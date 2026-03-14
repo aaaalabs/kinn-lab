@@ -29,11 +29,7 @@
     },
     {
       "source": "/map",
-      "destination": "/playgrounds/tirol_map/index.html"
-    },
-    {
-      "source": "/map/:path*",
-      "destination": "/playgrounds/tirol_map/:path*"
+      "destination": "/map/index.html"
     }
   ],
   "headers": [

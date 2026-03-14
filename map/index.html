@@ -530,8 +530,8 @@
 
     /* ── Load layers, then markers ── */
     Promise.all([
-      fetch('/playgrounds/tirol_map/data/tyrol_municipal.json').then(r => r.json()),
-      fetch('/playgrounds/tirol_map/data/tyrol_state.json').then(r => r.json()),
+      fetch('/map/data/tyrol_municipal.json').then(r => r.json()),
+      fetch('/map/data/tyrol_state.json').then(r => r.json()),
     ]).then(([municipal, state]) => {
       L.geoJSON(municipal, { style: municipalStyle }).addTo(map);
       L.geoJSON(state, { style: stateStyle }).addTo(map);
