@@ -74,7 +74,8 @@
 
     .back-link:hover { color: var(--dark-teal); }
 
-    #map { flex: 1; min-height: 0; }
+    #map-wrap { overflow: hidden; }
+    #map { flex: 1; min-height: 0; height: 100%; }
 
     /* Legend */
     .legend {
@@ -195,6 +196,152 @@
     }
 
     .leaflet-control-attribution a { color: var(--teal) !important; }
+
+    /* Venue list toggle button */
+    .list-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+      background: var(--ecru-white);
+      border: 1px solid rgba(43, 50, 40, 0.1);
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.85rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: var(--heavy-metal);
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(43, 50, 40, 0.08);
+      transition: background 0.2s, color 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .list-toggle:hover {
+      background: var(--heavy-metal);
+      color: var(--mintgreen);
+    }
+
+    .list-toggle.active {
+      background: var(--heavy-metal);
+      color: var(--mintgreen);
+    }
+
+    /* Venue panel */
+    .venue-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 999;
+      width: 340px;
+      height: 100%;
+      background: var(--ecru-white);
+      border-left: 1px solid rgba(43, 50, 40, 0.1);
+      box-shadow: -4px 0 24px rgba(43, 50, 40, 0.08);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .venue-panel.open { transform: translateX(0); }
+
+    .venue-panel-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(43, 50, 40, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .venue-panel-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.95rem;
+      color: var(--heavy-metal);
+    }
+
+    .venue-panel-count {
+      font-size: 0.75rem;
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .venue-panel-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--malta) transparent;
+    }
+
+    .venue-panel-list::-webkit-scrollbar { width: 5px; }
+    .venue-panel-list::-webkit-scrollbar-track { background: transparent; }
+    .venue-panel-list::-webkit-scrollbar-thumb {
+      background: var(--malta);
+      border-radius: 3px;
+    }
+
+    .venue-group-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.25rem 0.35rem;
+      color: var(--teal);
+    }
+
+    .venue-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.5rem 1.25rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .venue-row:hover { background: rgba(94, 217, 166, 0.06); }
+
+    .venue-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .venue-row-info { flex: 1; min-width: 0; }
+
+    .venue-row-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--heavy-metal);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .venue-row-address {
+      font-size: 0.7rem;
+      color: #6B7068;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .venue-row-events {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      color: var(--teal);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 600px) {
+      .venue-panel { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -206,7 +353,17 @@
     <a href="/" class="back-link">Zurück zum Lab</a>
   </header>
 
-  <div id="map"></div>
+  <div id="map-wrap" style="position:relative;flex:1;min-height:0;display:flex;">
+    <div id="map"></div>
+    <button class="list-toggle" onclick="handleTogglePanel()">Standorte</button>
+    <div class="venue-panel" id="venuePanel">
+      <div class="venue-panel-header">
+        <div class="venue-panel-title">Alle Standorte</div>
+        <div class="venue-panel-count" id="venueCount"></div>
+      </div>
+      <div class="venue-panel-list" id="venueList"></div>
+    </div>
+  </div>
 
   <div class="legend">
     <div class="legend-title">Standorte</div>
@@ -278,14 +435,14 @@
       { name: 'Werkstätte Wattens', address: 'Weisstraße 9, Wattens', lat: 47.2872646, lng: 11.5929236, cat: 'mobil', events: 1 },
       { name: 'Campus Casablanca', address: 'Öde 32, Schönwies', lat: 47.1991637, lng: 10.6650397, cat: 'mobil', events: 1 },
       { name: 'Museen Tirol Bauernhöfe', address: 'Angerberg 10, Kramsach', lat: 47.4638797, lng: 11.9185334, cat: 'mobil', events: 1 },
-      { name: 'Bäcker Ruetz Backhaus', address: 'Sportplatzweg 2, Kematen', lat: 47.2607885, lng: 11.2698419, cat: 'mobil', events: 0 },
+      { name: 'Bäcker Ruetz Backhaus', address: 'Sportplatzweg 2, Kematen', lat: 47.2607885, lng: 11.2698419, cat: 'scouting', events: 0 },
 
       // Scouting — Offen
       { name: 'EGGER Group', address: 'St. Johann in Tirol', lat: 47.4981426, lng: 12.4201561, cat: 'scouting', events: 0 },
       { name: 'Adler-Lacke', address: 'Schwaz', lat: 47.3603794, lng: 11.7245581, cat: 'scouting', events: 0 },
       { name: 'Hotel Gappen', address: 'Achenrain 58, Kramsach', lat: 47.4490467, lng: 11.8755506, cat: 'scouting', events: 0 },
       { name: 'aeoon Technologies', address: 'Amerling 133, Kramsach', lat: 47.4403721, lng: 11.8766551, cat: 'scouting', events: 0 },
-      { name: 'SoftDeCC Kramsach', address: 'Kramsach', lat: 47.4439, lng: 11.8769, cat: 'scouting', events: 0 },
+      { name: 'SoftDeCC Kramsach', address: 'Kramsach', lat: 47.4439, lng: 11.8769, cat: 'hub-next', events: 0 },
       { name: 'Villa Blanka', address: 'Weiherburggasse 8, Innsbruck', lat: 47.2790952, lng: 11.3976352, cat: 'scouting', events: 0 },
       { name: 'PumpTrack Innsbruck', address: 'Amraser-See-Straße 56a, Innsbruck', lat: 47.2625643, lng: 11.4309327, cat: 'scouting', events: 0 },
       { name: 'CANCOM', address: 'Valiergasse 56, Innsbruck', lat: 47.2660937, lng: 11.4385226, cat: 'scouting', events: 0 },
@@ -368,6 +525,9 @@
       `;
     }
 
+    /* ── Marker refs for panel interaction ── */
+    const markerMap = new Map();
+
     /* ── Load layers, then markers ── */
     Promise.all([
       fetch('/playgrounds/tirol_map/data/tyrol_municipal.json').then(r => r.json()),
@@ -376,18 +536,78 @@
       L.geoJSON(municipal, { style: municipalStyle }).addTo(map);
       L.geoJSON(state, { style: stateStyle }).addTo(map);
 
-      // Render order: scouting first (back), hub last (front)
       const order = ['scouting', 'chapter-next', 'mobil', 'chapter', 'hub-next', 'hub'];
       order.forEach(cat => {
         venues
           .filter(v => v.cat === cat)
           .forEach(v => {
-            L.marker([v.lat, v.lng], { icon: createMarkerIcon(v.cat) })
+            const marker = L.marker([v.lat, v.lng], { icon: createMarkerIcon(v.cat) })
               .bindPopup(createPopup(v))
               .addTo(map);
+            markerMap.set(v, marker);
           });
       });
+
+      buildVenueList();
     });
+
+    /* ── Venue panel ── */
+    function handleTogglePanel() {
+      const panel = document.getElementById('venuePanel');
+      const btn = document.querySelector('.list-toggle');
+      const isOpen = panel.classList.toggle('open');
+      btn.classList.toggle('active', isOpen);
+      setTimeout(() => map.invalidateSize(), 300);
+    }
+
+    function handleVenueClick(venue) {
+      const marker = markerMap.get(venue);
+      if (!marker) return;
+      map.setView([venue.lat, venue.lng], 14, { animate: true });
+      setTimeout(() => marker.openPopup(), 350);
+    }
+
+    function buildVenueList() {
+      const list = document.getElementById('venueList');
+      const count = document.getElementById('venueCount');
+      count.textContent = venues.length + ' Standorte';
+
+      const groupOrder = ['hub', 'hub-next', 'chapter', 'chapter-next', 'mobil', 'scouting'];
+      const grouped = {};
+      venues.forEach(v => {
+        (grouped[v.cat] = grouped[v.cat] || []).push(v);
+      });
+
+      let html = '';
+      groupOrder.forEach(cat => {
+        const items = grouped[cat];
+        if (!items) return;
+        const cfg = catConfig[cat];
+
+        html += `<div class="venue-group-label">${cfg.label} (${items.length})</div>`;
+        items
+          .sort((a, b) => b.events - a.events || a.name.localeCompare(b.name))
+          .forEach((v, i) => {
+            const dotStyle = cat === 'scouting'
+              ? `border:1.5px dashed ${cfg.border};background:transparent;`
+              : cfg.border
+                ? `background:${cfg.color};border:2px solid ${cfg.border};`
+                : `background:${cfg.color};`;
+            const evLabel = v.events > 0 ? v.events : '';
+            html += `
+              <div class="venue-row" onclick="handleVenueClick(venues[${venues.indexOf(v)}])">
+                <div class="venue-dot" style="${dotStyle}"></div>
+                <div class="venue-row-info">
+                  <div class="venue-row-name">${v.name}</div>
+                  <div class="venue-row-address">${v.address}</div>
+                </div>
+                ${evLabel ? `<div class="venue-row-events">${evLabel}</div>` : ''}
+              </div>`;
+          });
+      });
+
+      list.innerHTML = html;
+    }
   </script>
 </body>
 </html>
