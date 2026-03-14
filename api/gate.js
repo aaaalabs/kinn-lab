@@ -19,7 +19,7 @@ export default function handler(req, res) {
       : req.body?._pw;
     const dest = req.query.dest || '/';
     if (pw === PASSWORD) {
-      res.setHeader('Set-Cookie', `lab_auth=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`);
+      res.setHeader('Set-Cookie', `lab_auth=${token}; Path=/; Secure; SameSite=Lax; Max-Age=2592000`);
       return res.redirect(302, dest);
     }
     return res.status(401).send(loginHTML(dest, true));
