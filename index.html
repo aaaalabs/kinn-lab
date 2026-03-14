@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN Lab</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/public/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/css/kinn-base.css">
+  <style>
+    .lab-badge {
+      display: inline-block;
+      background: rgba(94, 217, 166, 0.15);
+      color: #2C3E50;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 2rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .prototype-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .prototype-item {
+      padding: 1rem;
+      background: rgba(94, 217, 166, 0.05);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      border-left: 4px solid #5ED9A6;
+      transition: all 0.2s ease;
+    }
+
+    .prototype-item:hover {
+      background: rgba(94, 217, 166, 0.1);
+      transform: translateX(4px);
+    }
+
+    .prototype-item a {
+      text-decoration: none;
+      color: #2C3E50;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      display: block;
+    }
+
+    .prototype-item .description {
+      font-size: 0.8125rem;
+      color: #6B6B6B;
+      margin-top: 0.25rem;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.8125rem;
+      color: #999;
+    }
+
+    .footer a {
+      color: #5ED9A6;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="/public/kinn-logo.png" alt="KINN" class="logo">
+
+    <span class="lab-badge">Lab</span>
+    <h1>Prototypen-Werkstatt</h1>
+    <p class="subtitle">Hier entstehen neue KINN-Seiten, bevor sie live gehen.</p>
+
+    <div class="card">
+      <h2>Aktuelle Prototypen</h2>
+      <ul class="prototype-list">
+        <li class="prototype-item">
+          <a href="/pages/_template/">
+            Template-Seite
+            <span class="description">Vorlage fuer neue Unterseiten</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <a href="https://kinn.at">kinn.at</a> — KINN Lab
+    </div>
+  </div>
+</body>
+</html>

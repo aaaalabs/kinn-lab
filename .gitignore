@@ -1,0 +1,12 @@
+# System
+.DS_Store
+*.log
+node_modules/
+.vercel
+.env
+.env.local
+.env*.local
+.env.vercel*
+
+# Worktrees
+.worktrees/
