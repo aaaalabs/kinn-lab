@@ -14,11 +14,9 @@ export default function handler(req, res) {
 
   // Password submitted via POST
   if (req.method === 'POST') {
-    console.log('GATE_DEBUG body_type:', typeof req.body, 'body:', JSON.stringify(req.body), 'content-type:', req.headers['content-type']);
     const pw = typeof req.body === 'string'
       ? new URLSearchParams(req.body).get('_pw')
       : req.body?._pw;
-    console.log('GATE_DEBUG pw:', pw, 'match:', pw === PASSWORD, 'PASSWORD_len:', PASSWORD.length);
     const dest = req.query.dest || '/';
     if (pw === PASSWORD) {
       res.setHeader('Set-Cookie', `lab_auth=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`);
