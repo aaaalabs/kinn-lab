@@ -14,18 +14,15 @@ export default function handler(req, res) {
 
   // Password submitted via POST
   if (req.method === 'POST') {
-    let body = '';
-    req.on('data', (chunk) => { body += chunk; });
-    req.on('end', () => {
-      const params = new URLSearchParams(body);
-      const dest = req.query.dest || '/';
-      if (params.get('_pw') === PASSWORD) {
-        res.setHeader('Set-Cookie', `lab_auth=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`);
-        return res.redirect(302, dest);
-      }
-      return res.status(401).send(loginHTML(dest, true));
-    });
-    return;
+    const pw = typeof req.body === 'string'
+      ? new URLSearchParams(req.body).get('_pw')
+      : req.body?._pw;
+    const dest = req.query.dest || '/';
+    if (pw === PASSWORD) {
+      res.setHeader('Set-Cookie', `lab_auth=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`);
+      return res.redirect(302, dest);
+    }
+    return res.status(401).send(loginHTML(dest, true));
   }
 
   // Show login
