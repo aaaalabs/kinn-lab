@@ -16,7 +16,7 @@ export default function middleware(request) {
       status: 302,
       headers: {
         Location: url.pathname,
-        'Set-Cookie': `lab_auth=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`,
+        'Set-Cookie': `lab_auth=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000`,
       },
     });
   }
