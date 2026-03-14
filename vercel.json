@@ -22,6 +22,10 @@
     {
       "source": "/pages/:path*",
       "destination": "/pages/:path*"
+    },
+    {
+      "source": "/playgrounds/:path*",
+      "destination": "/playgrounds/:path*"
     }
   ],
   "headers": [
