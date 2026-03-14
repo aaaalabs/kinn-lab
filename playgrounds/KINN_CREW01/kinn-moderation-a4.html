@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN:MODERATION · A4 Kurzversion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --mintgreen:   #5ED9A6;
+      --heavy-metal: #2B3228;
+      --ecru-white:  #F5F0E6;
+      --spring-rain: #A8C8B0;
+      --teal:        #4A9B8C;
+      --dark-teal:   #2D6B60;
+      --malta:       #BDB2A1;
+      --kangaroo:    #C6C3B5;
+    }
+
+    @font-face {
+      font-family: 'Futura';
+      src: local('Futura'), local('Futura-Medium'), local('FuturaPT-Book');
+      font-weight: 400;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ── Screen wrapper ── */
+    body {
+      font-family: 'Futura', 'Work Sans', system-ui, sans-serif;
+      background: #C8C4BC;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 2rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── The A4 sheet ── */
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: var(--ecru-white);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.22);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ════════════════════════════════
+       HEADER
+    ════════════════════════════════ */
+    .hdr {
+      background: var(--heavy-metal);
+      padding: 7mm 10mm 6mm;
+      display: flex;
+      align-items: center;
+      gap: 6mm;
+    }
+    .hdr-logo svg {
+      width: 28mm;
+      fill: var(--ecru-white);
+      display: block;
+    }
+    .hdr-divider {
+      width: 1px;
+      height: 10mm;
+      background: rgba(255,255,255,0.15);
+      flex-shrink: 0;
+    }
+    .hdr-text {}
+    .hdr-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 5.5pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mintgreen);
+      margin-bottom: 1.5mm;
+    }
+    .hdr-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 16pt;
+      color: var(--ecru-white);
+      letter-spacing: -0.01em;
+      line-height: 1;
+      margin-bottom: 1mm;
+    }
+    .hdr-sub {
+      font-family: 'Futura', sans-serif;
+      font-size: 6.5pt;
+      color: var(--spring-rain);
+      letter-spacing: 0.03em;
+      line-height: 1.4;
+    }
+    .hdr-tag {
+      margin-left: auto;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .hdr-tagline {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 5pt;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+    }
+    .hdr-mint-bar {
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--mintgreen) 0%, transparent 100%);
+    }
+
+    /* ════════════════════════════════
+       BODY
+    ════════════════════════════════ */
+    .body {
+      padding: 6mm 10mm 5mm;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5mm;
+    }
+
+    /* ── Section label ── */
+    .slabel {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 5pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 2mm;
+      display: flex;
+      align-items: center;
+      gap: 2mm;
+    }
+    .slabel::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(43,50,40,0.1);
+    }
+
+    /* ── Row layout helpers ── */
+    .row   { display: flex; gap: 4mm; }
+    .col   { flex: 1; min-width: 0; }
+    .col-2 { flex: 2; min-width: 0; }
+
+    /* ── Values row ── */
+    .values-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2.5mm;
+    }
+    .val {
+      background: #fff;
+      border: 1px solid rgba(43,50,40,0.08);
+      border-radius: 3mm;
+      border-top: 2px solid var(--mintgreen);
+      padding: 2.5mm 2.5mm;
+      text-align: center;
+    }
+    .val-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 6pt;
+      color: var(--heavy-metal);
+      margin-bottom: 1mm;
+      line-height: 1.2;
+    }
+    .val-desc {
+      font-family: 'Futura', sans-serif;
+      font-size: 5pt;
+      color: #6B7068;
+      line-height: 1.45;
+    }
+
+    /* ── Firewall (Rolle) ── */
+    .firewall {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(43,50,40,0.09);
+      border-radius: 3mm;
+      overflow: hidden;
+    }
+    .fw-col { padding: 3mm 3.5mm; }
+    .fw-col:first-child {
+      background: rgba(94,217,166,0.07);
+      border-right: 1px solid rgba(43,50,40,0.08);
+    }
+    .fw-col:last-child { background: rgba(212,104,74,0.05); }
+    .fw-head {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 6.5pt;
+      color: var(--heavy-metal);
+      margin-bottom: 2mm;
+      padding-bottom: 1.5mm;
+      border-bottom: 1px solid rgba(43,50,40,0.1);
+    }
+    .fw-col:first-child .fw-head { color: var(--dark-teal); }
+    .fw-col:last-child  .fw-head { color: #B03828; }
+    .fw-item {
+      font-family: 'Futura', sans-serif;
+      font-size: 6pt;
+      color: #484D44;
+      line-height: 1.5;
+      padding: 1mm 0;
+      border-bottom: 1px solid rgba(43,50,40,0.05);
+      display: flex;
+      gap: 1.5mm;
+      align-items: flex-start;
+    }
+    .fw-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .fw-col:first-child .fw-item::before { content: '✓'; color: var(--mintgreen); font-weight: bold; flex-shrink: 0; font-size: 5.5pt; }
+    .fw-col:last-child  .fw-item::before { content: '✗'; color: #D4684A; font-weight: bold; flex-shrink: 0; font-size: 5.5pt; }
+
+    /* ── Principles ── */
+    .principles {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5mm;
+    }
+    .pr {
+      display: flex;
+      gap: 2.5mm;
+      align-items: flex-start;
+      padding: 2mm 3mm;
+      background: #fff;
+      border: 1px solid rgba(43,50,40,0.07);
+      border-radius: 2.5mm;
+    }
+    .pr-num {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 9pt;
+      color: var(--mintgreen);
+      line-height: 1;
+      flex-shrink: 0;
+      min-width: 3.5mm;
+      margin-top: 0.3mm;
+    }
+    .pr-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 6.5pt;
+      color: var(--heavy-metal);
+      margin-bottom: 0.8mm;
+    }
+    .pr-desc {
+      font-family: 'Futura', sans-serif;
+      font-size: 5.5pt;
+      color: #6B7068;
+      line-height: 1.5;
+    }
+
+    /* ── Impulsfragen ── */
+    .fragen-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3mm;
+    }
+    .fg-group {}
+    .fg-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 5pt;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 2mm;
+    }
+    .fg-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5mm;
+    }
+    .fq {
+      background: #fff;
+      border: 1px solid rgba(43,50,40,0.08);
+      border-radius: 2.5mm;
+      padding: 2mm 2.5mm;
+      display: flex;
+      gap: 1.5mm;
+      align-items: flex-start;
+    }
+    .fq-mark {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 8pt;
+      color: var(--mintgreen);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .fq-text {
+      font-family: 'Futura', sans-serif;
+      font-size: 5.5pt;
+      color: var(--heavy-metal);
+      line-height: 1.5;
+    }
+
+    /* ── Edge cases ── */
+    .edges {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2.5mm;
+    }
+    .edge {
+      background: #fff;
+      border: 1px solid rgba(43,50,40,0.08);
+      border-radius: 2.5mm;
+      padding: 2.5mm 3mm;
+    }
+    .edge-when {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 5pt;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--malta);
+      margin-bottom: 1mm;
+    }
+    .edge-trigger {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 6pt;
+      color: var(--heavy-metal);
+      margin-bottom: 1.5mm;
+      line-height: 1.3;
+    }
+    .edge-ans {
+      font-family: 'Futura', sans-serif;
+      font-size: 5.5pt;
+      color: #484D44;
+      line-height: 1.5;
+      border-top: 1px solid rgba(43,50,40,0.07);
+      padding-top: 1.5mm;
+    }
+
+    /* ── Quote bar ── */
+    .qbar {
+      background: rgba(94,217,166,0.08);
+      border-left: 2.5px solid var(--mintgreen);
+      border-radius: 0 2.5mm 2.5mm 0;
+      padding: 2.5mm 3.5mm;
+    }
+    .qbar-text {
+      font-family: 'Futura', sans-serif;
+      font-size: 6.5pt;
+      color: var(--heavy-metal);
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .qbar-cite {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 5pt;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-top: 1mm;
+    }
+
+    /* ════════════════════════════════
+       FOOTER
+    ════════════════════════════════ */
+    .ftr {
+      background: var(--heavy-metal);
+      padding: 3mm 10mm;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ftr-left {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 5pt;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+    }
+    .ftr-right {
+      font-family: 'Futura', sans-serif;
+      font-size: 5pt;
+      color: rgba(255,255,255,0.15);
+    }
+
+    /* ════════════════════════════════
+       PRINT
+    ════════════════════════════════ */
+    @media print {
+      @page { size: A4; margin: 0; }
+      body { background: none; padding: 0; }
+      .sheet { box-shadow: none; width: 100%; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+<div class="sheet">
+
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="hdr-logo">
+      <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/>
+        <path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/>
+        <polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/>
+        <path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/>
+      </svg>
+    </div>
+    <div class="hdr-divider"></div>
+    <div class="hdr-text">
+      <div class="hdr-eyebrow">Tischmoderator:innen · Kurzleitfaden</div>
+      <div class="hdr-title">KINN:MODERATION</div>
+      <div class="hdr-sub">Worauf es ankommt, wenn du den Raum hältst.</div>
+    </div>
+    <div class="hdr-tag">
+      <div class="hdr-tagline">kinn.at · März 2026</div>
+    </div>
+  </header>
+  <div class="hdr-mint-bar"></div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- WERTE -->
+    <div>
+      <div class="slabel">Werte · Was KINN ausmacht</div>
+      <div class="values-row">
+        <div class="val">
+          <div class="val-title">Augenhöhe</div>
+          <div class="val-desc">CEO = Student am Tisch. Kein Titel entscheidet über Redezeit.</div>
+        </div>
+        <div class="val">
+          <div class="val-title">Kein Pitching</div>
+          <div class="val-desc">KINN ist kein Vertriebskanal — weder donnerstags noch am Tisch.</div>
+        </div>
+        <div class="val">
+          <div class="val-title">Für alle</div>
+          <div class="val-desc">Kein Gatekeeping. Wer neugierig ist, gehört dazu.</div>
+        </div>
+        <div class="val">
+          <div class="val-title">Safe Space</div>
+          <div class="val-desc">Fehler dürfen geteilt werden. Was am Tisch bleibt, bleibt am Tisch.</div>
+        </div>
+        <div class="val">
+          <div class="val-title">Neugier</div>
+          <div class="val-desc">Du fragst, weil du wirklich wissen willst — nicht um zu lenken.</div>
+        </div>
+        <div class="val">
+          <div class="val-title">Transparenz</div>
+          <div class="val-desc">Wenn du nicht weißt, sag es. Offenheit schafft Verbindung.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROLLE + PRINZIPIEN -->
+    <div class="row">
+
+      <!-- Rolle -->
+      <div class="col">
+        <div class="slabel">Deine Rolle</div>
+        <div class="firewall">
+          <div class="fw-col">
+            <div class="fw-head">Das tust du</div>
+            <div class="fw-item">Gespräch mit einer Frage eröffnen</div>
+            <div class="fw-item">Stille aushalten — sie ist produktiv</div>
+            <div class="fw-item">Alle einladen, nicht nur die Lautesten</div>
+            <div class="fw-item">Verbindungen zwischen Aussagen zeigen</div>
+            <div class="fw-item">Kurze Zusammenfassung am Ende</div>
+          </div>
+          <div class="fw-col">
+            <div class="fw-head">Das tust du nicht</div>
+            <div class="fw-item">Eigene Meinung als Wahrheit verkaufen</div>
+            <div class="fw-item">Eigene Produkte bewerben</div>
+            <div class="fw-item">Gespräch dominieren oder kontrollieren</div>
+            <div class="fw-item">Pitches stillschweigend zulassen</div>
+            <div class="fw-item">Urteile über Personen fällen</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prinzipien -->
+      <div class="col">
+        <div class="slabel">Praktische Prinzipien</div>
+        <div class="principles">
+          <div class="pr">
+            <div class="pr-num">1</div>
+            <div>
+              <div class="pr-title">Fang einfach an</div>
+              <div class="pr-desc">Eine Frage reicht. Kein langes Intro. „Was ist gerade dein größtes KI-Thema?" ist besser als drei Minuten Begrüßung.</div>
+            </div>
+          </div>
+          <div class="pr">
+            <div class="pr-num">2</div>
+            <div>
+              <div class="pr-title">Vorstellungen kurz halten</div>
+              <div class="pr-desc">Ein Satz pro Person — Name, was sie tun. Du gibst das Tempo vor: mach es selbst kurz, der Rest folgt.</div>
+            </div>
+          </div>
+          <div class="pr">
+            <div class="pr-num">3</div>
+            <div>
+              <div class="pr-title">Zeit ist knapp — jeder soll zu Wort kommen</div>
+              <div class="pr-desc">Du hast 30–40 Min., dann gibt das KINN-Team das Ende an. Je nach Eventgröße früher. Geh davon aus, dass die Zeit knapp ist — und sorge dafür, dass niemand schweigend geht.</div>
+            </div>
+          </div>
+          <div class="pr">
+            <div class="pr-num">4</div>
+            <div>
+              <div class="pr-title">Verbinde, statt zu bewerten</div>
+              <div class="pr-desc">„Das klingt ähnlich wie was XY gesagt hat — seht ihr einen Zusammenhang?" Du webst das Gespräch, du bewertest es nicht.</div>
+            </div>
+          </div>
+          <div class="pr">
+            <div class="pr-num">5</div>
+            <div>
+              <div class="pr-title">Schließ mit einer Einladung</div>
+              <div class="pr-desc">„Was nehmt ihr heute mit?" oder „Mit wem wollt ihr weiterreden?" schließt den Kreis — und öffnet neue.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- IMPULSFRAGEN -->
+    <div>
+      <div class="slabel">Impulsfragen-Kit</div>
+      <div class="fragen-wrap">
+        <div class="fg-group">
+          <div class="fg-label">Einstieg</div>
+          <div class="fg-items">
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Was ist gerade dein größtes KI-Bottleneck?</div></div>
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Welches Tool habt ihr zuletzt ausprobiert — was hat überrascht?</div></div>
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Wo hättest du dir letzte Woche KI-Unterstützung gewünscht?</div></div>
+          </div>
+        </div>
+        <div class="fg-group">
+          <div class="fg-label">Vertiefung</div>
+          <div class="fg-items">
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Was hat funktioniert — und was definitiv nicht?</div></div>
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Wie habt ihr das intern kommuniziert oder umgesetzt?</div></div>
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Was würdest du rückblickend anders machen?</div></div>
+          </div>
+        </div>
+        <div class="fg-group">
+          <div class="fg-label">Verbindung</div>
+          <div class="fg-items">
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Wer am Tisch hat ähnliche Erfahrungen — oder dieselben Fragen?</div></div>
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Gibt es jemanden im Netzwerk, den du dazu empfehlen würdest?</div></div>
+            <div class="fq"><div class="fq-mark">?</div><div class="fq-text">Was nehmt ihr mit — und mit wem wollt ihr weiterreden?</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDGE CASES -->
+    <div>
+      <div class="slabel">Was tun wenn…</div>
+      <div class="edges">
+        <div class="edge">
+          <div class="edge-when">Situation 01</div>
+          <div class="edge-trigger">… jemand anfängt zu pitchen</div>
+          <div class="edge-ans">Freundlich, aber klar: „Wäre das ein Thema für einen KINN:TechTalk?" — dann zurück zur Frage.</div>
+        </div>
+        <div class="edge">
+          <div class="edge-when">Situation 02</div>
+          <div class="edge-trigger">… das Gespräch stockt</div>
+          <div class="edge-ans">Stille erst aushalten. Falls nicht: konkretere Frage stellen. „Was habt ihr diese Woche tatsächlich mit KI gemacht — auch wenn es klein war?"</div>
+        </div>
+        <div class="edge">
+          <div class="edge-when">Situation 03</div>
+          <div class="edge-trigger">… eine Person dominiert</div>
+          <div class="edge-ans">Andere aktiv einladen: „Was ist eure Erfahrung dazu?" Blickkontakt zu den Stillen — ein Blick reicht.</div>
+        </div>
+        <div class="edge">
+          <div class="edge-when">Situation 04</div>
+          <div class="edge-trigger">… du selbst keine Antwort weißt</div>
+          <div class="edge-ans">Sag es. „Ich weiß es nicht — weiß jemand hier mehr?" Nichtwissen ist eine Einladung, keine Schwäche.</div>
+        </div>
+        <div class="edge">
+          <div class="edge-when">Situation 05</div>
+          <div class="edge-trigger">… es wird zu technisch</div>
+          <div class="edge-ans">Zurück zu den Menschen: „Was bedeutet das konkret für euren Alltag?" Technik ist Mittel, nicht Zweck.</div>
+        </div>
+        <div class="edge">
+          <div class="edge-when">Situation 06</div>
+          <div class="edge-trigger">… die Stimmung kippt</div>
+          <div class="edge-ans">Nicht ignorieren: „Ich merke, das trifft einen Nerv — wollen wir kurz innehalten?" Raum geben, nicht lösen.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUOTE -->
+    <div class="qbar">
+      <div class="qbar-text">Moderation heißt: Raum öffnen, nicht diktieren. Du musst nicht die klügste Person am Tisch sein — nur die aufmerksamste.</div>
+      <div class="qbar-cite">KINN:MODERATION · Grundhaltung</div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- FOOTER -->
+  <footer class="ftr">
+    <div class="ftr-left">KINN · Tirol · kinn.at</div>
+    <div class="ftr-right">Niemand sollte bei KI allein dastehen. Wir treffen uns. Jede Woche.</div>
+  </footer>
+
+</div><!-- /sheet -->
+</body>
+</html>

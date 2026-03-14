@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN - Tirols KI-Community</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family:'Futura'; src:local('Futura'),local('Futura-Medium'),local('FuturaPT-Book'); font-weight:400; }
+
+    :root {
+      --mintgreen:#5ED9A6;
+      --heavy-metal:#2B3228;
+      --ecru-white:#F5F0E6;
+      --spring-rain:#A8C8B0;
+      --malta:#BDB2A1;
+      --kangaroo:#C6C3B5;
+      --teal:#4A9B8C;
+      --dark-teal:#2D6B60;
+      --cream:#F5F1E8;
+      --mint-glow:rgba(94,217,166,0.15);
+      --mint-subtle:rgba(94,217,166,0.08);
+      --bg:var(--ecru-white);
+      --text:var(--heavy-metal);
+      --text-muted:#6B7068;
+      --surface:#FFFFFF;
+      --border:rgba(43,50,40,0.1);
+      --warn:#D4956A;
+      --warn-bg:rgba(212,149,106,0.08);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Futura','Work Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.618;-webkit-font-smoothing:antialiased}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,240,230,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.6rem 2rem;display:flex;align-items:center;gap:1.5rem}
+    nav .logo-nav{display:flex;align-items:center;text-decoration:none}
+    nav .logo-nav svg{height:18px;width:auto;fill:var(--heavy-metal)}
+    nav .nav-links{display:flex;gap:0.15rem;flex-wrap:wrap}
+    nav a.nl{font-family:'Futura','Work Sans',sans-serif;font-size:0.7rem;color:var(--text-muted);text-decoration:none;padding:0.3rem 0.55rem;border-radius:6px;transition:all 0.2s;letter-spacing:0.04em;text-transform:uppercase}
+    nav a.nl:hover{background:var(--mint-glow);color:var(--heavy-metal)}
+    nav .nav-tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--mintgreen);color:var(--heavy-metal);padding:0.2rem 0.5rem;border-radius:4px;margin-left:auto}
+
+    /* PAGES */
+    .page{min-height:100vh;padding:5.5rem 2rem 4rem;display:flex;align-items:center;justify-content:center;position:relative}
+    .pi{max-width:920px;width:100%}
+    .page.pg-light::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 30%,var(--mint-subtle) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(168,200,176,0.06) 0%,transparent 50%);pointer-events:none}
+    .page.pg-light-alt{background:linear-gradient(180deg,var(--ecru-white) 0%,#F0EBE1 100%)}
+    .page.pg-light-alt::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 70% 20%,rgba(189,178,161,0.08) 0%,transparent 50%),radial-gradient(circle at 30% 80%,var(--mint-subtle) 0%,transparent 50%);pointer-events:none}
+
+    /* DARK THEME */
+    .page.pg-dark{background:var(--heavy-metal);color:var(--ecru-white)}
+    .page.pg-dark::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 30% 40%,rgba(94,217,166,0.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(168,200,176,0.04) 0%,transparent 60%);pointer-events:none}
+    .pg-dark h1{color:var(--ecru-white)}
+    .pg-dark h2{color:var(--ecru-white)}
+    .pg-dark p{color:var(--spring-rain)}
+    .pg-dark .sub{color:var(--spring-rain)}
+    .pg-dark .sn{color:var(--mintgreen);opacity:0.2}
+    .pg-dark .sl{color:var(--spring-rain)}
+    .pg-dark .note{background:rgba(94,217,166,0.08);border-color:var(--mintgreen)}
+    .pg-dark .note strong{color:var(--mintgreen)}
+    .pg-dark .tl::before{background:rgba(168,200,176,0.2)}
+    .pg-dark .tl-item::before{border-color:var(--heavy-metal)}
+    .pg-dark .tl-date{color:var(--mintgreen)}
+    .pg-dark .tl-text{color:var(--spring-rain)}
+
+    /* MINT THEME */
+    .page.pg-mint{background:linear-gradient(135deg,#38C98A 0%,#5ED9A6 55%,#7BE6B8 100%);color:var(--heavy-metal)}
+    .page.pg-mint::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 80%,rgba(43,50,40,0.06) 0%,transparent 50%);pointer-events:none}
+    .pg-mint .sn{color:var(--heavy-metal);opacity:0.15}
+    .pg-mint .sl{color:var(--dark-teal)}
+    .pg-mint .sub{color:var(--dark-teal)}
+    .pg-mint .metric{background:rgba(43,50,40,0.1);border-color:rgba(43,50,40,0.08);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+    .pg-mint .metric-val{color:var(--heavy-metal)}
+    .pg-mint .metric-unit{color:var(--dark-teal)}
+    .pg-mint .metric-label{color:var(--heavy-metal)}
+    .pg-mint .note{background:rgba(43,50,40,0.08);border-color:var(--heavy-metal)}
+    .pg-mint .note strong{color:var(--heavy-metal)}
+
+    /* COVER */
+    .cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:var(--heavy-metal)!important;color:var(--ecru-white)!important}
+    .cover-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(94,217,166,0.18) 0%,transparent 70%);pointer-events:none;animation:pulse-glow 8s ease-in-out infinite}
+    @keyframes pulse-glow{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}50%{transform:translate(-50%,-50%) scale(1.08);opacity:0.5}}
+    .cl{width:320px;max-width:70%;margin:0 auto 1.5rem;z-index:1;position:relative}
+    .cl svg{width:100%;height:auto;fill:var(--ecru-white);filter:drop-shadow(0 0 30px rgba(94,217,166,0.3))}
+    .ct{font-size:0.9rem;color:var(--spring-rain);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:2rem;z-index:1;position:relative}
+    .ch{font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(1.75rem,5vw,2.8rem);color:var(--ecru-white);margin-bottom:1rem;z-index:1;position:relative}
+    .cs{font-size:1rem;color:var(--spring-rain);margin-bottom:0.5rem;z-index:1;position:relative}
+    .cb{display:inline-block;font-size:0.75rem;color:var(--mintgreen);background:rgba(94,217,166,0.12);border:1px solid rgba(94,217,166,0.25);padding:0.4rem 1.25rem;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;margin-top:3rem;z-index:1;position:relative;font-family:'Montserrat',sans-serif;font-weight:700}
+    .ml{width:60px;height:3px;background:var(--mintgreen);border-radius:2px;margin:1.5rem auto;z-index:1;position:relative}
+
+    /* TYPOGRAPHY */
+    h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.75rem,4vw,2.5rem);color:var(--heavy-metal);letter-spacing:0.02em;line-height:1.15;margin-bottom:1.5rem}
+    h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--heavy-metal);line-height:1.3;margin-top:2.5rem;margin-bottom:1rem}
+    h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.1rem;color:var(--teal);margin-top:1.5rem;margin-bottom:0.75rem}
+    p{margin-bottom:1rem;line-height:1.7}
+    .sn{font-family:'Montserrat',sans-serif;font-weight:900;font-size:4rem;color:var(--spring-rain);opacity:0.4;line-height:1;margin-bottom:-0.5rem}
+    .sl{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .kb{font-family:'Montserrat',sans-serif;font-weight:900}
+    .sub{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--teal);letter-spacing:0.04em;margin-bottom:1.25rem}
+
+    /* METRICS */
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+    .metric{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1.25rem;text-align:center;transition:transform 0.2s,box-shadow 0.2s}
+    .metric:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(43,50,40,0.08)}
+    .metric-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.5rem,3vw,2rem);color:var(--teal);line-height:1.1}
+    .metric-unit{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;color:var(--kangaroo);letter-spacing:0.05em;text-transform:uppercase;margin-top:0.15rem}
+    .metric-label{font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem}
+
+    /* CALLOUTS */
+    .note{background:rgba(94,217,166,0.08);border-left:3px solid var(--mintgreen);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem}
+    .note strong{color:var(--teal)}
+
+    /* QUOTES */
+    .quote{display:block;border-left:3px solid var(--mintgreen);padding:1.25rem 1.5rem 1.25rem 3rem;margin:1.25rem 0;background:var(--mint-glow);border-radius:0 12px 12px 0;position:relative}
+    .quote::before{content:'\201C';position:absolute;top:0.5rem;left:0.75rem;font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.5rem;color:rgba(94,217,166,0.3);line-height:1}
+    .quote p{font-size:1rem;font-style:italic;color:var(--heavy-metal);margin-bottom:0.35rem;line-height:1.6}
+    .quote cite{font-size:0.8rem;color:var(--teal);font-style:normal;font-family:'Montserrat',sans-serif;font-weight:700}
+    .pg-dark .quote{background:rgba(94,217,166,0.06);border-color:rgba(94,217,166,0.4)}
+    .pg-dark .quote::before{color:rgba(94,217,166,0.2)}
+    .pg-dark .quote p{color:var(--ecru-white)}
+
+    /* KODEX */
+    .kodex{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+    .kodex-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1.25rem;position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+    .kodex-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(43,50,40,0.08)}
+    .kodex-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--mintgreen)}
+    .kodex-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:var(--mintgreen);line-height:1}
+    .kodex-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.8rem;color:var(--heavy-metal);margin:0.25rem 0 0.35rem;letter-spacing:0.03em;text-transform:uppercase}
+    .kodex-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5;font-style:italic}
+    .pg-dark .kodex-card{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+    .pg-dark .kodex-card:hover{box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+    .pg-dark .kodex-title{color:var(--ecru-white)}
+    .pg-dark .kodex-desc{color:var(--spring-rain)}
+
+    /* PHASES */
+    .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .phase{background:var(--surface);border-radius:16px;padding:1.75rem 1.5rem;border:1px solid var(--border);position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+    .phase:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(43,50,40,0.08)}
+    .phase::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--spring-rain)}
+    .phase.active::before{background:var(--mintgreen)}
+    .phase-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:0.5rem}
+    .phase-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--heavy-metal);margin-bottom:0.25rem}
+    .phase-body{font-size:0.88rem;color:var(--text-muted);line-height:1.6}
+    .pg-dark .phase{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
+    .pg-dark .phase:hover{box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+    .pg-dark .phase-label{color:var(--mintgreen)}
+    .pg-dark .phase-title{color:var(--ecru-white)}
+    .pg-dark .phase-body{color:var(--spring-rain)}
+
+    /* STAKEHOLDER GRID */
+    .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin:1.5rem 0}
+    .sg-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center;transition:all 0.2s}
+    .sg-item:hover{border-color:var(--mintgreen);transform:translateY(-1px)}
+    .sg-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.82rem;color:var(--heavy-metal);margin-bottom:0.2rem}
+    .sg-role{font-size:0.75rem;color:var(--text-muted)}
+
+    /* CHAPTER MAP */
+    .cmap{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+    .cmap-section{font-family:'Montserrat',sans-serif;font-weight:900;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--malta);margin-bottom:0.75rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(43,50,40,0.08)}
+    .cmap-region{border-radius:14px;padding:1.25rem 1.1rem;position:relative;transition:transform 0.2s,box-shadow 0.2s}
+    .cmap-region:hover{transform:translateY(-2px)}
+    .cmap-region.hub{background:var(--heavy-metal);color:var(--ecru-white)}
+    .cmap-region.hub:hover{box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+    .cmap-region.chapter{background:rgba(94,217,166,0.1);border:2px solid rgba(94,217,166,0.35)}
+    .cmap-region.chapter:hover{box-shadow:0 8px 24px rgba(94,217,166,0.12)}
+    .cmap-region.pipeline{background:rgba(189,178,161,0.05);border:1px dashed rgba(189,178,161,0.3)}
+    .cmap-badge{display:inline-block;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:5px;margin-bottom:0.5rem}
+    .hub .cmap-badge{background:var(--mintgreen);color:var(--heavy-metal)}
+    .chapter .cmap-badge{background:rgba(94,217,166,0.25);color:var(--dark-teal)}
+    .pipeline .cmap-badge{background:rgba(189,178,161,0.1);color:var(--kangaroo)}
+    .cmap-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.05rem;color:var(--heavy-metal);margin-bottom:0.15rem}
+    .hub .cmap-name{color:var(--ecru-white)}
+    .cmap-city{font-size:0.75rem;color:var(--text-muted);margin-bottom:0.5rem}
+    .hub .cmap-city{color:var(--kangaroo)}
+    .cmap-stat{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.78rem;color:var(--text-muted)}
+    .hub .cmap-stat{color:var(--spring-rain)}
+    .chapter .cmap-stat{color:var(--dark-teal)}
+    .pipeline .cmap-stat{color:var(--kangaroo);font-style:italic}
+
+    /* FLOW */
+    .flow{display:flex;align-items:stretch;gap:0;margin:1.5rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .flow-item{flex:1;padding:1.25rem 1rem;background:var(--surface);position:relative;text-align:center;transition:background 0.2s}
+    .flow-item:hover{background:var(--mint-subtle)}
+    .flow-item:not(:last-child){border-right:1px solid var(--border)}
+    .flow-item:not(:last-child)::after{content:'\2192';position:absolute;right:-0.6rem;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--mintgreen);z-index:2;background:var(--surface);width:1.2rem;height:1.2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;line-height:1}
+    .flow-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .flow-text{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
+
+    /* TIMELINE */
+    .tl{position:relative;padding-left:2rem;margin:1.5rem 0}
+    .tl::before{content:'';position:absolute;left:0.45rem;top:0.5rem;bottom:0.5rem;width:2px;background:var(--spring-rain)}
+    .tl-item{position:relative;padding-bottom:1.5rem}
+    .tl-item:last-child{padding-bottom:0}
+    .tl-item::before{content:'';position:absolute;left:-1.55rem;top:0.35rem;width:10px;height:10px;border-radius:50%;background:var(--mintgreen);border:2px solid var(--ecru-white);z-index:1}
+    .tl-date{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.7rem;color:var(--teal);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.15rem}
+    .tl-text{font-size:0.88rem;color:var(--text-muted);line-height:1.5}
+
+    /* FOOTER */
+    .pg-footer{background:var(--heavy-metal)!important;min-height:auto;padding:4rem 2rem}
+    .pg-footer .pi{text-align:center}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .page{padding:4.5rem 1rem 3rem}
+      .cl{width:220px}
+      .phases{grid-template-columns:1fr}.kodex{grid-template-columns:1fr}
+      .metrics{grid-template-columns:repeat(2,1fr)}.flow{flex-direction:column}
+      .flow-item:not(:last-child){border-right:none;border-bottom:1px solid var(--border)}
+      .flow-item:not(:last-child)::after{display:none}
+      nav .nav-links{display:none}
+      .sg{grid-template-columns:repeat(2,1fr)}
+      .cmap{grid-template-columns:1fr}
+      .cover-glow{width:350px;height:350px}
+    }
+
+    @media print{nav{display:none}.page{min-height:auto;page-break-after:always;padding:2rem}body{background:white}.cover{background:var(--ecru-white)!important;color:var(--heavy-metal)!important}.cl svg{fill:var(--heavy-metal)!important;filter:none!important}}
+    [id]{scroll-margin-top:4rem}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#cover" class="logo-nav">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+  </a>
+  <div class="nav-links">
+    <a href="#zahlen" class="nl">Zahlen</a>
+    <a href="#wachstum" class="nl">Wachstum</a>
+    <a href="#format" class="nl">Format</a>
+    <a href="#community" class="nl">Community</a>
+    <a href="#momentum" class="nl">Momentum</a>
+    <a href="#prinzipien" class="nl">Prinzipien</a>
+  </div>
+  <div class="nav-tag">März 2026</div>
+</nav>
+
+
+<!-- ═══════════ COVER (dark + glow) ═══════════ -->
+<div class="page cover" id="cover">
+  <div class="cover-glow"></div>
+  <div class="cl">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+  </div>
+  <div class="ct">Tirols KI-Community</div>
+  <div class="ch">Wir bringen KI nach Tirol.</div>
+  <div class="ml"></div>
+  <div class="cs">Wöchentlich. Offen. Organisch gewachsen.</div>
+  <div class="cb">Seit November 2025</div>
+</div>
+
+
+<!-- ═══════════ 01: ZAHLEN (mint gradient + frosted cards) ═══════════ -->
+<div class="page pg-mint" id="zahlen"><div class="pi">
+  <div class="sn">01</div>
+  <div class="sl">Status Quo</div>
+  <h1>KINN in Zahlen</h1>
+  <p class="sub">Organisch gewachsen - ohne Förderung, ohne Paywall, ohne Marketing-Budget</p>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">550+</div><div class="metric-unit">gesamt</div><div class="metric-label">Teilnehmer</div></div>
+    <div class="metric"><div class="metric-val">21</div><div class="metric-unit">seit Gründung</div><div class="metric-label">Events</div></div>
+    <div class="metric"><div class="metric-val">14</div><div class="metric-unit">in Rotation</div><div class="metric-label">Spielorte</div></div>
+    <div class="metric"><div class="metric-val">2</div><div class="metric-unit">Regionen</div><div class="metric-label">Innsbruck & Kufstein</div></div>
+  </div>
+
+  <div class="note"><strong>Warteliste aktiv:</strong> Plätze werden 2-3 Wochen im Voraus ausgebucht. Reservierung für Erstbesucher garantiert frische Impulse in der Community.</div>
+</div></div>
+
+
+<!-- ═══════════ 02: WACHSTUM (light-alt + SVG chart) ═══════════ -->
+<div class="page pg-light-alt" id="wachstum"><div class="pi">
+  <div class="sn">02</div>
+  <div class="sl">Wachstum</div>
+  <h1>4 &rarr; 110 in 4 Monaten</h1>
+  <p class="sub">Teilnehmer pro Event - organisch, ohne Marketing</p>
+
+  <svg viewBox="0 0 600 225" style="width:100%;display:block;margin-bottom:1.5rem" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="proj03" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#5ED9A6" stop-opacity="0.05"/><stop offset="100%" stop-color="#5ED9A6" stop-opacity="0.2"/></linearGradient></defs>
+    <line x1="45" y1="175" x2="575" y2="175" stroke="#e8e4dc" stroke-width="1"/>
+    <line x1="45" y1="125" x2="575" y2="125" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <line x1="45" y1="75" x2="575" y2="75" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <line x1="45" y1="25" x2="575" y2="25" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <text x="40" y="178" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">0</text>
+    <text x="40" y="128" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">50</text>
+    <text x="40" y="78" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">100</text>
+    <text x="40" y="28" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">150</text>
+    <text x="14" y="100" text-anchor="middle" font-family="Futura,sans-serif" font-size="7" fill="#6B7068" transform="rotate(-90 14 100)">Teilnehmer</text>
+    <text x="120" y="16" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="600" fill="#BDB2A1">PRE-LUMA</text>
+    <text x="333" y="16" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="600" fill="#4A9B8C">LUMA-DATEN</text>
+    <text x="511" y="16" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="600" fill="#5ED9A6">AUSGEBUCHT</text>
+    <line x1="192" y1="20" x2="192" y2="175" stroke="#BDB2A1" stroke-width="0.5" stroke-dasharray="3"/>
+    <line x1="473" y1="20" x2="473" y2="175" stroke="#BDB2A1" stroke-width="0.5" stroke-dasharray="3"/>
+    <rect x="177" y="20" width="28" height="155" fill="#BDB2A1" fill-opacity="0.08" rx="4"/>
+    <text x="191" y="98" text-anchor="middle" font-family="Futura,sans-serif" font-size="6" fill="#BDB2A1" transform="rotate(-90 191 98)">PAUSE</text>
+    <polyline points="55,171 85,164 115,164 145,161 175,150" fill="none" stroke="#BDB2A1" stroke-width="1.5" stroke-dasharray="4"/>
+    <circle cx="55" cy="171" r="3" fill="#BDB2A1"/><text x="55" y="166" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#BDB2A1">4</text>
+    <circle cx="85" cy="164" r="3" fill="#BDB2A1"/><text x="85" y="159" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#BDB2A1">11</text>
+    <circle cx="115" cy="164" r="3" fill="#BDB2A1"/>
+    <circle cx="145" cy="161" r="3" fill="#BDB2A1"/><text x="145" y="156" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#BDB2A1">14</text>
+    <circle cx="175" cy="150" r="3" fill="#BDB2A1"/><text x="175" y="145" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#BDB2A1">25</text>
+    <line x1="175" y1="150" x2="210" y2="140" stroke="#BDB2A1" stroke-width="1" stroke-dasharray="3"/>
+    <polyline points="210,140 240,125 270,153 300,143 330,145 360,104 390,139 420,153 455,151" fill="none" stroke="#4A9B8C" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="210" cy="140" r="4" fill="#4A9B8C"/><text x="210" y="135" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">35</text>
+    <circle cx="240" cy="125" r="4" fill="#4A9B8C"/><text x="240" y="120" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">50</text>
+    <circle cx="270" cy="153" r="4" fill="#4A9B8C"/><text x="270" y="163" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">22</text>
+    <polygon points="300,137 306,143 300,149 294,143" fill="#A8C8B0"/><text x="300" y="132" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#A8C8B0">32</text>
+    <circle cx="330" cy="145" r="4" fill="#4A9B8C"/><text x="330" y="155" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">30</text>
+    <circle cx="360" cy="104" r="4" fill="#5ED9A6"/><text x="360" y="99" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#5ED9A6">71</text>
+    <circle cx="390" cy="139" r="4" fill="#4A9B8C"/><text x="390" y="134" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">36</text>
+    <polygon points="420,147 426,153 420,159 414,153" fill="#A8C8B0"/><text x="420" y="163" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#A8C8B0">22</text>
+    <circle cx="455" cy="151" r="4" fill="#4A9B8C"/><text x="455" y="146" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">24</text>
+    <line x1="455" y1="151" x2="490" y2="65" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/>
+    <circle cx="490" cy="65" r="5" fill="none" stroke="#5ED9A6" stroke-width="2.5"/><text x="490" y="59" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#5ED9A6">110</text>
+    <text x="490" y="77" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">IBK+KUF</text>
+    <line x1="490" y1="65" x2="510" y2="141" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/>
+    <line x1="510" y1="141" x2="530" y2="139" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/>
+    <polygon points="510,135 516,141 510,147 504,141" fill="#A8C8B0"/><text x="510" y="130" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#A8C8B0">34</text>
+    <circle cx="530" cy="139" r="4" fill="none" stroke="#5ED9A6" stroke-width="2"/><text x="530" y="134" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#5ED9A6">~36</text>
+    <line x1="530" y1="139" x2="550" y2="145" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/>
+    <circle cx="550" cy="145" r="4" fill="none" stroke="#5ED9A6" stroke-width="2"/><text x="550" y="140" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#5ED9A6">30</text>
+    <path d="M490,65 L510,141 L530,139 L550,145 C562,115 566,70 570,45 L570,175 L490,175 Z" fill="url(#proj03)"/>
+    <line x1="550" y1="145" x2="570" y2="45" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="3 2"/>
+    <text x="570" y="40" text-anchor="end" font-family="Montserrat,sans-serif" font-size="8" font-weight="700" fill="#5ED9A6">~150</text>
+    <text x="55" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#1</text>
+    <text x="85" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#2</text>
+    <text x="115" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#3</text>
+    <text x="145" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#4</text>
+    <text x="175" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#5</text>
+    <text x="210" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#6</text>
+    <text x="240" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#7</text>
+    <text x="270" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#8</text>
+    <text x="300" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#9</text>
+    <text x="330" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#10</text>
+    <text x="360" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#11</text>
+    <text x="390" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#12</text>
+    <text x="420" y="188" text-anchor="middle" font-family="Futura,sans-serif" font-size="6" fill="#BDB2A1">#13</text>
+    <text x="455" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#14</text>
+    <text x="490" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#5ED9A6">#15</text>
+    <text x="510" y="188" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#A8C8B0">#16</text>
+    <text x="530" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="5.5" font-weight="600" fill="#5ED9A6">#17</text>
+    <text x="550" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="5.5" font-weight="600" fill="#5ED9A6">#18</text>
+    <text x="570" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#5ED9A6">Q2</text>
+    <text x="55" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Nov</text>
+    <text x="145" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Dez</text>
+    <text x="240" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Jan</text>
+    <text x="360" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Feb</text>
+    <text x="520" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Mär</text>
+    <text x="570" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Apr+</text>
+    <!-- Legend -->
+    <line x1="55" y1="212" x2="70" y2="212" stroke="#BDB2A1" stroke-width="1.5" stroke-dasharray="4"/><circle cx="62" cy="212" r="2" fill="#BDB2A1"/>
+    <text x="75" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Pre-Luma (manuell)</text>
+    <line x1="185" y1="212" x2="200" y2="212" stroke="#4A9B8C" stroke-width="2"/><circle cx="192" cy="212" r="2.5" fill="#4A9B8C"/>
+    <text x="205" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Luma Check-ins</text>
+    <line x1="300" y1="212" x2="318" y2="212" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/><circle cx="309" cy="212" r="2.5" fill="none" stroke="#5ED9A6" stroke-width="1.5"/>
+    <text x="323" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Ausgebucht / Projektion</text>
+    <polygon points="430,210 434,214 430,218 426,214" fill="#A8C8B0"/>
+    <text x="438" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Außerh. IBK</text>
+  </svg>
+
+  <div class="note"><strong>Das 27-fache der Gründung:</strong> Von 4 Teilnehmern beim ersten Event auf 110 gleichzeitig in zwei Regionen - Innsbruck und Kufstein beide ausgebucht.</div>
+</div></div>
+
+
+<!-- ═══════════ 03: FORMAT (light) ═══════════ -->
+<div class="page pg-light" id="format"><div class="pi">
+  <div class="sn">03</div>
+  <div class="sl">Das Format</div>
+  <h1>Jeden Donnerstag. Anderer Ort. Echte Praxis.</h1>
+  <p>KINN ist kein Verein, kein Meetup, keine Konferenz. Es ist eine wöchentliche Routine - wie ins Fitness Center gehen, nur für KI. Jede Woche ein anderer Gastgeber, ein anderes Thema, neue Perspektiven.</p>
+
+  <div class="kodex">
+    <div class="kodex-card">
+      <div class="kodex-num">P</div>
+      <div class="kodex-title">Peer Learning</div>
+      <div class="kodex-desc">Keine Frontalvorträge. Alle lernen voneinander - vom Studenten bis zum CTO. Wissen wird geteilt, nicht verkauft.</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">R</div>
+      <div class="kodex-title">Venue-Rotation</div>
+      <div class="kodex-desc">Jede Woche ein anderer Gastgeber. Firmen, Coworking Spaces, Hotels. Jeder Ort bringt seine eigene Energie mit.</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">O</div>
+      <div class="kodex-title">Offenheit</div>
+      <div class="kodex-desc">Kein Gatekeeping, keine VIP-Bereiche, kein Pay-to-Play. Wer kommt, ist dabei. Das ist das Geheimnis der Energie.</div>
+    </div>
+  </div>
+
+  <div class="flow">
+    <div class="flow-item"><div class="flow-label">Welcome</div><div class="flow-text">Ankommen, Netzwerken, Neue kennenlernen</div></div>
+    <div class="flow-item"><div class="flow-label">Input</div><div class="flow-text">TechTalk, Use Case, Live-Demo oder Workshop</div></div>
+    <div class="flow-item"><div class="flow-label">Exchange</div><div class="flow-text">Diskussion, Q&A, Peer-to-Peer</div></div>
+    <div class="flow-item"><div class="flow-label">Connect</div><div class="flow-text">Nachbesprechung, Projekte, Kontakte</div></div>
+  </div>
+</div></div>
+
+
+<!-- ═══════════ 04: COMMUNITY (dark + glass cards) ═══════════ -->
+<div class="page pg-dark" id="community"><div class="pi">
+  <div class="sn">04</div>
+  <div class="sl">Die Leute</div>
+  <h1>Wer bei KINN dabei ist</h1>
+  <p>Der Querschnitt von Tirols KI-Szene - und darüber hinaus. Entwickler, Designer, Gründer, KMU-Entscheider, Studierende, Forschende. Was sie verbindet: echtes Interesse an KI, nicht nur Hype.</p>
+
+  <div class="phases">
+    <div class="phase active">
+      <div class="phase-label">Macher</div>
+      <div class="phase-title">Entwickler & Techniker</div>
+      <div class="phase-body">Leute, die KI-Systeme tatsächlich bauen und implementieren. Vom Freelancer bis zum Team Lead. Hands-on Erfahrung mit LLMs, Computer Vision, Automatisierung.</div>
+    </div>
+    <div class="phase active">
+      <div class="phase-label">Entscheider</div>
+      <div class="phase-title">Gründer & Führungskräfte</div>
+      <div class="phase-body">Unternehmer, die KI in ihren Betrieb integrieren wollen. Startups, die KI-Produkte bauen. KMU-Entscheider, die den Anschluss nicht verlieren wollen.</div>
+    </div>
+    <div class="phase active">
+      <div class="phase-label">Zukunft</div>
+      <div class="phase-title">Forschung & Nachwuchs</div>
+      <div class="phase-body">MCI, Uni Innsbruck, FH Kufstein. Studierende, die den Praxisbezug suchen. Forschende, die ihre Arbeit in die Wirtschaft bringen wollen.</div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>KINN ist der Ort, an dem sich Leute treffen, die KI nicht nur diskutieren, sondern tatsächlich damit arbeiten. Jede Woche.</p>
+  </div>
+</div></div>
+
+
+<!-- ═══════════ 05: MOMENTUM (light-alt) ═══════════ -->
+<div class="page pg-light-alt" id="momentum"><div class="pi">
+  <div class="sn">05</div>
+  <div class="sl">Wachstum</div>
+  <h1>Was gerade passiert</h1>
+  <p class="sub">4 Monate alt, aber die Dynamik eines Ökosystems</p>
+
+  <div class="cmap-section">Chapters - mit lokalen Leaders</div>
+  <div class="cmap">
+    <div class="cmap-region hub">
+      <div class="cmap-badge">Hub</div>
+      <div class="cmap-name">Innsbruck</div>
+      <div class="cmap-city">Wöchentlich - 14 Spielorte in Rotation</div>
+      <div class="cmap-stat">550+ Teilnehmer gesamt</div>
+    </div>
+    <div class="cmap-region chapter">
+      <div class="cmap-badge">Chapter - Live</div>
+      <div class="cmap-name">Kufstein</div>
+      <div class="cmap-city">Unterland - seit März 2026</div>
+      <div class="cmap-stat">Lokales Team, eigene Events</div>
+    </div>
+    <div class="cmap-region pipeline">
+      <div class="cmap-badge">Pipeline</div>
+      <div class="cmap-name">Reutte</div>
+      <div class="cmap-city">Außerfern - in Aufbau</div>
+      <div class="cmap-stat">Leader rekrutiert</div>
+    </div>
+  </div>
+
+  <div class="cmap-section">Weitere Regionen - in Planung</div>
+  <div class="cmap">
+    <div class="cmap-region pipeline">
+      <div class="cmap-badge">Scouting</div>
+      <div class="cmap-name">Lienz</div>
+      <div class="cmap-city">Osttirol</div>
+      <div class="cmap-stat">Leader gesucht</div>
+    </div>
+    <div class="cmap-region pipeline">
+      <div class="cmap-badge">Scouting</div>
+      <div class="cmap-name">Landeck</div>
+      <div class="cmap-city">Oberland</div>
+      <div class="cmap-stat">Leader gesucht</div>
+    </div>
+    <div class="cmap-region pipeline" style="border:none;background:transparent;display:flex;align-items:center;justify-content:center">
+      <div class="cmap-stat" style="text-align:center">+ weitere Regionen<br>folgen</div>
+    </div>
+  </div>
+
+  <h2>Meilensteine</h2>
+
+  <div class="tl">
+    <div class="tl-item">
+      <div class="tl-date">Nov 2025</div>
+      <div class="tl-text">Gründung KINN - erstes Event mit 30+ Teilnehmern</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Dez 2025</div>
+      <div class="tl-text">Warteliste etabliert - Events regelmäßig ausgebucht</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Feb 2026</div>
+      <div class="tl-text">Die Community hat sich innerhalb weniger Monate als fester Bestandteil des Tiroler KI-Ökosystems etabliert</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Mär 2026</div>
+      <div class="tl-text">Aktive Partnerschaften mit WKO Tirol, FH Kufstein, AI Collective und weiteren</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Ohne Förderung, ohne Marketing:</strong> Alles rein organisch. Die Nachfrage war immer größer als das Angebot. Das spricht für sich.</div>
+</div></div>
+
+
+<!-- ═══════════ 06: PRINZIPIEN (dark + glass kodex) ═══════════ -->
+<div class="page pg-dark" id="prinzipien"><div class="pi">
+  <div class="sn">06</div>
+  <div class="sl">Wie wir arbeiten</div>
+  <h1>Prinzipien, nicht Regeln</h1>
+  <p>KINN funktioniert, weil die Grundsätze stimmen. Kein Overhead, keine Bürokratie - aber klare Werte, die jeder kennt.</p>
+
+  <div class="kodex">
+    <div class="kodex-card">
+      <div class="kodex-num">1</div>
+      <div class="kodex-title">Gleichbehandlung</div>
+      <div class="kodex-desc">KINN bevorzugt niemanden. Keine VIP-Listen, keine Premium-Platzierungen. Jeder hat die gleichen Chancen.</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">2</div>
+      <div class="kodex-title">Praxis vor Theorie</div>
+      <div class="kodex-desc">Echte Use Cases, echte Implementierungen, echte Erfahrungen. Kein Slide-Karaoke, keine leeren Versprechen.</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">3</div>
+      <div class="kodex-title">Community First</div>
+      <div class="kodex-desc">Was gut ist für die Community, ist gut für alle. Kommerzielle Interessen sind willkommen - aber nie auf Kosten der Gemeinschaft.</div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>Wir entscheiden nicht, wer gut ist und wer schlecht. Wir bieten eine Plattform. Der Rest passiert von alleine.</p>
+  </div>
+</div></div>
+
+
+<!-- ═══════════ FOOTER (dark, matching cover) ═══════════ -->
+<div class="page pg-footer"><div class="pi">
+  <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg" style="width:100px;fill:var(--ecru-white);margin-bottom:0.75rem;filter:drop-shadow(0 0 20px rgba(94,217,166,0.2))"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+  <div style="font-size:0.85rem;color:var(--spring-rain)">Tirols KI-Community</div>
+  <div style="font-size:0.72rem;color:var(--kangaroo);margin-top:1rem;font-style:italic">kinn.at - Jeden Donnerstag - Offen für alle</div>
+</div></div>
+
+</body>
+</html>

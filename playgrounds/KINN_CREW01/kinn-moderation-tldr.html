@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN:MODERATION · TL;DR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --mintgreen:   #5ED9A6;
+      --heavy-metal: #2B3228;
+      --ecru-white:  #F5F0E6;
+      --spring-rain: #A8C8B0;
+      --teal:        #4A9B8C;
+      --dark-teal:   #2D6B60;
+      --malta:       #BDB2A1;
+    }
+    @font-face { font-family: 'Futura'; src: local('Futura'), local('Futura-Medium'), local('FuturaPT-Book'); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Futura', 'Work Sans', system-ui, sans-serif;
+      background: #C8C4BC;
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh; padding: 2rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      width: 148mm; height: 210mm;
+      background: var(--ecru-white);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.22);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    /* HEADER */
+    .hdr {
+      background: var(--heavy-metal); padding: 4mm 7mm;
+      display: flex; align-items: center; gap: 4mm; flex-shrink: 0;
+    }
+    .hdr svg { width: 21mm; fill: var(--ecru-white); display: block; flex-shrink: 0; }
+    .hdr-div { width: 1px; height: 6.5mm; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+    .hdr-ey  { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 5pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mintgreen); margin-bottom: 0.8mm; }
+    .hdr-t   { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 14pt; color: var(--ecru-white); letter-spacing: -0.01em; line-height: 1; }
+    .hdr-tldr{ margin-left: auto; flex-shrink: 0; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 8pt; letter-spacing: 0.1em; color: rgba(255,255,255,0.18); }
+    .mint-bar{ height: 2px; background: linear-gradient(90deg, var(--mintgreen) 0%, transparent 100%); flex-shrink: 0; }
+
+    /* BODY */
+    .body {
+      padding: 4mm 7mm 3.5mm;
+      flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* section label */
+    .sl {
+      font-family: 'Montserrat', sans-serif; font-weight: 900;
+      font-size: 4.8pt; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 1.8mm;
+      display: flex; align-items: center; gap: 2mm;
+    }
+    .sl::after { content: ''; flex: 1; height: 1px; background: rgba(43,50,40,0.1); }
+
+    /* CORE */
+    .core {
+      background: var(--heavy-metal); border-radius: 2.5mm;
+      padding: 3.5mm 4.5mm; display: flex; align-items: center; gap: 3mm;
+    }
+    .core-bar { width: 3px; align-self: stretch; background: var(--mintgreen); border-radius: 2px; flex-shrink: 0; }
+    .core-t { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 11.5pt; color: var(--ecru-white); line-height: 1.25; letter-spacing: -0.01em; }
+    .core-s { font-family: 'Futura', sans-serif; font-size: 7pt; color: var(--spring-rain); margin-top: 1.5mm; line-height: 1.5; }
+
+    /* VALUES */
+    .values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8mm; }
+    .val {
+      background: #fff; border: 1px solid rgba(43,50,40,0.08);
+      border-top: 2.5px solid var(--mintgreen); border-radius: 2mm; padding: 2mm 2.5mm;
+    }
+    .vn { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 7pt; color: var(--heavy-metal); margin-bottom: 0.8mm; }
+    .vd { font-family: 'Futura', sans-serif; font-size: 6pt; color: #6B7068; line-height: 1.4; }
+
+    /* ROLLE */
+    .roles {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(43,50,40,0.09); border-radius: 2.5mm; overflow: hidden;
+    }
+    .rc { padding: 2.5mm 3mm; }
+    .rc:first-child { background: rgba(94,217,166,0.07); border-right: 1px solid rgba(43,50,40,0.08); }
+    .rc:last-child  { background: rgba(212,104,74,0.05); }
+    .rch {
+      font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 7.5pt;
+      padding-bottom: 1.5mm; border-bottom: 1px solid rgba(43,50,40,0.1); margin-bottom: 1.5mm;
+    }
+    .rc:first-child .rch { color: var(--dark-teal); }
+    .rc:last-child  .rch { color: #B03828; }
+    .ri {
+      font-family: 'Futura', sans-serif; font-size: 6.5pt; color: #484D44; line-height: 1.45;
+      padding: 1.1mm 0; border-bottom: 1px solid rgba(43,50,40,0.05);
+      display: flex; gap: 1.5mm;
+    }
+    .ri:last-child { border-bottom: none; padding-bottom: 0; }
+    .rc:first-child .ri::before { content: '✓'; color: var(--mintgreen); font-weight: bold; flex-shrink: 0; }
+    .rc:last-child  .ri::before { content: '✗'; color: #D4684A; font-weight: bold; flex-shrink: 0; }
+
+    /* BOTTOM TWO-COL */
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; }
+
+    /* Impulsfragen — compact list, no card-per-item */
+    .fq-list { display: flex; flex-direction: column; gap: 0; }
+    .fq {
+      font-family: 'Futura', sans-serif; font-size: 7pt; color: var(--heavy-metal); line-height: 1.45;
+      padding: 1.5mm 0; border-bottom: 1px solid rgba(43,50,40,0.06);
+      display: flex; gap: 2mm; align-items: baseline;
+    }
+    .fq:last-child { border-bottom: none; }
+    .fq-m { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 8pt; color: var(--mintgreen); flex-shrink: 0; line-height: 1; }
+
+    /* Edge cases — compact list, no card-per-item */
+    .edges { display: flex; flex-direction: column; gap: 0; }
+    .edge { padding: 1.5mm 0; border-bottom: 1px solid rgba(43,50,40,0.06); }
+    .edge:last-child { border-bottom: none; }
+    .e-t { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 7pt; color: var(--heavy-metal); margin-bottom: 0.8mm; }
+    .e-a {
+      font-family: 'Futura', sans-serif; font-size: 6.5pt; color: #484D44; line-height: 1.45;
+      display: flex; gap: 1.5mm;
+    }
+    .e-a::before { content: '→'; color: var(--mintgreen); font-weight: bold; flex-shrink: 0; font-size: 6pt; }
+
+    /* TIMEBAR */
+    .timebar {
+      background: #fff; border: 1px solid rgba(43,50,40,0.08);
+      border-left: 3px solid var(--mintgreen); border-radius: 0 2mm 2mm 0;
+      padding: 2.5mm 3.5mm; display: flex; gap: 3mm; align-items: center;
+    }
+    .tb-num { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 12pt; color: var(--mintgreen); flex-shrink: 0; line-height: 1; }
+    .tb-txt { font-family: 'Futura', sans-serif; font-size: 6.5pt; color: #484D44; line-height: 1.5; }
+    .tb-txt strong { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--heavy-metal); }
+
+    /* FOOTER */
+    .ftr {
+      background: var(--heavy-metal); padding: 2.2mm 7mm; flex-shrink: 0;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .fl { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 5pt; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+    .fr { font-family: 'Futura', sans-serif; font-size: 5pt; color: rgba(255,255,255,0.14); }
+
+    @media print {
+      @page { size: A5 portrait; margin: 0; }
+      body { background: none; padding: 0; }
+      .card { box-shadow: none; width: 100%; height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <header class="hdr">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/>
+      <path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/>
+      <polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/>
+      <path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/>
+    </svg>
+    <div class="hdr-div"></div>
+    <div>
+      <div class="hdr-ey">Tischmoderator:innen</div>
+      <div class="hdr-t">KINN:MODERATION</div>
+    </div>
+    <div class="hdr-tldr">TL;DR</div>
+  </header>
+  <div class="mint-bar"></div>
+
+  <div class="body">
+
+    <!-- Core -->
+    <div class="core">
+      <div class="core-bar"></div>
+      <div>
+        <div class="core-t">Raum öffnen, nicht diktieren.</div>
+        <div class="core-s">Du musst nicht die klügste Person am Tisch sein — nur die aufmerksamste. Deine Frage ist wichtiger als deine Antwort.</div>
+      </div>
+    </div>
+
+    <!-- Werte -->
+    <div>
+      <div class="sl">Werte</div>
+      <div class="values">
+        <div class="val"><div class="vn">Augenhöhe</div><div class="vd">CEO = Student. Kein Titel bestimmt Redezeit.</div></div>
+        <div class="val"><div class="vn">Kein Pitching</div><div class="vd">KINN ist kein Vertriebskanal.</div></div>
+        <div class="val"><div class="vn">Für alle</div><div class="vd">Kein Gatekeeping, kein Insider-Zirkel.</div></div>
+        <div class="val"><div class="vn">Safe Space</div><div class="vd">Fehler dürfen geteilt werden.</div></div>
+        <div class="val"><div class="vn">Neugier</div><div class="vd">Fragen, weil du's wissen willst.</div></div>
+        <div class="val"><div class="vn">Transparenz</div><div class="vd">Nicht wissen? Sag es.</div></div>
+      </div>
+    </div>
+
+    <!-- Rolle -->
+    <div>
+      <div class="sl">Deine Rolle</div>
+      <div class="roles">
+        <div class="rc">
+          <div class="rch">Das tust du</div>
+          <div class="ri">Mit einer Frage eröffnen</div>
+          <div class="ri">Stille aushalten</div>
+          <div class="ri">Alle einladen, nicht nur die Lauten</div>
+          <div class="ri">Verbindungen sichtbar machen</div>
+          <div class="ri">Kurz zusammenfassen am Ende</div>
+        </div>
+        <div class="rc">
+          <div class="rch">Das tust du nicht</div>
+          <div class="ri">Eigene Meinung als Wahrheit</div>
+          <div class="ri">Eigenes Produkt bewerben</div>
+          <div class="ri">Gespräch dominieren</div>
+          <div class="ri">Pitches zulassen</div>
+          <div class="ri">Urteile über Personen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fragen + Edge Cases -->
+    <div class="two">
+      <div>
+        <div class="sl">Impulsfragen</div>
+        <div class="fq-list">
+          <div class="fq"><span class="fq-m">?</span>Was ist dein größtes KI-Bottleneck gerade?</div>
+          <div class="fq"><span class="fq-m">?</span>Welches Tool habt ihr zuletzt ausprobiert?</div>
+          <div class="fq"><span class="fq-m">?</span>Was hat funktioniert — und was nicht?</div>
+          <div class="fq"><span class="fq-m">?</span>Wer am Tisch hat ähnliche Erfahrungen?</div>
+          <div class="fq"><span class="fq-m">?</span>Was nehmt ihr mit — mit wem weiterreden?</div>
+        </div>
+      </div>
+      <div>
+        <div class="sl">Was tun wenn…</div>
+        <div class="edges">
+          <div class="edge">
+            <div class="e-t">… jemand pitcht</div>
+            <div class="e-a">„Wäre das ein Thema für einen TechTalk?" — zurück zur Frage.</div>
+          </div>
+          <div class="edge">
+            <div class="e-t">… Gespräch stockt</div>
+            <div class="e-a">Stille aushalten. Dann: „Was habt ihr diese Woche gemacht?"</div>
+          </div>
+          <div class="edge">
+            <div class="e-t">… jemand dominiert</div>
+            <div class="e-a">Andere einladen: „Was ist eure Erfahrung?" Blick zu den Stillen.</div>
+          </div>
+          <div class="edge">
+            <div class="e-t">… du nichts weißt</div>
+            <div class="e-a">„Weiß jemand mehr?" — Nichtwissen ist eine Einladung.</div>
+          </div>
+          <div class="edge">
+            <div class="e-t">… Stimmung kippt</div>
+            <div class="e-a">„Sollen wir kurz innehalten?" Raum geben, nicht lösen.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timebar -->
+    <div class="timebar">
+      <div class="tb-num">30–40'</div>
+      <div class="tb-txt">Das KINN-Team gibt das Ende an — je nach Eventgröße früher. <strong>Vorstellungen kurz: ein Satz pro Person.</strong> Dein Ziel: jede Person kommt mindestens einmal zu Wort.</div>
+    </div>
+
+  </div>
+
+  <footer class="ftr">
+    <div class="fl">KINN · kinn.at · März 2026</div>
+    <div class="fr">Niemand sollte bei KI allein dastehen. Wir treffen uns. Jede Woche.</div>
+  </footer>
+
+</div>
+</body>
+</html>

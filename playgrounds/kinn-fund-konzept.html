@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN:FUND - Community-Finanzierungskonzept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family:'Futura'; src:local('Futura'),local('Futura-Medium'),local('FuturaPT-Book'); font-weight:400; }
+    :root {
+      --mintgreen:#5ED9A6; --heavy-metal:#2B3228; --ecru-white:#F5F0E6; --spring-rain:#A8C8B0;
+      --malta:#BDB2A1; --kangaroo:#C6C3B5; --teal:#4A9B8C; --dark-teal:#2D6B60; --cream:#F5F1E8;
+      --mint-glow:rgba(94,217,166,0.15); --mint-subtle:rgba(94,217,166,0.08);
+      --bg:var(--ecru-white); --text:var(--heavy-metal); --text-muted:#6B7068;
+      --surface:#FFFFFF; --border:rgba(43,50,40,0.1);
+      --warn:#D4956A; --warn-bg:rgba(212,149,106,0.08);
+    }
+    *{margin:0;padding:0;box-sizing:border-box} html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Futura','Work Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.618;-webkit-font-smoothing:antialiased}
+    a.ext{color:var(--teal);text-decoration:none;border-bottom:1px solid var(--mint-glow);transition:border-color 0.2s}
+    a.ext:hover{border-color:var(--mintgreen)} a.ext::after{content:'\2009\2197';font-size:0.75em;opacity:0.5}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,240,230,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.6rem 2rem;display:flex;align-items:center;gap:1.5rem}
+    nav .logo-nav{display:flex;align-items:center;text-decoration:none} nav .logo-nav svg{height:18px;width:auto;fill:var(--heavy-metal)}
+    nav .nav-links{display:flex;gap:0.15rem;flex-wrap:wrap}
+    nav a.nl{font-family:'Futura','Work Sans',sans-serif;font-size:0.7rem;color:var(--text-muted);text-decoration:none;padding:0.3rem 0.55rem;border-radius:6px;transition:all 0.2s;letter-spacing:0.04em;text-transform:uppercase}
+    nav a.nl:hover{background:var(--mint-glow);color:var(--heavy-metal)}
+    nav .nav-tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--mintgreen);color:var(--heavy-metal);padding:0.2rem 0.5rem;border-radius:4px;margin-left:auto}
+
+    .page{min-height:100vh;padding:5.5rem 2rem 4rem;display:flex;align-items:center;justify-content:center;position:relative}
+    .pi{max-width:920px;width:100%}
+    .page::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 30%,var(--mint-subtle) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(168,200,176,0.06) 0%,transparent 50%);pointer-events:none}
+    .page:nth-child(even){background:linear-gradient(180deg,var(--ecru-white) 0%,#F0EBE1 100%)}
+    .page:nth-child(even)::before{background:radial-gradient(circle at 70% 20%,rgba(189,178,161,0.08) 0%,transparent 50%),radial-gradient(circle at 30% 80%,var(--mint-subtle) 0%,transparent 50%)}
+    .page.pg-fund{background:linear-gradient(180deg,rgba(94,217,166,0.04) 0%,rgba(94,217,166,0.08) 100%);border-left:3px solid var(--mintgreen)}
+    .page.pg-fc{background:linear-gradient(180deg,rgba(189,178,161,0.06) 0%,rgba(189,178,161,0.1) 100%);border-left:3px solid var(--malta)}
+    .page.pg-mix{background:linear-gradient(180deg,rgba(94,217,166,0.03) 0%,rgba(189,178,161,0.07) 100%);border-left:3px solid var(--spring-rain)}
+
+    .cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+    .cover::before{content:'';position:absolute;top:-20%;left:-20%;width:140%;height:140%;background:radial-gradient(ellipse at 30% 20%,rgba(94,217,166,0.12) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(168,200,176,0.08) 0%,transparent 60%);pointer-events:none;animation:cp 12s ease-in-out infinite}
+    @keyframes cp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:0.8}}
+    .cl{width:320px;max-width:70%;margin:0 auto 1rem;z-index:1;position:relative} .cl svg{width:100%;height:auto;fill:var(--heavy-metal);filter:drop-shadow(0 4px 16px rgba(0,0,0,0.06))}
+    .ct{font-size:0.9rem;color:var(--text-muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:2rem;z-index:1;position:relative}
+    .ch{font-family:'Montserrat',sans-serif;font-weight:800;font-size:2.5rem;color:var(--heavy-metal);margin-bottom:1rem;z-index:1;position:relative}
+    .cs{font-size:1rem;color:var(--text-muted);margin-bottom:0.5rem;z-index:1;position:relative}
+    .cb{display:inline-block;font-size:0.75rem;color:var(--heavy-metal);background:var(--mint-glow);border:1px solid rgba(94,217,166,0.3);padding:0.4rem 1rem;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;margin-top:3rem;z-index:1;position:relative}
+    .ml{width:60px;height:3px;background:var(--mintgreen);border-radius:2px;margin:1.5rem auto;z-index:1;position:relative}
+
+    h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.5rem;color:var(--heavy-metal);letter-spacing:0.02em;line-height:1.15;margin-bottom:1.5rem}
+    h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.5rem;color:var(--heavy-metal);line-height:1.3;margin-top:2.5rem;margin-bottom:1rem}
+    h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.1rem;color:var(--teal);margin-top:1.5rem;margin-bottom:0.75rem}
+    p{margin-bottom:1rem;line-height:1.7}
+    .sn{font-family:'Montserrat',sans-serif;font-weight:900;font-size:4rem;color:var(--spring-rain);opacity:0.4;line-height:1;margin-bottom:-0.5rem}
+    .sl{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .kb{font-family:'Montserrat',sans-serif;font-weight:900}
+    .sub{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--teal);letter-spacing:0.04em;margin-bottom:1.25rem}
+
+    .st-wrap{overflow-x:auto;margin:1.25rem 0 1.5rem;border-radius:12px;border:1px solid var(--border);-webkit-overflow-scrolling:touch}
+    .st{width:100%;min-width:480px;border-collapse:separate;border-spacing:0}
+    .st th{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;text-align:left;padding:0.75rem 1rem;background:var(--heavy-metal);color:var(--ecru-white)}
+    .st td{padding:0.65rem 1rem;font-size:0.9rem;border-bottom:1px solid var(--border)} .st tr:last-child td{border-bottom:none}
+    .st tr:nth-child(even) td{background:rgba(168,200,176,0.06)} .st td:first-child{font-weight:600;color:var(--heavy-metal)}
+
+    .note{background:rgba(94,217,166,0.08);border-left:3px solid var(--mintgreen);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem} .note strong{color:var(--teal)}
+    .warn{background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem} .warn strong{color:#B07840}
+
+    /* Tier cards */
+    .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .tier{background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:1.75rem 1.5rem;position:relative;transition:transform 0.2s,box-shadow 0.2s}
+    .tier:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.08)}
+    .tier.featured{border-color:var(--mintgreen);box-shadow:0 4px 20px rgba(94,217,166,0.15)}
+    .tier-badge{position:absolute;top:-10px;left:1rem;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.7rem;border-radius:4px;background:var(--kangaroo);color:var(--surface)}
+    .tier.featured .tier-badge{background:var(--mintgreen);color:var(--heavy-metal)}
+    .tier-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.15rem;color:var(--heavy-metal);margin-top:0.5rem;margin-bottom:0.25rem}
+    .tier-price{font-family:'Montserrat',sans-serif;font-weight:800;font-size:2rem;color:var(--teal);line-height:1.1;margin-bottom:0.15rem}
+    .tier-price span{font-size:0.8rem;font-weight:600;color:var(--text-muted)}
+    .tier-year{font-size:0.8rem;color:var(--kangaroo);margin-bottom:1rem}
+    .tier-desc{font-size:0.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:1rem}
+    .tier-features{list-style:none;font-size:0.85rem}
+    .tier-features li{padding:0.35rem 0 0.35rem 1.5rem;position:relative;border-bottom:1px solid var(--border)}
+    .tier-features li:last-child{border-bottom:none}
+    .tier-features li::before{content:'';position:absolute;left:0;top:0.55rem;width:10px;height:10px;border-radius:50%;background:var(--spring-rain)}
+    .tier.featured .tier-features li::before{background:var(--mintgreen)}
+
+    /* Phase cards */
+    .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .phase{background:var(--surface);border-radius:16px;padding:1.75rem 1.5rem;border:1px solid var(--border);position:relative;overflow:hidden}
+    .phase::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--spring-rain)}
+    .phase.active::before{background:var(--mintgreen)}
+    .phase.future::before{background:var(--kangaroo)}
+    .phase-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:0.5rem}
+    .phase-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--heavy-metal);margin-bottom:0.25rem}
+    .phase-target{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.5rem;color:var(--mintgreen);margin-bottom:0.75rem}
+    .phase-body{font-size:0.88rem;color:var(--text-muted);line-height:1.6}
+
+    /* Flow diagram */
+    .flow{display:flex;align-items:stretch;gap:0;margin:1.5rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .flow-item{flex:1;padding:1.25rem 1rem;background:var(--surface);position:relative;text-align:center}
+    .flow-item:not(:last-child){border-right:1px solid var(--border)}
+    .flow-item:not(:last-child)::after{content:'→';position:absolute;right:-0.6rem;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--mintgreen);z-index:2;background:var(--surface);width:1.2rem;height:1.2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;line-height:1}
+    .flow-icon{font-size:1.5rem;margin-bottom:0.5rem}
+    .flow-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .flow-text{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
+
+    /* Stakeholder grid */
+    .stake{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.5rem 0}
+    .stake-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;position:relative}
+    .stake-card::before{content:'';position:absolute;top:0;left:1rem;right:1rem;height:2px;border-radius:1px}
+    .stake-card.direct::before{background:var(--mintgreen)}
+    .stake-card.indirect::before{background:var(--spring-rain)}
+    .stake-icon{font-size:1.25rem;margin-bottom:0.5rem}
+    .stake-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.95rem;color:var(--heavy-metal);margin-bottom:0.5rem}
+    .stake-body{font-size:0.88rem;color:var(--text-muted);line-height:1.6}
+
+    /* Progress bars */
+    .prog{margin:1.5rem 0}
+    .prog-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem}
+    .prog-label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.8rem;color:var(--heavy-metal);width:120px;text-align:right;flex-shrink:0}
+    .prog-bar{flex:1;height:28px;background:rgba(43,50,40,0.05);border-radius:8px;overflow:hidden;position:relative}
+    .prog-fill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:0.75rem;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;color:white;transition:width 0.6s ease}
+    .prog-fill.mint{background:linear-gradient(90deg,var(--teal),var(--mintgreen))}
+    .prog-fill.spring{background:linear-gradient(90deg,var(--spring-rain),var(--teal))}
+    .prog-fill.warm{background:linear-gradient(90deg,var(--malta),var(--warn))}
+
+    /* Metric boxes */
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+    .metric{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+    .metric-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.8rem;color:var(--teal);line-height:1.1}
+    .metric-unit{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;color:var(--kangaroo);letter-spacing:0.05em;text-transform:uppercase;margin-top:0.15rem}
+    .metric-label{font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem}
+
+    /* Firewall diagram */
+    .firewall{display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin:1.5rem 0;align-items:stretch}
+    .fw-side{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+    .fw-wall{width:4px;background:repeating-linear-gradient(180deg,var(--mintgreen) 0px,var(--mintgreen) 8px,transparent 8px,transparent 16px);margin:0 1.5rem;border-radius:2px;position:relative;min-height:160px}
+    .fw-wall-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-90deg);font-family:'Montserrat',sans-serif;font-weight:900;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mintgreen);white-space:nowrap;background:var(--bg);padding:0.25rem 0.5rem}
+    .fw-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1rem;color:var(--heavy-metal);margin-bottom:0.75rem}
+    .fw-items{font-size:0.85rem;color:var(--text-muted);line-height:1.8;text-align:left;display:inline-block}
+
+    /* Timeline */
+    .timeline{position:relative;margin:2rem 0;padding-left:2.5rem}
+    .timeline::before{content:'';position:absolute;left:0.5rem;top:0;bottom:0;width:2px;background:var(--spring-rain);border-radius:1px}
+    .tl-item{position:relative;margin-bottom:1.5rem}
+    .tl-item::before{content:'';position:absolute;left:-2.5rem;top:0.35rem;width:12px;height:12px;border-radius:50%;background:var(--surface);border:3px solid var(--spring-rain)}
+    .tl-item.active::before{border-color:var(--mintgreen);background:var(--mintgreen)}
+    .tl-item.next::before{border-color:var(--teal);background:var(--surface)}
+    .tl-date{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:0.15rem}
+    .tl-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.95rem;color:var(--heavy-metal);margin-bottom:0.25rem}
+    .tl-body{font-size:0.88rem;color:var(--text-muted);line-height:1.5}
+
+    /* Transparency mockup */
+    .transp{background:var(--surface);border:2px solid var(--spring-rain);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative}
+    .transp-badge{position:absolute;top:-10px;left:1.5rem;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--spring-rain);color:var(--heavy-metal);padding:0.2rem 0.6rem;border-radius:4px}
+    .transp-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--heavy-metal);margin-bottom:0.25rem;margin-top:0.25rem}
+    .transp-sub{font-size:0.85rem;color:var(--kangaroo);margin-bottom:1.25rem}
+    .bar-row{display:flex;height:32px;border-radius:8px;overflow:hidden;margin-bottom:0.75rem}
+    .bar-seg{display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.65rem;color:white;letter-spacing:0.03em;transition:flex 0.4s}
+    .bar-legend{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.5rem}
+    .bar-legend-item{display:flex;align-items:center;gap:0.35rem;font-size:0.8rem;color:var(--text-muted)}
+    .bar-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+    /* Quote */
+    .quote{display:block;border-left:3px solid var(--mintgreen);padding:1rem 1.5rem;margin:1.25rem 0;background:var(--mint-glow);border-radius:0 12px 12px 0}
+    .quote p{font-size:1rem;font-style:italic;color:var(--heavy-metal);margin-bottom:0.35rem;line-height:1.6}
+    .quote cite{font-size:0.8rem;color:var(--teal);font-style:normal;font-family:'Montserrat',sans-serif;font-weight:700}
+
+    /* Cause cards */
+    .causes{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.5rem 0}
+    .cause:first-child{grid-column:1/-1;border-color:var(--mintgreen);box-shadow:0 4px 20px rgba(94,217,166,0.12)}
+    .cause{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;position:relative;overflow:hidden}
+    .cause-status{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.5rem;border-radius:4px;display:inline-block;margin-bottom:0.75rem}
+    .cause-status.open{background:var(--mint-glow);color:var(--teal)}
+    .cause-status.planned{background:rgba(189,178,161,0.15);color:var(--malta)}
+    .cause-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1rem;color:var(--heavy-metal);margin-bottom:0.35rem}
+    .cause-amount{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--teal);margin-bottom:0.5rem}
+    .cause-desc{font-size:0.85rem;color:var(--text-muted);line-height:1.5}
+    .cause-bar{height:6px;background:rgba(43,50,40,0.06);border-radius:3px;margin-top:0.75rem;overflow:hidden}
+    .cause-bar-fill{height:100%;border-radius:3px;background:var(--mintgreen)}
+
+    /* Pillar cards */
+    .pillars{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;margin:1.5rem 0}
+    .pillar{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;position:relative;overflow:hidden}
+    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--spring-rain)}
+    .pillar.highlight::before{background:var(--mintgreen)}
+    .pillar.highlight{border-color:var(--mintgreen);box-shadow:0 4px 20px rgba(94,217,166,0.15)}
+    .pillar-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:var(--spring-rain);line-height:1}
+    .pillar.highlight .pillar-num{color:var(--mintgreen)}
+    .pillar-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.95rem;color:var(--heavy-metal);margin:0.25rem 0}
+    .pillar-desc{font-size:0.85rem;color:var(--text-muted);line-height:1.5}
+
+    /* Action items */
+    .actions{list-style:none;margin:1.25rem 0}
+    .actions li{padding:0.5rem 0 0.5rem 2rem;position:relative;font-size:0.9rem;border-bottom:1px solid var(--border)}
+    .actions li:last-child{border-bottom:none}
+    .actions li::before{content:'☐';position:absolute;left:0.25rem;top:0.5rem;font-size:1rem;color:var(--teal)}
+
+    @media(max-width:768px){
+      .cl{width:220px}.ch{font-size:1.75rem}h1{font-size:1.75rem}
+      .tiers,.phases{grid-template-columns:1fr}.stake,.causes,.pillars{grid-template-columns:1fr}
+      .metrics{grid-template-columns:repeat(2,1fr)}.flow{flex-direction:column}
+      .flow-item:not(:last-child){border-right:none;border-bottom:1px solid var(--border)}
+      .flow-item:not(:last-child)::after{display:none}
+      .firewall{grid-template-columns:1fr}.fw-wall{width:100%;height:4px;min-height:auto;margin:0.75rem 0;background:repeating-linear-gradient(90deg,var(--mintgreen) 0px,var(--mintgreen) 8px,transparent 8px,transparent 16px)}
+      .fw-wall-label{transform:translate(-50%,-50%) rotate(0deg)}
+      nav .nav-links{display:none}.prog-label{width:80px;font-size:0.7rem}
+    }
+    @media print{nav{display:none}.page{min-height:auto;page-break-after:always;padding:2rem}body{background:white}}
+    [id]{scroll-margin-top:4rem}
+
+    /* Expandable source/detail blocks */
+    details.src{margin:0.75rem 0;border-left:2px solid var(--spring-rain);border-radius:0 6px 6px 0;background:rgba(168,200,176,0.06)}
+    details.src summary{cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.03em;color:var(--teal);padding:0.5rem 0.75rem;list-style:none;display:flex;align-items:center;gap:0.4rem;user-select:none}
+    details.src summary::-webkit-details-marker{display:none}
+    details.src summary::before{content:'▸';font-size:0.7rem;transition:transform 0.2s}
+    details.src[open] summary::before{transform:rotate(90deg)}
+    details.src .src-body{padding:0.25rem 0.75rem 0.75rem;font-size:0.82rem;color:var(--text-muted);line-height:1.65}
+    details.src .src-body a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(74,155,140,0.25)}
+    details.src .src-body a:hover{border-color:var(--mintgreen)}
+    details.src .src-body ul{margin:0.25rem 0 0;padding-left:1.1rem}
+    details.src .src-body li{margin-bottom:0.2rem}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#cover" class="logo-nav"><svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg></a>
+  <div class="nav-links">
+    <a href="#warum" class="nl">Warum</a><a href="#modell" class="nl">Modell</a><a href="#stufen" class="nl">Stufen</a><a href="#skalierung" class="nl">Skalierung</a><a href="#causes" class="nl">Causes</a><a href="#transparenz" class="nl">Transparenz</a><a href="#profiteure" class="nl">Kreislauf</a><a href="#firewall" class="nl">Firewall</a><a href="#architektur" class="nl">Architektur</a><a href="#recht" class="nl">Recht</a><a href="#timeline" class="nl">Timeline</a>
+  </div>
+  <div class="nav-tag">Konzept v2.3</div>
+</nav>
+
+<!-- COVER -->
+<div class="page cover" id="cover">
+  <div>
+    <div class="cl"><svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg></div>
+    <div class="ct">Tirols KI-Community</div>
+    <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;color:var(--mintgreen);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;z-index:1;position:relative">:FUND</div>
+    <div class="ml"></div>
+    <div class="ch">Community-Finanzierung<br>durch radikale Transparenz</div>
+    <div class="cs">Micro-Crowdfunding & Stufenmodell</div>
+    <div class="cs">Ein Libra Innovation FlexCo Konzept</div>
+    <div class="cs" style="font-size:0.85rem;color:var(--kangaroo);margin-top:1rem">Internes Strategiepapier - Februar 2026</div>
+    <div class="cb"><a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a></div>
+  </div>
+</div>
+
+<!-- 01 WARUM -->
+<div class="page pg-fund" id="warum"><div class="pi">
+  <div class="sn">01</div><div class="sl">Ausgangslage</div>
+  <h1>Warum Community-Finanzierung?</h1>
+  <div class="sub">Von "wir brauchen Geld" zu "wir wollen gemeinsam etwas tragen"</div>
+
+  <p><span class="kb">KINN</span> ist in drei Monaten von 4 Gründern zu 50+ regelmäßigen Teilnehmern gewachsen. Jeden Donnerstag zwischen 8 und 9 Uhr treffen sich Menschen aus ganz Tirol, um über KI zu reden, voneinander zu lernen, sich zu vernetzen. Das kostet fast nichts - aber es kostet etwas. Bisher konnten die Frühstücks-Ausgaben durch freiwillige Spenden (vor Steuer) ungefähr gedeckt werden - rund 550 Euro seit Jahresbeginn. Vieles übernehmen die Location-Hosts selbst: Kaffee und teils auch Snacks.</p>
+
+  <p>Das ist kein Finanzierungsproblem. Das ist eine Belonging-Chance.</p>
+
+  <quote class="quote">
+    <p>"People come to communities for benefits, and they stay for belonging."</p>
+    <cite>David Spinks, The Business of Belonging</cite>
+  </quote>
+
+  <p>Wenn 50 Menschen jeden Donnerstag freiwillig um 8 Uhr aufstehen, weil ihnen <span class="kb">KINN</span> etwas gibt, dann wollen viele von ihnen auch etwas zurückgeben. Nicht weil sie müssen - sondern weil "ich trage dazu bei" ein anderes Gefühl ist als "ich konsumiere gratis."</p>
+
+  <p>Und wer beiträgt, gestaltet mit: Ob es beim nächsten Frühstück Gebäck gibt oder nur Kekse. Ob Stammgäste Badges oder T-Shirts bekommen. Beteiligung und öffentliche Wertschätzung erzeugen Identifikation und Ownership - aus Gästen werden Mitgestalter.</p>
+
+  <div class="note"><strong>Kernprinzip:</strong> KINN:FUND ist kein Spendenaufruf und kein Mitgliedsbeitrag. Es ist eine Einladung: "Das hier existiert, weil Menschen es tragen wollen."</div>
+
+  <h2>Die drei Grundregeln</h2>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-icon">&#9898;</div>
+      <div class="flow-label">Impact First</div>
+      <div class="flow-text">Erst beweisen, was KINN bringt. <a class="ext" href="https://kinn.at/stimmen" target="_blank" rel="noopener">kinn.at/stimmen</a> existiert bereits. Dann fragen.</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-icon">&#9898;</div>
+      <div class="flow-label">Radikale Transparenz</div>
+      <div class="flow-text">Jeder Euro dokumentiert. Monatlich. Öffentlich. Kein "Vertraue uns" - sondern "Schau selbst."</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-icon">&#9898;</div>
+      <div class="flow-label">Freiwilligkeit</div>
+      <div class="flow-text">KINN bleibt immer gratis. Kein Druck, kein Gate&shy;keeping. Wer gibt, gibt weil er will.</div>
+    </div>
+  </div>
+
+  <h2>KINN heute - Februar 2026</h2>
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">50+</div><div class="metric-unit">Regulars</div><div class="metric-label">Jeden Donnerstag 8 Uhr</div></div>
+    <div class="metric"><div class="metric-val">71</div><div class="metric-unit">Rekord</div><div class="metric-label">WIFI Lernbar Event</div></div>
+    <div class="metric"><div class="metric-val">4.8</div><div class="metric-unit">von 5</div><div class="metric-label">Rating auf Luma</div></div>
+    <div class="metric"><div class="metric-val">10</div><div class="metric-unit">Locations</div><div class="metric-label">Wöchentliche Rotation</div></div>
+  </div>
+
+  <div class="note"><strong>Geographische Reichweite:</strong> Von Innsbruck über Wattens, Kitzbühel und Schönwies bis Reutte, Dornbirn und Südtirol. 25% Frauenanteil und steigend. Locations: InnCubator, Das Wundervoll, Impact Hub, raum13, SOHO 2, WIFI Lernbar, FILMBASE, Werkstätte Wattens, Campus Casablanca, START.N Kitzbühel.</div>
+</div></div>
+
+<!-- 02 MODELL -->
+<div class="page pg-fund" id="modell"><div class="pi">
+  <div class="sn">02</div><div class="sl">Konzeptrahmen</div>
+  <h1>Das KINN:PATE Modell</h1>
+  <div class="sub">Micro-Crowdfunding mit Zugehörigkeits-Effekt</div>
+
+  <p>Klassisches Sponsoring folgt der Logik "Geld gegen Logo-Platzierung." Vereinsbeiträge folgen der Logik "Zahle, damit du darfst." Beides passt nicht zu <span class="kb">KINN</span>. Das KINN:PATE Modell folgt einer dritten Logik: <strong>"Ich will, dass das weiter existiert - also trage ich bei."</strong></p>
+
+  <p>Wie ein Lieblings-Podcast, dem man monatlich etwas in den Hut wirft. Nicht für eine Gegenleistung, sondern weil die Welt besser ist, wenn es das gibt.</p>
+
+  <h2>Impact Loop</h2>
+  <p>Die Mechanik ist einfach und baut auf bestehender Infrastruktur auf:</p>
+
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-label">Erleben</div>
+      <div class="flow-text">Donnerstags-Treffen, Podcast, Discord, Vernetzung</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Bezeugen</div>
+      <div class="flow-text"><a class="ext" href="https://kinn.at/stimmen" target="_blank" rel="noopener">kinn.at/stimmen</a> - Testimonials zeigen den Impact</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Tragen</div>
+      <div class="flow-text"><a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a> - "Das will ich unterstützen"</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Sehen</div>
+      <div class="flow-text">Transparenz-Dashboard - Wohin fließt mein Beitrag?</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Bestehende Brücke:</strong> <a class="ext" href="https://kinn.at/stimmen" target="_blank" rel="noopener">kinn.at/stimmen</a> beweist den Impact. <a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a> wird der natürliche nächste Schritt: "Du siehst, was KINN bewirkt - hier kannst du es mittragen."</div>
+
+  <h2>Was KINN:FUND nicht ist</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Ist nicht</th><th>Ist stattdessen</th></tr>
+    <tr><td>Mitgliedsbeitrag</td><td>Freiwilliger Community-Beitrag ohne Pflichten oder Rechte-Ansprüche</td></tr>
+    <tr><td>Spende (steuerlich)</td><td>Normale FlexCo-Einnahme (USt-pflichtig) - transparent kommuniziert</td></tr>
+    <tr><td>Paywall</td><td>KINN bleibt für alle gratis. Kein Premium-Content hinter Schranken</td></tr>
+    <tr><td>Vereinsmodell</td><td>Keine Generalversammlung, kein Stimmrecht, keine Bürokratie</td></tr>
+    <tr><td>Sponsoring</td><td>Keine Logo-Gegenleistung, kein Einfluss auf Programm oder Inhalte</td></tr>
+  </table></div>
+</div></div>
+
+<!-- 03 STUFEN -->
+<div class="page pg-fund" id="stufen"><div class="pi">
+  <div class="sn">03</div><div class="sl">Stufenmodell</div>
+  <h1>Drei Wege, KINN zu tragen</h1>
+  <div class="sub">Niedrigschwellig, freiwillig, ohne Verkaufsdruck</div>
+
+  <div class="tiers">
+    <div class="tier">
+      <div class="tier-badge">Einstieg</div>
+      <div class="tier-name">KINN:FREUND</div>
+      <div class="tier-price">5 <span>Euro/Monat</span></div>
+      <div class="tier-year">60 Euro im Jahr - weniger als ein Kaffee pro Woche</div>
+      <div class="tier-desc">"Ich will, dass KINN existiert."</div>
+      <ul class="tier-features">
+        <li>Name auf <a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a> (wenn gewünscht)</li>
+        <li>Das gute Gefühl, Teil von etwas zu sein</li>
+        <li>Monatliches Transparenz-Update per E-Mail</li>
+      </ul>
+    </div>
+
+    <div class="tier featured">
+      <div class="tier-badge">Empfohlen</div>
+      <div class="tier-name">KINN:PATE</div>
+      <div class="tier-price">15 <span>Euro/Monat</span></div>
+      <div class="tier-year">180 Euro im Jahr</div>
+      <div class="tier-desc">"KINN hat mir schon mehr gegeben als das."</div>
+      <ul class="tier-features">
+        <li>Alles von KINN:FREUND</li>
+        <li>Monatliches "Hinter den Kulissen"-Update</li>
+        <li>KINN:PATE Badge für LinkedIn</li>
+        <li>Einladung zu Paten-Roundtables (2x/Jahr)</li>
+      </ul>
+    </div>
+
+    <div class="tier">
+      <div class="tier-badge">Für Überzeugte</div>
+      <div class="tier-name">KINN:TRÄGER</div>
+      <div class="tier-price">50 <span>Euro/Monat</span></div>
+      <div class="tier-year">600 Euro im Jahr - oder einmalig ab 200 Euro</div>
+      <div class="tier-desc">"Ich will, dass das Schule macht."</div>
+      <ul class="tier-features">
+        <li>Alles von KINN:PATE</li>
+        <li>Persönliches Spotlight auf <a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a></li>
+        <li>Sichtbarkeit für eigenes Business/Projekt</li>
+        <li>Direkter Draht zum Core Team</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="warn"><strong>Bewusste Entscheidung:</strong> Keine "Bronze/Silber/Gold"-Sprache. Keine Pricing-Table-Ästhetik. Die Stufen heißen Freund, Pate, Träger - weil es um Beziehung geht, nicht um Produktkauf.</div>
+
+  <h2>Konservative Startrechnung</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Stufe</th><th>Erwartete Anzahl</th><th>Beitrag/Monat</th><th>Gesamt/Monat</th></tr>
+    <tr><td>KINN:FREUND</td><td>25-35 Personen</td><td>5 Euro</td><td>125-175 Euro</td></tr>
+    <tr><td>KINN:PATE</td><td>12-20 Personen</td><td>15 Euro</td><td>180-300 Euro</td></tr>
+    <tr><td>KINN:TRÄGER</td><td>3-5 Pers./Firmen</td><td>50 Euro</td><td>150-250 Euro</td></tr>
+    <tr><td colspan="3" style="text-align:right;font-family:'Montserrat',sans-serif;font-weight:800">Konservative Summe</td><td style="font-family:'Montserrat',sans-serif;font-weight:800;color:var(--teal)">455-725 Euro</td></tr>
+  </table></div>
+
+  <div class="note"><strong>Kontext:</strong> Die wöchentlichen Locations kosten nichts - die Hosts stellen Räume, Kaffee und teils Snacks kostenlos bereit. Kostenfaktoren sind Verpflegung, Merchandise und große Events. Discord und Podcast-Equipment sind bereits vorhanden. Bisherige Spenden (~550 Euro seit Jahresbeginn) deckten die Frühstücks-Ausgaben vor Steuer ungefähr ab. KINN:FUND macht das planbar und nachhaltig.</div>
+
+  <div class="warn"><strong>Realistische Einordnung:</strong> Die obige Rechnung ist ein Stretch-Szenario. Community-Funding-Benchmarks zeigen: Selbst enge Offline-Communities erreichen typischerweise 20-40% Conversion von Regulars zu zahlenden Unterstützern. Realistisches Phase-1-Ziel: <strong>18-25 KINN:PATEN, 200-350 Euro/Monat</strong>. Das ist für eine Community im ersten Jahr bereits sehr gut - und schafft Raum, positiv zu überraschen.</div>
+  <details class="src"><summary>Quellen: Conversion-Benchmarks</summary><div class="src-body"><ul>
+    <li>Patreon Free-to-Paid Conversion: 2-5% generell, 10-30% bei engen Communities (CrazyEgg, GrowthUnhinged)</li>
+    <li>Kevin Kelly "1,000 True Fans": True-Fan-Ratio von 1:3 bis 1:5 (20-33%)</li>
+    <li><a href="https://metalab.at" target="_blank" rel="noopener">Metalab Wien</a>: 200 zahlende Mitglieder bei 30 EUR/Monat - nach 15+ Jahren, mit täglichem physischem Raum</li>
+    <li>KINN-Vorteil: wöchentlicher Face-to-Face-Kontakt, 4.8/5 Rating, Social Accountability - hebt die Conversion über reine Online-Benchmarks</li>
+  </ul></div></details>
+</div></div>
+
+<!-- 04 SKALIERUNG -->
+<div class="page pg-mix" id="skalierung"><div class="pi">
+  <div class="sn">04</div><div class="sl">Wachstumspfad</div>
+  <h1>Drei Phasen der Skalierung</h1>
+  <div class="sub">Von Kostendeckung über Professionalisierung bis Ecosystem-Building</div>
+
+  <div class="phases">
+    <div class="phase active">
+      <div class="phase-label">Phase 1 - Start</div>
+      <div class="phase-title">Grundkosten decken</div>
+      <div class="phase-target">500 Euro/Monat</div>
+      <div class="phase-body">
+        Launch der drei Stufen. Ein konkreter erster Cause: "Besseres Frühstück." Die Community gestaltet mit, wie gut die Events werden.<br><br>
+        <strong>Zeitraum:</strong> Q2 2026<br>
+        <strong>Community:</strong> 50+ Regulars<br>
+        <strong>Hebel:</strong> /stimmen → /fund Brücke
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-label">Phase 2 - Wachstum</div>
+      <div class="phase-title">Formate ermöglichen</div>
+      <div class="phase-target">1.200 Euro/Monat</div>
+      <div class="phase-body">
+        Causes-System für konkrete Ziele. Firmen-Stufe KINN:PARTNER. Merchandise, Summit-Events, Workshop-Materialien wo Value Exchange nicht reicht.<br><br>
+        <strong>Zeitraum:</strong> Q3-Q4 2026<br>
+        <strong>Community:</strong> 80-100 Regulars<br>
+        <strong>Hebel:</strong> Wachstum + erste Firmenstufe
+      </div>
+    </div>
+
+    <div class="phase future">
+      <div class="phase-label">Phase 3 - Ecosystem</div>
+      <div class="phase-title">Wertschöpfungs-Kreislauf</div>
+      <div class="phase-target">2.500+ Euro/Monat</div>
+      <div class="phase-body">
+        Koordinations-Pauschale für Core Team. KINN-Chapter in weiteren Tiroler Städten. Eigenständiges Budget für Community-Projekte.<br><br>
+        <strong>Zeitraum:</strong> 2027<br>
+        <strong>Community:</strong> 150+ (Multi-Location)<br>
+        <strong>Hebel:</strong> Professionalisierung + Expansion
+      </div>
+    </div>
+  </div>
+
+  <h2>Einnahmen-Projektion nach Phase</h2>
+  <div class="prog">
+    <div class="prog-row">
+      <div class="prog-label">Phase 1</div>
+      <div class="prog-bar"><div class="prog-fill mint" style="width:20%">500</div></div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-label">Phase 2</div>
+      <div class="prog-bar"><div class="prog-fill spring" style="width:48%">1.200</div></div>
+    </div>
+    <div class="prog-row">
+      <div class="prog-label">Phase 3</div>
+      <div class="prog-bar"><div class="prog-fill warm" style="width:100%">2.500+</div></div>
+    </div>
+  </div>
+
+  <h2>Phase 2: Die Firmen-Stufe</h2>
+  <p>Ab Q3 2026 kommt eine vierte Stufe hinzu - nicht für Einzelpersonen, sondern für Unternehmen:</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Stufe</th><th>Beitrag</th><th>Business Case</th></tr>
+    <tr><td>KINN:PARTNER Basis</td><td>100 Euro/Monat<br><span style="color:var(--kangaroo);font-weight:400;font-size:0.8rem">1.200 Euro/Jahr</span></td><td>Logo auf <a class="ext" href="https://kinn.at" target="_blank" rel="noopener">kinn.at</a>, Erwähnung im Newsletter, Sichtbarkeit bei Events. "Günstiger als jede Fortbildung für unser Team."</td></tr>
+    <tr><td>KINN:PARTNER Plus</td><td>250 Euro/Monat<br><span style="color:var(--kangaroo);font-weight:400;font-size:0.8rem">3.000 Euro/Jahr</span></td><td>Alles von Basis + Spotlight-Interview, Priority bei Use-Case-Präsentationen, Co-Branding bei Community-Events.</td></tr>
+  </table></div>
+
+  <div class="note"><strong>Kalkulation:</strong> 5-10 Partner-Firmen in Phase 2 bedeuten 500-2.500 Euro/Monat zusätzlich. Das ist der Hebel, der die Professionalisierung in Phase 3 ermöglicht.</div>
+
+  <div class="note"><strong>Für KINN:PARTNER Firmen:</strong> Der Community-Beitrag ist zwar keine steuerlich absetzbare Spende - aber für Unternehmen kann er als <strong>Betriebsausgabe</strong> (Werbung/Sponsoring) steuerlich geltend gemacht werden. Das ändert den Business Case erheblich: 100 Euro/Monat netto statt brutto.</div>
+
+  <h2>Phase 3: Faire Vergütung für das Core Team</h2>
+  <p>Wenn monatlich 2.500+ Euro reinkommen und die Grundkosten bei 800-1.000 Euro liegen, bleibt ein Überschuss. Dieser wird transparent aufgeteilt:</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Position</th><th>Monatlich</th><th>Warum</th></tr>
+    <tr><td>Community-Koordination</td><td>500-800 Euro</td><td>Planung, Organisation, Kommunikation (Thomas)</td></tr>
+    <tr><td>TechTalk-Organisation</td><td>200-300 Euro</td><td>Format-Entwicklung, Speaker-Koordination (Martin)</td></tr>
+    <tr><td>Merchandise & Events</td><td>200-300 Euro</td><td>Badges, Shirts, Summit-Vorbereitung</td></tr>
+    <tr><td>Rücklage</td><td>200+ Euro</td><td>Buffer für Sonder-Events, Equipment, Unvorhergesehenes</td></tr>
+  </table></div>
+
+  <div class="warn"><strong>Warum das wichtig ist:</strong> Die Vereinsstruktur wurde am 30. Jänner 2026 bewusst verworfen - u.a. weil ein Verein keine faire Vergütung für Koordinationsarbeit ermöglicht. Die FlexCo-Struktur erlaubt genau das: Arbeit wird als Arbeit anerkannt, nicht als Ehrenamt vorausgesetzt.</div>
+</div></div>
+
+<!-- 05 CAUSES -->
+<div class="page pg-fund" id="causes"><div class="pi">
+  <div class="sn">05</div><div class="sl">Ziel-Finanzierung</div>
+  <h1>Das Causes-System</h1>
+  <div class="sub">Konkrete Ziele statt abstraktes Sammeln</div>
+
+  <p>Statt einfach "mehr Geld" zu sammeln, definiert <span class="kb">KINN</span> konkrete, sichtbare Ziele. Jeder Cause hat ein Budget, einen Fortschrittsbalken und einen klaren Impact. Wenn ein Cause funded ist, wird das gefeiert - und der nächste folgt.</p>
+
+  <!-- Geldfluss-Diagramm -->
+  <svg viewBox="0 0 800 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:1.5rem 0;font-family:'Montserrat',sans-serif">
+    <defs>
+      <marker id="af" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#5ED9A6"/></marker>
+    </defs>
+    <!-- Beitrag -->
+    <rect x="0" y="55" width="140" height="70" rx="12" fill="#5ED9A6" opacity="0.15" stroke="#5ED9A6" stroke-width="1.5"/>
+    <text x="70" y="82" text-anchor="middle" font-size="11" font-weight="800" fill="#2B3228">Community-</text>
+    <text x="70" y="98" text-anchor="middle" font-size="11" font-weight="800" fill="#2B3228">Beitrag</text>
+    <!-- Pfeil 1 -->
+    <line x1="148" y1="90" x2="192" y2="90" stroke="#5ED9A6" stroke-width="2" marker-end="url(#af)"/>
+    <!-- FUND -->
+    <rect x="200" y="45" width="130" height="90" rx="14" fill="#4A9B8C" opacity="0.12" stroke="#4A9B8C" stroke-width="2"/>
+    <text x="265" y="80" text-anchor="middle" font-size="12" font-weight="900" fill="#4A9B8C">KINN:FUND</text>
+    <text x="265" y="97" text-anchor="middle" font-size="9" fill="#6B7068">Transparentes Konto</text>
+    <!-- Pfeil 2 -->
+    <line x1="338" y1="90" x2="382" y2="90" stroke="#5ED9A6" stroke-width="2" marker-end="url(#af)"/>
+    <!-- Causes Box -->
+    <rect x="390" y="20" width="200" height="140" rx="12" fill="#A8C8B0" opacity="0.1" stroke="#A8C8B0" stroke-width="1.5"/>
+    <text x="490" y="42" text-anchor="middle" font-size="10" font-weight="700" fill="#4A9B8C" letter-spacing="0.08em">CAUSES</text>
+    <g transform="translate(447,56) scale(0.38)" fill="none" stroke="#4A9B8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14c.83 .642 2.077 1.017 3.5 1c1.423 .017 2.67 -.358 3.5 -1c.83 -.642 2.077 -1.017 3.5 -1c1.423 -.017 2.67 .358 3.5 1"/><path d="M8 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2"/><path d="M12 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2"/><path d="M3 10h14v5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-5"/><path d="M16.746 16.726a3 3 0 1 0 .252 -5.555"/></g>
+    <text x="462" y="66" font-size="10" fill="#2B3228">Frühstück</text>
+    <g transform="translate(447,76) scale(0.38)" fill="none" stroke="#4A9B8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4l6 2v5h-3v8a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1v-8h-3v-5l6 -2a3 3 0 0 0 6 0"/></g>
+    <text x="462" y="86" font-size="10" fill="#2B3228">Merchandise</text>
+    <g transform="translate(447,96) scale(0.38)" fill="none" stroke="#4A9B8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/><path d="M8 15h2v2h-2l0 -2"/></g>
+    <text x="462" y="106" font-size="10" fill="#2B3228">Summit-Events</text>
+    <g transform="translate(447,116) scale(0.38)" fill="none" stroke="#4A9B8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6l0 13"/><path d="M12 6l0 13"/><path d="M21 6l0 13"/></g>
+    <text x="462" y="126" font-size="10" fill="#2B3228">Workshop-Material</text>
+    <text x="490" y="148" text-anchor="middle" font-size="8" fill="#6B7068">Fortschrittsbalken &amp; Impact-Stories</text>
+    <!-- Pfeil 3 -->
+    <line x1="598" y1="90" x2="642" y2="90" stroke="#5ED9A6" stroke-width="2" marker-end="url(#af)"/>
+    <!-- Impact -->
+    <rect x="650" y="45" width="140" height="90" rx="35" fill="#5ED9A6" opacity="0.2" stroke="#5ED9A6" stroke-width="1.5"/>
+    <text x="720" y="82" text-anchor="middle" font-size="12" font-weight="800" fill="#2D6B60">Bessere</text>
+    <text x="720" y="98" text-anchor="middle" font-size="12" font-weight="800" fill="#2D6B60">Events</text>
+  </svg>
+
+  <div class="causes">
+    <div class="cause">
+      <div class="cause-status open" style="background:var(--mintgreen);color:var(--heavy-metal)">Pilot - Soft Launch</div>
+      <div class="cause-title">Erste KINN Badges</div>
+      <div class="cause-amount">Ziel: 80-120 Euro (einmalig)</div>
+      <div class="cause-desc">Mini-Cause über das EVENT SUPPORT Team: Sticker und Badges für Stammgäste bestellen, beim Donnerstag verteilen. Erster sichtbarer Proof, dass KINN:FUND funktioniert - und der perfekte Seed für den vollen Merch-Cause.</div>
+      <div class="cause-bar"><div class="cause-bar-fill" style="width:65%"></div></div>
+    </div><!-- /pilot -->
+
+    <div class="cause">
+      <div class="cause-status open">Phase 1 - Startcause</div>
+      <div class="cause-title">Besseres Frühstück</div>
+      <div class="cause-amount">Ziel: 100-150 Euro/Monat (laufend)</div>
+      <div class="cause-desc">Gebäck statt nur Kekse, bessere Verpflegung bei den Donnerstags-Treffen. Die Community entscheidet mit, wie gut das nächste Frühstück wird.</div>
+      <div class="cause-bar"><div class="cause-bar-fill" style="width:42%"></div></div>
+    </div>
+
+    <div class="cause">
+      <div class="cause-status planned">Phase 2 - Geplant</div>
+      <div class="cause-title">KINN Merchandise</div>
+      <div class="cause-amount">Ziel: 500 Euro (einmalig)</div>
+      <div class="cause-desc">Badges, T-Shirts und Sticker für Stammgäste. Sichtbare Zugehörigkeit stärkt Identifikation - wer KINN trägt, ist Teil von etwas.</div>
+      <div class="cause-bar"><div class="cause-bar-fill" style="width:18%"></div></div>
+    </div>
+
+    <div class="cause">
+      <div class="cause-status planned">Phase 2 - Geplant</div>
+      <div class="cause-title">Workshop-Materialien</div>
+      <div class="cause-amount">Ziel: 100 Euro/Monat (laufend)</div>
+      <div class="cause-desc">Nur für das, was Value Exchange nicht deckt. Redner profitieren vom Netzwerk, Community-Partner wie Lovable stellen Tokens bereit. KINN:FUND springt ein, wo Lizenzen oder Unterlagen trotzdem Geld kosten.</div>
+      <div class="cause-bar"><div class="cause-bar-fill" style="width:10%"></div></div>
+    </div>
+
+    <div class="cause">
+      <div class="cause-status planned">Phase 3 - Vision</div>
+      <div class="cause-title">KINN Summit</div>
+      <div class="cause-amount">Ziel: 500-1.000 Euro (pro Event)</div>
+      <div class="cause-desc">Große Community-Events mit 100+ Teilnehmern brauchen bezahlte Locations und Catering. Der ganze Monat spart gemeinsam auf den Summit hin - oder wir sammeln danach. Größerer Mehrwert für alle.</div>
+      <div class="cause-bar"><div class="cause-bar-fill" style="width:5%"></div></div>
+    </div>
+  </div>
+
+  <h2>Cause-Mechanik</h2>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-label">Definieren</div>
+      <div class="flow-text">Core Team schlägt Cause vor mit Budget und Impact-Beschreibung</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Sammeln</div>
+      <div class="flow-text">Fortschrittsbalken auf /fund zeigt Live-Stand</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Funded!</div>
+      <div class="flow-text">Cause wird umgesetzt, Ergebnis dokumentiert</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Beweisen</div>
+      <div class="flow-text">Impact-Story auf /stimmen, nächster Cause folgt</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Psychologie:</strong> Konkrete Causes ("KINN Merchandise für 500 Euro") motivieren stärker als abstrakte Bitten ("Unterstütze KINN"). Menschen wollen sehen, was ihr Geld bewirkt - und es anderen erzählen können.</div>
+
+  <div class="note"><strong>Best Practice - Seed Funding:</strong> Fortschrittsbalken bei 0% können abschreckend wirken. Empfehlung: Vor jedem Cause-Launch 3-4 Early Supporters persönlich ansprechen, damit der Balken bei mindestens ~30% startet. Der "Goal Gradient Effect" zeigt: Motivation steigt, je näher das Ziel rückt - Kampagnen über 66% Funding konvertieren deutlich besser.</div>
+  <details class="src"><summary>Quellen: Fortschrittsbalken & Spendenverhalten</summary><div class="src-body"><ul>
+    <li>Fortschrittsbalken erhöhen Spenden um 18-35% (Fundly, RallyUp, Givebutter)</li>
+    <li>Kampagnen mit regelmäßigen Updates sammeln 126% mehr als solche ohne (Fundly)</li>
+    <li>Transparenz-Siegel steigert Beiträge um ca. 53% (Harvard Business School, Buell et al.)</li>
+  </ul></div></details>
+</div></div>
+
+<!-- 06 TRANSPARENZ -->
+<div class="page pg-fund" id="transparenz"><div class="pi">
+  <div class="sn">06</div><div class="sl">Offene Bücher</div>
+  <h1>Radikale Transparenz als Feature</h1>
+  <div class="sub">Nicht "Vertrau uns" - sondern "Schau selbst"</div>
+
+  <p>Jeder Euro, der über KINN:FUND eingeht, wird monatlich dokumentiert und öffentlich auf <a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a> dargestellt. Das ist keine Pflicht - bei einer FlexCo gibt es keine gesetzliche Transparenzpflicht. Es ist eine bewusste Entscheidung: Radikale Offenheit als Vertrauens-Feature.</p>
+
+  <div class="transp">
+    <div class="transp-badge">Mockup: Monatsreport</div>
+    <div class="transp-title">KINN:FUND Transparenz-Report - März 2026</div>
+    <div class="transp-sub">48 KINN:PATEN haben im März insgesamt 847 Euro beigetragen</div>
+
+    <div class="bar-row">
+      <div class="bar-seg" style="flex:21.3;background:var(--teal)">180 Euro</div>
+      <div class="bar-seg" style="flex:17.7;background:var(--spring-rain);color:var(--heavy-metal)">150 Euro</div>
+      <div class="bar-seg" style="flex:7.9;background:var(--malta);color:var(--heavy-metal)">67 Euro</div>
+      <div class="bar-seg" style="flex:53.1;background:var(--mintgreen);color:var(--heavy-metal)">450 Euro</div>
+    </div>
+
+    <div class="bar-legend">
+      <div class="bar-legend-item"><div class="bar-legend-dot" style="background:var(--teal)"></div>Kaffee & Verpflegung</div>
+      <div class="bar-legend-item"><div class="bar-legend-dot" style="background:var(--spring-rain)"></div>Verpflegung</div>
+      <div class="bar-legend-item"><div class="bar-legend-dot" style="background:var(--malta)"></div>Software & Tools</div>
+      <div class="bar-legend-item"><div class="bar-legend-dot" style="background:var(--mintgreen)"></div>Core Team Koordination</div>
+    </div>
+  </div>
+
+  <h2>Was jeden Monat veröffentlicht wird</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Element</th><th>Detail</th></tr>
+    <tr><td>Gesamteinnahmen</td><td>Wie viele KINN:PATEN, Gesamtsumme, Veränderung zum Vormonat</td></tr>
+    <tr><td>Ausgaben-Aufschlüsselung</td><td>Jede Kategorie einzeln: Kaffee, Location, Tools, Koordination, Rücklage</td></tr>
+    <tr><td>Cause-Fortschritt</td><td>Welche Causes laufen, wie weit funded, was wurde umgesetzt</td></tr>
+    <tr><td>Paten-Zähler</td><td>Anzahl (nicht Beträge) pro Stufe - Social Proof ohne Bloßstellung</td></tr>
+    <tr><td>Nächster Monat</td><td>Was ist geplant, wofür wird das Geld eingesetzt</td></tr>
+  </table></div>
+
+  <div class="warn"><strong>Bewusste Grenze:</strong> Transparenz heißt nicht Bloßstellung. Veröffentlicht werden Kategorien und Summen - niemals individuelle Beitragsbeträge einzelner Personen. Wer auf der Wall stehen will, entscheidet selbst. Beträge bleiben immer privat.</div>
+
+  <h2>KINN:PATEN Wall</h2>
+  <p>Auf <a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a> können KINN:PATEN ihren Namen anzeigen lassen - wenn sie wollen. Keine Beträge, keine Rangfolge. Einfach eine Liste von Menschen, die sagen: "Ich trage <span class="kb">KINN</span> mit." Optional mit einem Einzeiler, warum sie dabei sind.</p>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">48</div><div class="metric-unit">KINN:PATEN</div><div class="metric-label">tragen die Community</div></div>
+    <div class="metric"><div class="metric-val">847</div><div class="metric-unit">Euro/Monat</div><div class="metric-label">Community-Budget</div></div>
+    <div class="metric"><div class="metric-val">100%</div><div class="metric-unit">Transparent</div><div class="metric-label">Jeder Euro dokumentiert</div></div>
+    <div class="metric"><div class="metric-val">0</div><div class="metric-unit">Paywalls</div><div class="metric-label">KINN bleibt gratis</div></div>
+  </div>
+</div></div>
+
+<!-- 07 PROFITEURE -->
+<div class="page pg-fund" id="profiteure"><div class="pi">
+  <div class="sn">07</div><div class="sl">Wertschöpfung</div>
+  <h1>Wer profitiert wovon?</h1>
+  <div class="sub">Ein Kreislauf, in dem jeder gewinnt - direkt und indirekt</div>
+
+  <p>Das KINN:FUND Modell ist kein Null-Summen-Spiel. Es erzeugt einen Wertschöpfungs-Kreislauf, in dem mehr Beteiligte automatisch mehr Wert für alle schaffen.</p>
+
+  <!-- Ökosystem-Kreislauf -->
+  <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:1.5rem 0;font-family:'Montserrat',sans-serif">
+    <defs>
+      <marker id="ac" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#A8C8B0"/></marker>
+    </defs>
+    <!-- Center -->
+    <circle cx="400" cy="160" r="45" fill="#5ED9A6" opacity="0.15" stroke="#5ED9A6" stroke-width="2"/>
+    <text x="400" y="155" text-anchor="middle" font-size="10" font-weight="900" fill="#2D6B60">KINN</text>
+    <text x="400" y="170" text-anchor="middle" font-size="9" font-weight="700" fill="#4A9B8C">Community</text>
+    <!-- Nodes -->
+    <!-- Top: Beiträge -->
+    <rect x="325" y="5" width="150" height="50" rx="10" fill="#4A9B8C" opacity="0.12" stroke="#4A9B8C" stroke-width="1.5"/>
+    <text x="400" y="28" text-anchor="middle" font-size="10" font-weight="800" fill="#4A9B8C">KINN:FUND</text>
+    <text x="400" y="44" text-anchor="middle" font-size="9" fill="#6B7068">Community-Beiträge</text>
+    <!-- Right: Causes -->
+    <rect x="600" y="90" width="150" height="50" rx="10" fill="#5ED9A6" opacity="0.15" stroke="#5ED9A6" stroke-width="1.5"/>
+    <text x="675" y="112" text-anchor="middle" font-size="10" font-weight="800" fill="#2D6B60">Causes</text>
+    <text x="675" y="128" text-anchor="middle" font-size="9" fill="#6B7068">Konkrete Ziele</text>
+    <!-- Bottom-Right: Impact -->
+    <rect x="600" y="185" width="150" height="50" rx="10" fill="#A8C8B0" opacity="0.15" stroke="#A8C8B0" stroke-width="1.5"/>
+    <text x="675" y="207" text-anchor="middle" font-size="10" font-weight="800" fill="#2B3228">Bessere Events</text>
+    <text x="675" y="223" text-anchor="middle" font-size="9" fill="#6B7068">Sichtbarer Impact</text>
+    <!-- Bottom: Wachstum -->
+    <rect x="325" y="265" width="150" height="50" rx="10" fill="#BDB2A1" opacity="0.15" stroke="#BDB2A1" stroke-width="1.5"/>
+    <text x="400" y="287" text-anchor="middle" font-size="10" font-weight="800" fill="#2B3228">Mehr Teilnehmer</text>
+    <text x="400" y="303" text-anchor="middle" font-size="9" fill="#6B7068">Wachsende Community</text>
+    <!-- Left Bottom: Stimmen -->
+    <rect x="50" y="185" width="150" height="50" rx="10" fill="#A8C8B0" opacity="0.15" stroke="#A8C8B0" stroke-width="1.5"/>
+    <text x="125" y="207" text-anchor="middle" font-size="10" font-weight="800" fill="#2B3228">kinn.at/stimmen</text>
+    <text x="125" y="223" text-anchor="middle" font-size="9" fill="#6B7068">Impact-Stories</text>
+    <!-- Left Top: Ownership -->
+    <rect x="50" y="90" width="150" height="50" rx="10" fill="#4A9B8C" opacity="0.12" stroke="#4A9B8C" stroke-width="1.5"/>
+    <text x="125" y="112" text-anchor="middle" font-size="10" font-weight="800" fill="#4A9B8C">Mitgestaltung</text>
+    <text x="125" y="128" text-anchor="middle" font-size="9" fill="#6B7068">Ownership &amp; Identifikation</text>
+    <!-- Arrows (clockwise) -->
+    <path d="M400,55 Q480,70 590,105" fill="none" stroke="#A8C8B0" stroke-width="2" marker-end="url(#ac)"/>
+    <path d="M675,145 Q675,165 675,180" fill="none" stroke="#A8C8B0" stroke-width="2" marker-end="url(#ac)"/>
+    <path d="M600,215 Q500,250 475,268" fill="none" stroke="#A8C8B0" stroke-width="2" marker-end="url(#ac)"/>
+    <path d="M325,285 Q250,270 200,230" fill="none" stroke="#A8C8B0" stroke-width="2" marker-end="url(#ac)"/>
+    <path d="M125,185 Q125,165 125,145" fill="none" stroke="#A8C8B0" stroke-width="2" marker-end="url(#ac)"/>
+    <path d="M200,100 Q300,65 330,55" fill="none" stroke="#A8C8B0" stroke-width="2" marker-end="url(#ac)"/>
+  </svg>
+
+  <h2>Direkte Profiteure</h2>
+  <div class="stake">
+    <div class="stake-card direct">
+      <div class="stake-name">Die KINN:PATEN selbst</div>
+      <div class="stake-body">Finanzieren ein Netzwerk, das ihnen Kontakte, Wissen und Zugehörigkeit gibt. Psychologischer Effekt: "Ich investiere in etwas" erzeugt stärkere Bindung als "Ich bekomme etwas gratis." Belonging durch Beitragen.</div>
+    </div>
+    <div class="stake-card direct">
+      <div class="stake-name">Co-Working Spaces</div>
+      <div class="stake-body">Stellen Räume und oft auch Kaffee kostenlos bereit. Bei großen Summit-Events (100+ Personen) werden Location-Kosten fair über KINN:FUND gedeckt. Das stärkt die Partnerschaft langfristig.</div>
+    </div>
+    <div class="stake-card direct">
+      <div class="stake-name">Das Core Team</div>
+      <div class="stake-body">Koordination wird als Arbeit anerkannt und fair vergütet. Kein Ehrenamt-Burnout, kein "das machen wir halt nebenher." Ab Phase 3 Aufwandsentschädigung für Thomas, Martin, Steven.</div>
+    </div>
+    <div class="stake-card direct">
+      <div class="stake-name">Die gesamte Community</div>
+      <div class="stake-body">Bessere Locations, professionelleres Equipment, mehr Formate. Jeder Cause, der funded wird, verbessert das Erlebnis für alle - auch für die, die nichts beitragen.</div>
+    </div>
+  </div>
+
+  <h2>Indirekte Profiteure</h2>
+  <div class="stake">
+    <div class="stake-card indirect">
+      <div class="stake-name">Libra Innovation FlexCo</div>
+      <div class="stake-body">Eine finanziell unabhängige Community wächst stärker und nachhaltiger. Mehr verifizierte Experten, mehr dokumentierte Use Cases, mehr qualifizierte Leads für die Vermittlungs-Pipeline. Kein KINN:FUND-Euro fließt in Libra-Projekte - der Nutzen entsteht indirekt durch das stärkere Ökosystem.</div>
+    </div>
+    <div class="stake-card indirect">
+      <div class="stake-name">Tiroler KMUs</div>
+      <div class="stake-body">Professionellere Formate bedeuten bessere Vernetzung zwischen KMUs und KI-Experten. Use-Case-Präsentationen, Workshop-Materialien und ein wachsendes Netzwerk senken die Einstiegshürde für regionale KI-Adoption.</div>
+    </div>
+    <div class="stake-card indirect">
+      <div class="stake-name">KINN:PARTNER Firmen</div>
+      <div class="stake-body">Sichtbarkeit in einer wachsenden Community, Zugang zu qualifizierten KI-Experten, Weiterbildungs-Effekt für die eigenen Teams. Die Patenschaft ist günstiger als jede externe Fortbildung - und bringt echte Kontakte.</div>
+    </div>
+    <div class="stake-card indirect">
+      <div class="stake-name">Der Standort Tirol</div>
+      <div class="stake-body">Eine selbsttragende, unabhängige KI-Community macht Tirol attraktiver für Tech-Talente und innovative Unternehmen. KINN wird zum Proof-Point: "Hier gibt es ein aktives KI-Ökosystem."</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- 08 FIREWALL -->
+<div class="page pg-mix" id="firewall"><div class="pi">
+  <div class="sn">08</div><div class="sl">Governance</div>
+  <h1>Die KINN / Libra Firewall</h1>
+  <div class="sub">Community-Geld bleibt Community-Geld. Punkt.</div>
+
+  <p>Das wichtigste Vertrauens-Element des gesamten Modells: Die absolute Trennung zwischen KINN:FUND-Einnahmen und Libra-Geschäft. Die Firewall zwischen sozialen und kommerziellen Normen ist nicht verhandelbar.</p>
+
+  <!-- Firewall-Schema -->
+  <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin:1.5rem 0;font-family:'Montserrat',sans-serif">
+    <defs><symbol id="i-coffee" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14c.83 .642 2.077 1.017 3.5 1c1.423 .017 2.67 -.358 3.5 -1c.83 -.642 2.077 -1.017 3.5 -1c1.423 -.017 2.67 .358 3.5 1"/><path d="M8 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2"/><path d="M12 3a2.4 2.4 0 0 0 -1 2a2.4 2.4 0 0 0 1 2"/><path d="M3 10h14v5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-5"/><path d="M16.746 16.726a3 3 0 1 0 .252 -5.555"/></symbol><symbol id="i-shirt" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4l6 2v5h-3v8a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1v-8h-3v-5l6 -2a3 3 0 0 0 6 0"/></symbol><symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/><path d="M8 15h2v2h-2l0 -2"/></symbol><symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6l0 13"/><path d="M12 6l0 13"/><path d="M21 6l0 13"/></symbol><symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><path d="M14 9a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></symbol><symbol id="i-brief" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/><path d="M12 12l0 .01"/><path d="M3 13a20 20 0 0 0 18 0"/></symbol><symbol id="i-brain" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 13a3.5 3.5 0 0 0 -3.5 3.5v1a3.5 3.5 0 0 0 7 0v-1.8"/><path d="M8.5 13a3.5 3.5 0 0 1 3.5 3.5v1a3.5 3.5 0 0 1 -7 0v-1.8"/><path d="M17.5 16a3.5 3.5 0 0 0 0 -7h-.5"/><path d="M19 9.3v-2.8a3.5 3.5 0 0 0 -7 0"/><path d="M6.5 16a3.5 3.5 0 0 1 0 -7h.5"/><path d="M5 9.3v-2.8a3.5 3.5 0 0 1 7 0v10"/></symbol><symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></symbol><symbol id="i-laptop" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19l18 0"/><path d="M5 7a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -8"/></symbol></defs>
+    <!-- KINN:FUND Seite -->
+    <rect x="10" y="10" width="340" height="200" rx="16" fill="#4A9B8C" opacity="0.07" stroke="#4A9B8C" stroke-width="1.5"/>
+    <text x="180" y="40" text-anchor="middle" font-size="14" font-weight="900" fill="#4A9B8C">KINN:FUND</text>
+    <text x="180" y="56" text-anchor="middle" font-size="9" fill="#6B7068">Community-Geld</text>
+    <!-- Items links -->
+    <use href="#i-coffee" x="120" y="72" width="9" height="9" stroke="#4A9B8C"/>
+    <text x="133" y="80" font-size="10" fill="#2B3228">Verpflegung</text>
+    <use href="#i-shirt" x="120" y="92" width="9" height="9" stroke="#4A9B8C"/>
+    <text x="133" y="100" font-size="10" fill="#2B3228">Merchandise</text>
+    <use href="#i-cal" x="120" y="112" width="9" height="9" stroke="#4A9B8C"/>
+    <text x="133" y="120" font-size="10" fill="#2B3228">Summit-Events</text>
+    <use href="#i-book" x="120" y="132" width="9" height="9" stroke="#4A9B8C"/>
+    <text x="133" y="140" font-size="10" fill="#2B3228">Workshops</text>
+    <use href="#i-rocket" x="120" y="152" width="9" height="9" stroke="#4A9B8C"/>
+    <text x="133" y="160" font-size="10" fill="#2B3228">KINN:MOBIL</text>
+    <text x="180" y="198" text-anchor="middle" font-size="8.5" font-weight="700" fill="#4A9B8C">100% Community-Zwecke</text>
+    <!-- Firewall Mitte -->
+    <rect x="370" y="20" width="60" height="180" rx="8" fill="#5ED9A6" opacity="0.15"/>
+    <line x1="400" y1="20" x2="400" y2="200" stroke="#5ED9A6" stroke-width="2.5" stroke-dasharray="5,4"/>
+    <text x="400" y="110" text-anchor="middle" font-size="9" font-weight="800" fill="#2D6B60" letter-spacing="0.15em" transform="rotate(-90,400,110)">FIREWALL</text>
+    <!-- Durchgestrichene Pfeile -->
+    <line x1="352" y1="60" x2="448" y2="60" stroke="#D4956A" stroke-width="1.5" opacity="0.5"/>
+    <line x1="392" y1="50" x2="408" y2="70" stroke="#D4956A" stroke-width="2.5"/>
+    <line x1="408" y1="50" x2="392" y2="70" stroke="#D4956A" stroke-width="2.5"/>
+    <!-- Libra Seite -->
+    <rect x="450" y="10" width="340" height="200" rx="16" fill="#BDB2A1" opacity="0.08" stroke="#BDB2A1" stroke-width="1.5"/>
+    <text x="620" y="40" text-anchor="middle" font-size="14" font-weight="900" fill="#2B3228">Libra FlexCo</text>
+    <text x="620" y="56" text-anchor="middle" font-size="9" fill="#6B7068">Geschäfts-Revenue</text>
+    <!-- Items rechts -->
+    <use href="#i-brief" x="560" y="72" width="9" height="9" stroke="#BDB2A1"/>
+    <text x="573" y="80" font-size="10" fill="#2B3228">Consulting</text>
+    <use href="#i-brain" x="560" y="92" width="9" height="9" stroke="#BDB2A1"/>
+    <text x="573" y="100" font-size="10" fill="#2B3228">AI Solutions</text>
+    <use href="#i-users" x="560" y="112" width="9" height="9" stroke="#BDB2A1"/>
+    <text x="573" y="120" font-size="10" fill="#2B3228">Vermittlung</text>
+    <use href="#i-laptop" x="560" y="132" width="9" height="9" stroke="#BDB2A1"/>
+    <text x="573" y="140" font-size="10" fill="#2B3228">SaaS-Produkte</text>
+    <text x="620" y="198" text-anchor="middle" font-size="8.5" font-weight="700" fill="#BDB2A1">Eigenes Budget, eigene Einnahmen</text>
+  </svg>
+
+  <div class="firewall">
+    <div class="fw-side">
+      <div class="fw-title" style="color:var(--teal)">KINN:FUND</div>
+      <div style="font-size:0.8rem;color:var(--kangaroo);margin-bottom:1rem">Community-Geld</div>
+      <div class="fw-items">
+        Verpflegung & Frühstück<br>
+        Merchandise (Badges, Shirts)<br>
+        Summit-Events (100+ Pers.)<br>
+        Core Team Koordination<br>
+        Workshop-Materialien<br>
+        KINN:MOBIL Expansion<br>
+        Rücklagen
+      </div>
+    </div>
+    <div class="fw-wall"><div class="fw-wall-label">Firewall</div></div>
+    <div class="fw-side">
+      <div class="fw-title" style="color:var(--heavy-metal)">Libra FlexCo</div>
+      <div style="font-size:0.8rem;color:var(--kangaroo);margin-bottom:1rem">Geschäfts-Revenue</div>
+      <div class="fw-items">
+        Vermittlungsprovisionen<br>
+        KI-Prototyping Projekte<br>
+        Tool-Lizenzen<br>
+        Consulting-Mediation<br>
+        Daten-Intelligence Services<br>
+        Content-Hub Aufträge<br>
+        DSGVO-Beratung<br>
+        Unternehmensgewinne
+      </div>
+    </div>
+  </div>
+
+  <h2>Warum Libra trotzdem profitiert</h2>
+  <p>Die Firewall bedeutet nicht, dass Libra nichts von <span class="kb">KINN</span> hat. Im Gegenteil - aber der Nutzen entsteht indirekt:</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Indirekter Nutzen</th><th>Mechanik</th></tr>
+    <tr><td>Stärkere Pipeline</td><td>Mehr Experten im Netzwerk = bessere Vermittlungsmöglichkeiten für Libra</td></tr>
+    <tr><td>Trust-Transfer</td><td>KINN-Community vertraut Libra, weil die Firewall sichtbar funktioniert</td></tr>
+    <tr><td>Markeneffekt</td><td>"Libra ermöglicht KINN" ist besseres Marketing als jede Werbekampagne</td></tr>
+    <tr><td>Deal-Flow</td><td>KMUs aus der Community werden zu Libra-Kunden - weil sie KINN kennen</td></tr>
+  </table></div>
+
+  <div class="note"><strong>Kommunikation:</strong> Die Firewall ist kein internes Detail. Sie wird aktiv auf /fund kommuniziert: "Community-Geld finanziert Community-Kosten. Libra-Projekte haben ein eigenes Budget. Beides transparent, beides getrennt."</div>
+
+  <div class="warn"><strong>Firewall strukturell stärken:</strong> Als operative Vereinbarung innerhalb einer einzelnen juristischen Person hängt die Firewall an der Disziplin der Beteiligten. Empfohlene Maßnahmen: (1) Dediziertes KINN:FUND-Unterkonto mit eigenen Kontoauszügen. (2) Schriftliche Selbstverpflichtung, öffentlich auf /fund. (3) Langfristig: Community Advisory Board (2-3 gewählte KINN:PATEN) mit Einsichtsrecht.</div>
+  <details class="src"><summary>Warum das wichtig ist: WordPress/Automattic 2024</summary><div class="src-body">
+    <p>WordPress hatte eine ähnliche Firewall zwischen Foundation (Community) und Automattic (kommerziell). Im September 2024 brach diese zusammen, als CEO Matt Mullenweg seine Kontrolle über beide Seiten nutzte, um WP Engine aus der Plugin-Infrastruktur zu sperren. Offengelegt wurde: WordPress.org war Mullenwegs persönliches Eigentum, nicht das der Foundation.</p>
+    <p><strong>Die Lehre:</strong> Wenn dieselbe Person Community und Kommerz kontrolliert, existiert die Firewall nur, solange die Person es will. Transparenz und strukturelle Absicherung sind der beste Schutz.</p>
+    <ul>
+      <li>Weitere Fälle: Redis 2024 (Lizenzänderung → Fork Valkey), HashiCorp/Terraform 2023 (→ OpenTofu)</li>
+      <li><a href="https://opencollective.com" target="_blank" rel="noopener">Open Collective Europe</a>: Referenzmodell für strukturelle Community-Finanztrennung</li>
+    </ul>
+  </div></details>
+</div></div>
+
+<!-- 09 ARCHITEKTUR -->
+<div class="page pg-mix" id="architektur"><div class="pi">
+  <div class="sn">09</div><div class="sl">Geschäftsmodell</div>
+  <h1>Revenue-Architektur & Beteiligung</h1>
+  <div class="sub">KINN:FUND als vierter Pillar im Libra-Ökosystem</div>
+
+  <p>Libra Innovation FlexCo finanziert sich über vier Revenue-Streams. KINN:FUND ergänzt als vierter Pillar - direkte Community-Unterstützung, strikt getrennt von den geschäftlichen Einnahmen.</p>
+
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-num">01</div>
+      <div class="pillar-name">Vermittlungsprovision</div>
+      <div class="pillar-desc">10-15% auf erfolgreiche Placements. KI-Experten an Tiroler KMUs vermitteln, die konkrete Projekte haben.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">02</div>
+      <div class="pillar-name">KMU-Mitgliedschaften</div>
+      <div class="pillar-desc">Jährliche Premium-Zugänge für Unternehmen. Zugang zu verifiziertem Experten-Pool und Matchmaking.</div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-num">03</div>
+      <div class="pillar-name">Supporter-Beiträge</div>
+      <div class="pillar-desc">Institutionelle Partner. In-kind oder Cash-Beiträge von Organisationen, die das Ökosystem stärken wollen.</div>
+    </div>
+    <div class="pillar highlight">
+      <div class="pillar-num">04</div>
+      <div class="pillar-name">KINN:FUND</div>
+      <div class="pillar-desc">Direkte Community-Unterstützung. Micro-Crowdfunding durch KINN:PATEN. Dieses Konzept.</div>
+    </div>
+  </div>
+
+  <div class="warn"><strong>Strikte Trennung:</strong> Pillar 1-3 finanzieren Libra-Geschäft. Pillar 4 (KINN:FUND) finanziert ausschließlich Community-Kosten. Die Firewall zwischen beiden ist nicht verhandelbar.</div>
+
+  <h2>Beteiligungsmodell</h2>
+
+  <quote class="quote">
+    <p>"Gewinnanteile erst nach bewiesener Lieferung."</p>
+    <cite>Stefan Seiger, Libra Innovation FlexCo</cite>
+  </quote>
+
+  <p>Wer Wert schafft, wird am Wert beteiligt. Das Beteiligungsmodell ist bewusst leistungsbezogen - keine Anteile auf Vorschuss, sondern faire Vergütung für gelieferten Wert.</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Mechanismus</th><th>Für wen</th><th>Prinzip</th></tr>
+    <tr><td>Revenue Sharing</td><td>Core Team Members</td><td>Anteil am Wert, den sie für das Ökosystem schaffen</td></tr>
+    <tr><td>Chapter-Beteiligungen</td><td>Regionale KINN-Gründer</td><td>Lokale Ownership für lokales Wachstum (Wattens, Schwaz, etc.)</td></tr>
+    <tr><td>UWA</td><td>Partner</td><td>Umsatzbeteiligungsvereinbarungen für faire Kooperationen</td></tr>
+  </table></div>
+
+  <h2>Aktuelles Budget (H1 2026)</h2>
+  <p><span class="kb">KINN</span> kostet wenig - aber es kostet. Aktuelles Budget, von Stefan genehmigt:</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Zeitraum</th><th>Betrag</th><th>Aufschlüsselung</th></tr>
+    <tr><td>Q1 2026</td><td>380 Euro</td><td>280 Euro direkte Kosten, 100 Euro Tools</td></tr>
+    <tr><td>Q2 2026</td><td>250 Euro</td><td>150 Euro Location falls nötig, 100 Euro Tools</td></tr>
+    <tr><td>Monatlich operativ</td><td>100-150 Euro</td><td>Kaffee/Drinks, Kleintools</td></tr>
+    <tr><td style="font-family:'Montserrat',sans-serif;font-weight:800">Total H1 2026</td><td style="font-family:'Montserrat',sans-serif;font-weight:800;color:var(--teal)">630 Euro</td><td>Bisher ±gedeckt durch Spenden (vor Steuer) + Location-Host-Beiträge</td></tr>
+  </table></div>
+
+  <div class="note"><strong>Mission:</strong> "Wir demokratisieren Innovation." - Stefan Seiger. KI-Lösungen waren Konzern-Spielzeug. KINN macht sie zugänglich für Tischlermeister, Hotels, Installateure. Ganz Tirol.</div>
+</div></div>
+
+<!-- 10 RECHT -->
+<div class="page pg-fc" id="recht"><div class="pi">
+  <div class="sn">10</div><div class="sl">Rechtlich & steuerlich</div>
+  <h1>FlexCo-Struktur statt Verein</h1>
+  <div class="sub">Warum das bewusst so gewählt ist - und was es bedeutet</div>
+
+  <p>Am 30. Jänner 2026 hat das <span class="kb">KINN</span> Core Team nach einem dreistündigen Meeting die Vereinsgründung <strong>komplett</strong> verworfen. Nicht "vielleicht später". Nicht "mal schauen". Sondern: <em>Darauf haben wir keinen Bock.</em></p>
+
+  <p>Thomas hat Erfahrung mit zwei Vereinen - bei beiden kam für die Gründer kein Wert heraus. Das erkannte Pattern: <strong>"Vereine verwalten. Vereine bauen nicht auf."</strong> Eine NotebookLM-Analyse bestätigte: "Verein und Business verheiraten funktioniert nicht." KINN:FUND läuft daher unter der Libra Innovation FlexCo.</p>
+
+  <h2>Warum kein Verein?</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Vereins-Einschränkung</th><th>FlexCo-Vorteil</th></tr>
+    <tr><td>Beiträge brauchen typischerweise GV-Beschluss (BMI-Musterstatuten)</td><td>Freie Preisgestaltung, änderbar jederzeit</td></tr>
+    <tr><td>Kein Gewinn-Ausschüttung erlaubt</td><td>Faire Vergütung für Core Team möglich</td></tr>
+    <tr><td>Scheinverein-Risiko bei kommerzieller Nähe</td><td>Wirtschaftliche Aktivität ist der Sinn</td></tr>
+    <tr><td>Gemeinnützigkeit limitiert Flexibilität</td><td>Keine Einschränkungen bei Kooperationen</td></tr>
+    <tr><td>Formale Beschlüsse für Änderungen</td><td>Agile Anpassung ohne Bürokratie</td></tr>
+  </table></div>
+
+  <h2>Steuerliche Einordnung</h2>
+  <div class="warn"><strong>Klare Kommunikation:</strong> KINN:PATE-Beiträge sind <u>keine steuerlich absetzbaren Spenden</u>. Sie sind reguläre FlexCo-Einnahmen, USt-pflichtig (20%) und einkommensteuerpflichtig. Das wird auf /fund transparent kommuniziert.</div>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Aspekt</th><th>Einordnung</th></tr>
+    <tr><td>Umsatzsteuer</td><td>20% USt auf alle KINN:FUND-Einnahmen</td></tr>
+    <tr><td>Einkommensteuer</td><td>Reguläre FlexCo-Einnahmen, gewinnsteuerpflichtig</td></tr>
+    <tr><td>Für KINN:PATEN</td><td>Nicht steuerlich absetzbar - transparent kommuniziert</td></tr>
+    <tr><td>Bezeichnung</td><td>"Community-Beitrag" - nicht "Spende" oder "Mitgliedsbeitrag"</td></tr>
+    <tr><td>Verträge</td><td>Kein Abo-Vertrag, jederzeit kündbar, keine Mindestlaufzeit</td></tr>
+  </table></div>
+
+  <div class="note"><strong>Offene Klärung mit Steuerberater:</strong> Die oben genannte 20%-USt-Pflicht ist die konservativste Lesart. Zwei Faktoren könnten die Steuerlast reduzieren: (1) Freiwillige Beiträge ohne konkrete Gegenleistung können als <em>echte Zuschüsse</em> gelten und sind dann nicht steuerbar (§1 UStG 1994). (2) Die <em>Kleinunternehmerregelung</em> befreit seit Jänner 2025 Umsätze bis 55.000 EUR/Jahr von der USt. Bei projiziertem KINN:FUND-Umsatz von unter 30.000 EUR/Jahr wäre das relevant. Endgültige Klärung steht aus.</div>
+  <details class="src"><summary>Quellen: USt-Behandlung</summary><div class="src-body"><ul>
+    <li><a href="https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/umsatzsteuerpflicht.html" target="_blank" rel="noopener">USP.gv.at: Umsatzsteuerpflicht</a></li>
+    <li><a href="https://www.wko.at/steuern/kleinunternehmerregelung-umsatzsteuer" target="_blank" rel="noopener">WKO: Kleinunternehmerregelung</a></li>
+    <li><a href="https://winheller.com/blog/zur-abgrenzung-zw-echtem-und-unechtem-zuschuss/" target="_blank" rel="noopener">Winheller: Abgrenzung echter/unechter Zuschuss</a></li>
+  </ul></div></details>
+
+  <h2>Begriffe auf /fund</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Verwenden</th><th>Vermeiden</th><th>Grund</th></tr>
+    <tr><td>KINN:PATE</td><td>Mitglied</td><td>"Mitglied" impliziert Vereinsrechte (Stimmrecht, GV)</td></tr>
+    <tr><td>Community-Beitrag</td><td>Spende</td><td>"Spende" suggeriert Steuervorteile die es nicht gibt</td></tr>
+    <tr><td>Beitragen / Unterstützen</td><td>Kaufen / Abonnieren</td><td>Soziale Normen statt Marktnormen</td></tr>
+    <tr><td>Jederzeit anpassbar</td><td>Kündigen</td><td>Kein Vertrag, also keine Kündigung</td></tr>
+  </table></div>
+</div></div>
+
+<!-- 11 TIMELINE -->
+<div class="page pg-mix" id="timeline"><div class="pi">
+  <div class="sn">11</div><div class="sl">Umsetzung</div>
+  <h1>Fahrplan</h1>
+  <div class="sub">Was wann passiert - und was es auslöst</div>
+
+  <div class="timeline">
+    <div class="tl-item active">
+      <div class="tl-date">Februar - März 2026</div>
+      <div class="tl-title">Konzept & Core-Team Alignment</div>
+      <div class="tl-body">Konzeptpapier (dieses Dokument) mit Core Team diskutieren. Feedback von Martin, Steven, Stefan. Entscheidung ob Go/No-Go. Steuerliche Rücksprache mit Steuerberater zu USt-Handling.</div>
+    </div>
+
+    <div class="tl-item next">
+      <div class="tl-date">April 2026</div>
+      <div class="tl-title">Soft Launch <a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a></div>
+      <div class="tl-body">Seite live schalten - still, ohne Kampagne. Brücke von /stimmen zu /fund einbauen. Erster Cause: "Besseres Frühstück." Persönliche Einladung an 10 Community-Members die bereits Interesse signalisiert haben.</div>
+    </div>
+
+    <div class="tl-item next">
+      <div class="tl-date">Mai 2026</div>
+      <div class="tl-title">Community-Kommunikation</div>
+      <div class="tl-body">Beim Donnerstags-Treffen erwähnen: "Wir haben /fund - wer mag, kann." LinkedIn-Post mit authentischer Story: "Was KINN kostet und wie ihr es mittragen könnt." Erster Transparenz-Report.</div>
+    </div>
+
+    <div class="tl-item next">
+      <div class="tl-date">Juni 2026</div>
+      <div class="tl-title">Phase 1 Evaluation</div>
+      <div class="tl-body">Wie viele KINN:PATEN? Decken wir die Grundkosten? Was sagt die Community? Anpassung der Stufen falls nötig. Entscheidung über Phase-2-Causes. <strong>Churn-Monitoring starten:</strong> Monatliche Retention-Rate tracken, persönliche Dankes-Nachricht an jeden neuen KINN:PATEN (wichtigster Retention-Hebel), Pausen-Option statt Kündigung anbieten.</div>
+    </div>
+
+    <details class="src"><summary>Hintergrund: Churn-Erwartung</summary><div class="src-body">
+      <p>Subscriptions haben typischerweise 5-8% monatliche Churn-Rate. Bei 30 KINN:PATEN und 7% Churn braucht es ~2 Neuzugänge pro Monat nur um stabil zu bleiben. KINNs natürliche Anti-Churn-Faktoren (wöchentlicher Face-to-Face-Kontakt, sichtbare Badges, lokale Verwurzelung) helfen - trotzdem muss Churn eingeplant werden.</p>
+      <ul>
+        <li>Patreon 30-Tage-Retention: 40-50% der Neu-Patrons (Graphtreon)</li>
+        <li>80% der Kündigenden bleiben als Free Members - die Beziehung bricht nicht ab</li>
+        <li>Jahres-Zahlungsoption reduziert Churn um ca. 50%</li>
+      </ul>
+    </div></details>
+
+    <div class="tl-item next">
+      <div class="tl-date">Q3 2026</div>
+      <div class="tl-title">Phase 2: Causes & Partner-Stufe</div>
+      <div class="tl-body">Causes-System mit Fortschrittsbalken live. KINN:PARTNER Firmen-Stufe launchen. KINN Merchandise als erster konkreter Cause. Ansprache von 5-10 KMUs die bereits regelmäßig kommen.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">Q4 2026</div>
+      <div class="tl-title">Jahresreview & Phase-3-Planung</div>
+      <div class="tl-body">Jahres-Transparenz-Report. Community-Feedback-Runde. Wenn 1.200+ Euro/Monat erreicht: Planung der Core-Team-Vergütung und KINN:MOBIL Expansion für 2027.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">2027</div>
+      <div class="tl-title">Phase 3: Professionalisierung</div>
+      <div class="tl-body">Core Team Koordinations-Pauschale. KINN:MOBIL Chapter in Wattens, Schwaz, Kufstein. Eigenes Community-Budget. KINN als selbsttragendes Ökosystem.</div>
+    </div>
+  </div>
+
+  <h2>Entscheidungspunkte</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Meilenstein</th><th>Entscheidung</th><th>Go-Kriterium</th></tr>
+    <tr><td>20 KINN:PATEN</td><td>Grundkosten gedeckt?</td><td>Laufende Kosten zu 80%+ finanziert</td></tr>
+    <tr><td>40 KINN:PATEN</td><td>Phase-2-Causes starten?</td><td>Überschuss für zusätzliche Projekte</td></tr>
+    <tr><td>5 KINN:PARTNER</td><td>Firmen-Stufe funktioniert?</td><td>Regelmäßige Zahlungen, kein Churn</td></tr>
+    <tr><td>1.200 Euro/Monat</td><td>Core Team Vergütung?</td><td>6 Monate stabil über Schwelle</td></tr>
+    <tr><td>2.500 Euro/Monat</td><td>KINN:MOBIL starten?</td><td>Ausreichend Budget nach allen Fixkosten</td></tr>
+  </table></div>
+</div></div>
+
+<!-- 12 ZUSAMMENFASSUNG -->
+<div class="page pg-mix" id="zusammenfassung"><div class="pi">
+  <div class="sn">12</div><div class="sl">Executive Summary</div>
+  <h1>Auf einen Blick</h1>
+  <div class="sub">Das gesamte Modell in Kennzahlen</div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">3</div><div class="metric-unit">Stufen</div><div class="metric-label">Freund / Pate / Träger</div></div>
+    <div class="metric"><div class="metric-val">5</div><div class="metric-unit">Euro</div><div class="metric-label">Minimalbeitrag</div></div>
+    <div class="metric"><div class="metric-val">3</div><div class="metric-unit">Phasen</div><div class="metric-label">500 → 1.200 → 2.500+</div></div>
+    <div class="metric"><div class="metric-val">0</div><div class="metric-unit">Paywalls</div><div class="metric-label">KINN bleibt immer gratis</div></div>
+  </div>
+
+  <h2>Kern-Prinzipien</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Prinzip</th><th>Umsetzung</th></tr>
+    <tr><td>Impact First</td><td>/stimmen beweist den Wert, bevor /fund zum Tragen einlädt</td></tr>
+    <tr><td>Radikale Transparenz</td><td>Monatlicher Report mit Euro-genauer Aufschlüsselung</td></tr>
+    <tr><td>Freiwilligkeit</td><td>Kein Druck, kein Gatekeeping, keine Mindestlaufzeiten</td></tr>
+    <tr><td>Firewall</td><td>Community-Geld finanziert Community. Libra hat eigenes Budget.</td></tr>
+    <tr><td>Faire Vergütung</td><td>Ab Phase 3 Koordinations-Pauschale statt Ehrenamt-Burnout</td></tr>
+    <tr><td>Causes statt Sammeln</td><td>Konkrete Ziele mit Fortschrittsbalken und Impact-Stories</td></tr>
+  </table></div>
+
+  <h2>Warum das funktioniert</h2>
+
+  <quote class="quote">
+    <p>"Wer jeden Donnerstag um 8 Uhr freiwillig aufsteht, weil KINN ihm etwas gibt, der will irgendwann auch etwas zurückgeben. Nicht weil er muss - sondern weil Zugehörigkeit kein Konsumgut ist."</p>
+    <cite>Grundgedanke KINN:FUND</cite>
+  </quote>
+
+  <p><span class="kb">KINN</span> hat etwas, das Geld nicht kaufen kann: 50+ Menschen, die jede Woche kommen weil sie wollen. KINN:FUND verwandelt dieses Wollen nicht in eine Pflicht - es gibt ihm einen Kanal. Und macht dabei transparent, nachvollziehbar und fair, was in anderen Organisationen im Dunkeln bleibt.</p>
+
+  <p>Die Kombination aus Micro-Crowdfunding, konkreten Causes und radikaler Transparenz ist in der Tiroler Community-Landschaft einzigartig. Kein Verein, kein Sponsoring, kein Fördertopf - sondern Menschen, die sagen: "Das will ich mittragen."</p>
+
+  <h2>Strategischer Wert</h2>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-label">Unabhängigkeit</div>
+      <div class="flow-text">KINN finanziell unabhängig von Libra</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Belonging</div>
+      <div class="flow-text">"Ich trage das" statt "Ich konsumiere gratis"</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Skalierung</div>
+      <div class="flow-text">Wachstum ohne Authentizitätsverlust</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Fairness</div>
+      <div class="flow-text">Burnout-Prävention durch faire Kompensation</div>
+    </div>
+  </div>
+
+  <h2>Adressierte Risiken</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Risiko</th><th>Absicherung</th></tr>
+    <tr><td>Scheinverein</td><td>Vermieden durch keine Vereinsstruktur</td></tr>
+    <tr><td>DSGVO</td><td>Klares Opt-in für Daten-Sharing auf der Wall</td></tr>
+    <tr><td>Libra-Konflikt</td><td>Firewall strikt aufrechterhalten und kommuniziert</td></tr>
+    <tr><td>Indie-Verlust</td><td>Causes und Transparenz verhindern Corporate-Character</td></tr>
+    <tr><td>Vertrauensprobleme</td><td>Radikale Transparenz als Präventivmaßnahme</td></tr>
+  </table></div>
+
+  <h2>Erfolgsmetriken</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Phase</th><th>Ziel</th></tr>
+    <tr><td>Phase 1</td><td>20 KINN:PATEN, 80%+ Kosten gedeckt</td></tr>
+    <tr><td>Phase 2</td><td>40 KINN:PATEN, Überschuss für zusätzliche Projekte</td></tr>
+    <tr><td>Phase 3</td><td>6 Monate stabil bei 2.500+ Euro/Monat, faire Kompensation möglich</td></tr>
+  </table></div>
+
+  <h2>Nächste Schritte</h2>
+  <ul class="actions">
+    <li>Steuerberater-Konsultation zu USt-Handling</li>
+    <li>Core Team Alignment zum Vergütungsmodell</li>
+    <li><a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a> Seite entwickeln</li>
+    <li>Ersten Cause definieren (Besseres Frühstück)</li>
+    <li>Transparenz-Dashboard Mockup</li>
+    <li>Persönliche Einladungen an 10 Early Supporters</li>
+    <li>Monatliches Reporting-Template erstellen</li>
+  </ul>
+
+  <div style="margin-top:3rem;text-align:center;padding-top:2rem;border-top:2px solid var(--spring-rain)">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg" style="width:100px;fill:var(--heavy-metal);margin-bottom:0.5rem"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+    <div style="font-size:0.85rem;color:var(--text-muted)">Tirols KI-Community</div>
+    <div style="font-size:0.8rem;color:var(--teal);margin-top:0.5rem"><a class="ext" href="https://kinn.at/fund" target="_blank" rel="noopener">kinn.at/fund</a></div>
+    <div style="font-size:0.7rem;color:var(--kangaroo);margin-top:1rem;font-style:italic">KINN:FUND Konzeptpapier v2.3 - Februar 2026 - Libra Innovation FlexCo</div>
+  </div>
+
+  <h2 style="margin-top:3rem">Changelog</h2>
+  <div id="changelog"></div>
+</div></div>
+
+<script src="changelog.js"></script>
+</body>
+</html>

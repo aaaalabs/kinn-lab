@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN - Gesamtstrategie & Entscheidungsbasis 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family:'Futura'; src:local('Futura'),local('Futura-Medium'),local('FuturaPT-Book'); font-weight:400; }
+    :root {
+      --mintgreen:#5ED9A6; --heavy-metal:#2B3228; --ecru-white:#F5F0E6; --spring-rain:#A8C8B0;
+      --malta:#BDB2A1; --kangaroo:#C6C3B5; --teal:#4A9B8C; --dark-teal:#2D6B60; --cream:#F5F1E8;
+      --mint-glow:rgba(94,217,166,0.15); --mint-subtle:rgba(94,217,166,0.08);
+      --bg:var(--ecru-white); --text:var(--heavy-metal); --text-muted:#6B7068;
+      --surface:#FFFFFF; --border:rgba(43,50,40,0.1);
+      --warn:#D4956A; --warn-bg:rgba(212,149,106,0.08);
+      --decision:#2D6B60; --decision-bg:rgba(45,107,96,0.06);
+    }
+    *{margin:0;padding:0;box-sizing:border-box} html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Futura','Work Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.618;-webkit-font-smoothing:antialiased}
+    a.ext{color:var(--teal);text-decoration:none;border-bottom:1px solid var(--mint-glow);transition:border-color 0.2s}
+    a.ext:hover{border-color:var(--mintgreen)} a.ext::after{content:'\2009\2197';font-size:0.75em;opacity:0.5}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,240,230,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.6rem 2rem;display:flex;align-items:center;gap:1.5rem}
+    nav .logo-nav{display:flex;align-items:center;text-decoration:none} nav .logo-nav svg{height:18px;width:auto;fill:var(--heavy-metal)}
+    nav .nav-links{display:flex;gap:0.15rem;flex-wrap:wrap}
+    nav a.nl{font-family:'Futura','Work Sans',sans-serif;font-size:0.7rem;color:var(--text-muted);text-decoration:none;padding:0.3rem 0.55rem;border-radius:6px;transition:all 0.2s;letter-spacing:0.04em;text-transform:uppercase}
+    nav a.nl:hover{background:var(--mint-glow);color:var(--heavy-metal)}
+    nav .nav-tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--heavy-metal);color:var(--mintgreen);padding:0.2rem 0.5rem;border-radius:4px;margin-left:auto}
+
+    .page{min-height:100vh;padding:5.5rem 2rem 4rem;display:flex;align-items:center;justify-content:center;position:relative}
+    .pi{max-width:920px;width:100%}
+    .page::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 30%,var(--mint-subtle) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(168,200,176,0.06) 0%,transparent 50%);pointer-events:none}
+    .page:nth-child(even){background:linear-gradient(180deg,var(--ecru-white) 0%,#F0EBE1 100%)}
+    .page:nth-child(even)::before{background:radial-gradient(circle at 70% 20%,rgba(189,178,161,0.08) 0%,transparent 50%),radial-gradient(circle at 30% 80%,var(--mint-subtle) 0%,transparent 50%)}
+    .page.pg-fund{background:linear-gradient(180deg,rgba(94,217,166,0.04) 0%,rgba(94,217,166,0.08) 100%);border-left:3px solid var(--mintgreen)}
+    .page.pg-decision{background:linear-gradient(180deg,rgba(45,107,96,0.04) 0%,rgba(45,107,96,0.08) 100%);border-left:3px solid var(--dark-teal)}
+    .page.pg-warn{background:linear-gradient(180deg,rgba(212,149,106,0.03) 0%,rgba(212,149,106,0.07) 100%);border-left:3px solid var(--warn)}
+    .page.pg-mix{background:linear-gradient(180deg,rgba(94,217,166,0.03) 0%,rgba(189,178,161,0.07) 100%);border-left:3px solid var(--spring-rain)}
+
+    /* Cover */
+    .cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;position:relative;background:var(--ecru-white)}
+    .cover-bg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+    .cover-bg::before{content:'';position:absolute;top:-30%;left:-20%;width:80%;height:80%;background:radial-gradient(ellipse,rgba(94,217,166,0.12) 0%,transparent 70%);animation:cpulse 10s ease-in-out infinite}
+    .cover-bg::after{content:'';position:absolute;bottom:-20%;right:-10%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(168,200,176,0.1) 0%,transparent 70%);animation:cpulse 14s ease-in-out infinite reverse}
+    @keyframes cpulse{0%,100%{transform:scale(1) translate(0,0)}50%{transform:scale(1.08) translate(2%,2%)}}
+    .cl{width:280px;max-width:65%;margin:0 auto 1.5rem;z-index:1;position:relative}
+    .cl svg{width:100%;height:auto;fill:var(--heavy-metal);filter:drop-shadow(0 4px 20px rgba(0,0,0,0.07))}
+    .ct{font-size:0.8rem;color:var(--text-muted);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:1.5rem;z-index:1;position:relative}
+    .ch{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.4rem;color:var(--heavy-metal);margin-bottom:0.75rem;z-index:1;position:relative;line-height:1.1}
+    .cs{font-size:1rem;color:var(--text-muted);margin-bottom:0.25rem;z-index:1;position:relative;max-width:520px;margin-left:auto;margin-right:auto}
+    .ml{width:60px;height:3px;background:var(--mintgreen);border-radius:2px;margin:1.5rem auto;z-index:1;position:relative}
+    .cb{display:inline-block;font-size:0.7rem;color:var(--heavy-metal);background:var(--mint-glow);border:1px solid rgba(94,217,166,0.35);padding:0.4rem 1.1rem;border-radius:100px;letter-spacing:0.1em;text-transform:uppercase;margin-top:2.5rem;z-index:1;position:relative}
+    .cover-docs{display:flex;justify-content:center;gap:1rem;margin-top:1rem;z-index:1;position:relative;flex-wrap:wrap}
+    .cover-doc{font-size:0.72rem;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);padding:0.35rem 0.8rem;border-radius:6px;letter-spacing:0.04em}
+    .cover-doc span{color:var(--teal);font-weight:700}
+
+    h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.3rem;color:var(--heavy-metal);letter-spacing:0.02em;line-height:1.15;margin-bottom:1.5rem}
+    h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.45rem;color:var(--heavy-metal);line-height:1.3;margin-top:2.5rem;margin-bottom:1rem}
+    h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.05rem;color:var(--teal);margin-top:1.5rem;margin-bottom:0.75rem}
+    p{margin-bottom:1rem;line-height:1.72}
+    .sn{font-family:'Montserrat',sans-serif;font-weight:900;font-size:4rem;color:var(--spring-rain);opacity:0.4;line-height:1;margin-bottom:-0.5rem}
+    .sl{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .kb{font-family:'Montserrat',sans-serif;font-weight:900}
+    .sub{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--teal);letter-spacing:0.04em;margin-bottom:1.25rem}
+
+    /* Tables */
+    .st-wrap{overflow-x:auto;margin:1.25rem 0 1.5rem;border-radius:12px;border:1px solid var(--border);-webkit-overflow-scrolling:touch}
+    .st{width:100%;min-width:480px;border-collapse:separate;border-spacing:0}
+    .st th{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;text-align:left;padding:0.75rem 1rem;background:var(--heavy-metal);color:var(--ecru-white)}
+    .st td{padding:0.65rem 1rem;font-size:0.9rem;border-bottom:1px solid var(--border)}
+    .st tr:last-child td{border-bottom:none}
+    .st tr:nth-child(even) td{background:rgba(168,200,176,0.06)}
+    .st td:first-child{font-weight:600;color:var(--heavy-metal)}
+    .st .yes{color:var(--teal);font-weight:700} .st .no{color:var(--warn);font-weight:700}
+
+    /* Notes & Quotes */
+    .note{background:rgba(94,217,166,0.08);border-left:3px solid var(--mintgreen);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem}
+    .note strong{color:var(--teal)}
+    .warn-box{background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem}
+    .warn-box strong{color:#B07840}
+    .decision-box{background:var(--decision-bg);border-left:3px solid var(--decision);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem}
+    .decision-box strong{color:var(--decision)}
+    .quote{display:block;border-left:3px solid var(--mintgreen);padding:1rem 1.5rem;margin:1.5rem 0;background:var(--mint-glow);border-radius:0 12px 12px 0}
+    .quote p{font-size:1rem;font-style:italic;color:var(--heavy-metal);margin-bottom:0.35rem;line-height:1.6}
+    .quote cite{font-size:0.8rem;color:var(--teal);font-style:normal;font-family:'Montserrat',sans-serif;font-weight:700}
+
+    /* Metrics */
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+    .metrics-5{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin:1.5rem 0}
+    .metric{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+    .metric.highlight{border-color:var(--mintgreen);background:rgba(94,217,166,0.05)}
+    .metric-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.8rem;color:var(--teal);line-height:1.1}
+    .metric.highlight .metric-val{color:var(--dark-teal)}
+    .metric-unit{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;color:var(--kangaroo);letter-spacing:0.05em;text-transform:uppercase;margin-top:0.15rem}
+    .metric-label{font-size:0.78rem;color:var(--text-muted);margin-top:0.4rem;line-height:1.3}
+
+    /* Flow */
+    .flow{display:flex;align-items:stretch;gap:0;margin:1.5rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .flow-item{flex:1;padding:1.25rem 1rem;background:var(--surface);position:relative;text-align:center}
+    .flow-item:not(:last-child){border-right:1px solid var(--border)}
+    .flow-item:not(:last-child)::after{content:'\2192';position:absolute;right:-0.6rem;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--mintgreen);z-index:2;background:var(--surface);width:1.2rem;height:1.2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;line-height:1}
+    .flow-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .flow-text{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
+    .flow-icon{font-size:1.25rem;margin-bottom:0.4rem}
+
+    /* Phase cards */
+    .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .phase{background:var(--surface);border-radius:16px;padding:1.75rem 1.5rem;border:1px solid var(--border);position:relative;overflow:hidden}
+    .phase::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--kangaroo)}
+    .phase.active::before{background:var(--mintgreen)}
+    .phase.next::before{background:var(--teal)}
+    .phase-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:0.5rem}
+    .phase.active .phase-label{color:var(--dark-teal)}
+    .phase-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.05rem;color:var(--heavy-metal);margin-bottom:0.35rem}
+    .phase-target{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.4rem;color:var(--mintgreen);margin-bottom:0.5rem}
+    .phase-body{font-size:0.85rem;color:var(--text-muted);line-height:1.6}
+    .phase-badge{display:inline-block;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--mint-glow);color:var(--teal);border:1px solid rgba(94,217,166,0.3);padding:0.15rem 0.5rem;border-radius:4px;margin-bottom:0.75rem}
+
+    /* Split / Firewall */
+    .firewall{display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin:1.5rem 0;align-items:stretch}
+    .fw-side{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+    .fw-side.community{border-color:var(--mintgreen);box-shadow:0 4px 20px rgba(94,217,166,0.1)}
+    .fw-side.commercial{border-color:var(--malta)}
+    .fw-wall{width:4px;background:repeating-linear-gradient(180deg,var(--mintgreen) 0px,var(--mintgreen) 8px,transparent 8px,transparent 16px);margin:0 1.5rem;border-radius:2px;position:relative;min-height:180px}
+    .fw-wall-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-90deg);font-family:'Montserrat',sans-serif;font-weight:900;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mintgreen);white-space:nowrap;background:var(--bg);padding:0.25rem 0.5rem}
+    .fw-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1rem;color:var(--heavy-metal);margin-bottom:0.75rem}
+    .fw-badge{display:inline-block;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.55rem;border-radius:4px;margin-bottom:0.75rem}
+    .fw-badge.community{background:var(--mint-glow);color:var(--teal);border:1px solid rgba(94,217,166,0.3)}
+    .fw-badge.commercial{background:rgba(189,178,161,0.15);color:var(--malta)}
+    .fw-items{font-size:0.84rem;color:var(--text-muted);line-height:1.9;text-align:left;display:inline-block}
+    .fw-items .yes{color:var(--teal)} .fw-items .no{color:var(--warn)}
+
+    /* Dunbar ladder */
+    .dunbar{margin:1.75rem 0;display:flex;flex-direction:column;gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .dunbar-step{display:flex;align-items:stretch}
+    .dunbar-bar{flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.7rem;color:white;letter-spacing:0.04em;padding:0 1rem;min-height:50px;text-align:center}
+    .dunbar-info{flex:1;display:flex;flex-direction:column;justify-content:center;gap:0.2rem;padding:0.75rem 1rem;background:var(--surface);border-bottom:1px solid var(--border)}
+    .dunbar-step:last-child .dunbar-info{border-bottom:none}
+    .dunbar-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--heavy-metal)}
+    .dunbar-text{font-size:0.8rem;color:var(--text-muted);flex:1;line-height:1.4}
+    .dunbar-status{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);margin-top:0.1rem}
+    .dunbar-status.current{color:var(--mintgreen)}
+
+    /* Venue grid */
+    .venues{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+    .venue{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;position:relative}
+    .venue.active{border-color:var(--teal)}
+    .venue.upcoming{opacity:0.75}
+    .venue-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.35rem;color:var(--text-muted)}
+    .venue.active .venue-label{color:var(--teal)}
+    .venue-name{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.88rem;color:var(--heavy-metal);margin-bottom:0.2rem}
+    .venue-cap{font-size:0.78rem;color:var(--text-muted)}
+
+    /* Hub card */
+    .hub{background:var(--surface);border:2px solid var(--spring-rain);border-radius:16px;padding:2rem;margin:2.5rem 0;position:relative;overflow:hidden}
+    .hub::before{content:'';position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(168,200,176,0.12) 0%,transparent 70%);pointer-events:none}
+    .hub-badge{display:inline-block;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--spring-rain);color:var(--heavy-metal);padding:0.2rem 0.7rem;border-radius:4px;margin-bottom:0.85rem}
+    .hub-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;color:var(--heavy-metal);margin-bottom:0.35rem;margin-top:0.35rem}
+    .hub-meta{font-size:0.85rem;color:var(--kangaroo);margin-bottom:1.25rem}
+    .hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .hub-item{background:rgba(168,200,176,0.07);border-radius:8px;padding:0.85rem}
+    .hub-item-label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .hub-item-val{font-size:0.88rem;color:var(--heavy-metal);line-height:1.4}
+
+    /* Timeline */
+    .timeline{position:relative;margin:2rem 0;padding-left:2.5rem}
+    .timeline::before{content:'';position:absolute;left:0.5rem;top:0;bottom:0;width:2px;background:var(--spring-rain);border-radius:1px}
+    .tl-item{position:relative;margin-bottom:1.5rem}
+    .tl-item::before{content:'';position:absolute;left:-2.5rem;top:0.35rem;width:12px;height:12px;border-radius:50%;background:var(--surface);border:3px solid var(--spring-rain)}
+    .tl-item.done::before{border-color:var(--mintgreen);background:var(--mintgreen)}
+    .tl-item.active::before{border-color:var(--teal);background:var(--teal)}
+    .tl-item.next::before{border-color:var(--teal);background:var(--surface)}
+    .tl-date{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:0.15rem}
+    .tl-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.95rem;color:var(--heavy-metal);margin-bottom:0.25rem}
+    .tl-body{font-size:0.88rem;color:var(--text-muted);line-height:1.5}
+    .tl-who{font-size:0.78rem;color:var(--kangaroo);margin-top:0.2rem;font-style:italic}
+
+    /* Financing bars */
+    .fin-streams{display:flex;flex-direction:column;gap:0.85rem;margin:1.5rem 0}
+    .fin-stream{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem}
+    .fin-stream-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem}
+    .fin-stream-label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--heavy-metal)}
+    .fin-stream-amount{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.9rem;color:var(--teal)}
+    .fin-stream-desc{font-size:0.8rem;color:var(--text-muted);line-height:1.4}
+    .fin-bar{height:5px;background:rgba(43,50,40,0.07);border-radius:3px;margin-top:0.65rem;overflow:hidden}
+    .fin-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--teal),var(--mintgreen))}
+
+    /* Formats */
+    .formats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .format{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.35rem;position:relative;overflow:hidden}
+    .format::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+    .format.weekly::before{background:var(--mintgreen)}
+    .format.learning::before{background:var(--teal)}
+    .format.podcast::before{background:var(--spring-rain)}
+    .format.hub::before{background:var(--malta)}
+    .format-icon{font-size:1.4rem;margin-bottom:0.5rem}
+    .format-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.9rem;color:var(--heavy-metal);margin-bottom:0.25rem}
+    .format-tag{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;background:rgba(43,50,40,0.06);color:var(--text-muted);padding:0.15rem 0.45rem;border-radius:3px;display:inline-block;margin-bottom:0.5rem}
+    .format-body{font-size:0.82rem;color:var(--text-muted);line-height:1.55}
+
+    /* Manifest */
+    .manifest{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.5rem 0}
+    .manifest-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;position:relative}
+    .manifest-card.is{border-color:var(--mintgreen);background:rgba(94,217,166,0.04)}
+    .manifest-card.isnot{border-color:rgba(212,149,106,0.35);background:rgba(212,149,106,0.04)}
+    .manifest-head{font-family:'Montserrat',sans-serif;font-weight:900;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1rem}
+    .manifest-card.is .manifest-head{color:var(--teal)}
+    .manifest-card.isnot .manifest-head{color:var(--warn)}
+    .manifest-item{font-size:0.88rem;color:var(--text-muted);padding:0.35rem 0;border-bottom:1px solid var(--border);line-height:1.4;display:flex;align-items:baseline;gap:0.5rem}
+    .manifest-item:last-child{border-bottom:none}
+    .manifest-item::before{content:'';font-size:0.7rem;flex-shrink:0;margin-top:0.1rem}
+    .manifest-card.is .manifest-item::before{content:'✓';color:var(--mintgreen)}
+    .manifest-card.isnot .manifest-item::before{content:'✗';color:var(--warn)}
+
+    /* Actions */
+    .actions{list-style:none;margin:1.25rem 0}
+    .actions li{padding:0.5rem 0 0.5rem 2rem;position:relative;font-size:0.9rem;border-bottom:1px solid var(--border);line-height:1.5}
+    .actions li:last-child{border-bottom:none}
+    .actions li::before{content:'\2610';position:absolute;left:0.25rem;top:0.5rem;font-size:1rem;color:var(--teal)}
+    .actions .who{font-size:0.78rem;color:var(--kangaroo);font-style:italic;margin-left:0.5rem}
+
+    /* Stake cards */
+    .stake{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.5rem 0}
+    .stake-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.3rem;position:relative}
+    .stake-card::before{content:'';position:absolute;top:0;left:1rem;right:1rem;height:2px;border-radius:1px;background:var(--spring-rain)}
+    .stake-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.9rem;color:var(--heavy-metal);margin-bottom:0.4rem}
+    .stake-body{font-size:0.82rem;color:var(--text-muted);line-height:1.55}
+
+    @media(max-width:768px){
+      .page{padding:4.5rem 1rem 3rem}
+      .ch{font-size:1.7rem}h1{font-size:1.7rem}h2{font-size:1.2rem}
+      .metrics,.metrics-5{grid-template-columns:repeat(2,1fr)}
+      .phases,.venues,.formats,.stake{grid-template-columns:1fr}
+      .manifest,.hub-grid{grid-template-columns:1fr}
+      .flow{flex-direction:column}
+      .flow-item:not(:last-child){border-right:none;border-bottom:1px solid var(--border)}
+      .flow-item:not(:last-child)::after{display:none}
+      .firewall{grid-template-columns:1fr}
+      .fw-wall{display:none}
+      nav .nav-links{display:none}
+    }
+    @media print{nav{display:none}.page{min-height:auto;page-break-after:always;padding:2rem}body{background:white}}
+    [id]{scroll-margin-top:4rem}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#cover" class="logo-nav">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+  </a>
+  <div class="nav-links">
+    <a href="#stand" class="nl">Status</a>
+    <a href="#marke" class="nl">Marke</a>
+    <a href="#skalierung" class="nl">Skalierung</a>
+    <a href="#hub" class="nl">KI Hub</a>
+    <a href="#finanzierung" class="nl">Finanzierung</a>
+    <a href="#formate" class="nl">Formate</a>
+    <a href="#roadmap" class="nl">Roadmap</a>
+    <a href="#manifest" class="nl">Manifest</a>
+  </div>
+  <div class="nav-tag">Gesamtstrategie 2026</div>
+</nav>
+
+<!-- COVER -->
+<div class="page cover" id="cover">
+  <div class="cover-bg"></div>
+  <div class="cl">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+  </div>
+  <div class="ct">KI Netzwerk Tirol</div>
+  <div class="ch">Gesamtstrategie &amp; Entscheidungsbasis</div>
+  <div class="ml"></div>
+  <p class="cs">Das Master-Dokument: Wo wir stehen, welche Entscheidungen getroffen wurden und wie wir 2026 weiterwachsen - ohne uns dabei zu verbiegen.</p>
+  <div class="cover-docs">
+    <div class="cover-doc">Ergänzt <span>KINN:FUND v2.3</span></div>
+    <div class="cover-doc">Ergänzt <span>Community Building v1.0</span></div>
+    <div class="cover-doc">Basiert auf <span>Core Team Meeting 17. Feb 2026</span></div>
+  </div>
+  <div class="cb">&#x25BC; &nbsp; Zum Inhalt scrollen</div>
+</div>
+
+<!-- STATUS -->
+<div class="page" id="stand">
+<div class="pi">
+  <div class="sn">01</div>
+  <div class="sl">Ausgangslage</div>
+  <h1>Wo wir stehen</h1>
+  <div class="sub">Fakten und Zahlen - Stand 17. Februar 2026</div>
+
+  <p>Von 4 Personen bei der Gründung im November 2025 auf eine der lebendigsten KI-Communities Westösterreichs. Was auf dem Papier nach einem klassischen Startup-Wachstumschart aussieht, fühlt sich vor Ort anders an: echte Gespräche, echte Verbindungen, echte Neugier.</p>
+
+  <div class="metrics">
+    <div class="metric highlight"><div class="metric-val">308</div><div class="metric-unit">Leads</div><div class="metric-label">Registriert auf kinn.at</div></div>
+    <div class="metric"><div class="metric-val">110</div><div class="metric-unit">Check-ins</div><div class="metric-label">Tatsächliche Events-Besuche gesamt</div></div>
+    <div class="metric"><div class="metric-val">87%</div><div class="metric-unit">Show Rate</div><div class="metric-label">Angemeldete die tatsächlich kommen</div></div>
+    <div class="metric"><div class="metric-val">4,8</div><div class="metric-unit">Sterne</div><div class="metric-label">Durchschnittsbewertung</div></div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">100+</div><div class="metric-unit">Teilnehmer</div><div class="metric-label">Registriert für KINN #15</div></div>
+    <div class="metric"><div class="metric-val">125</div><div class="metric-unit">Leads</div><div class="metric-label">Noch nie bei Event erschienen</div></div>
+    <div class="metric"><div class="metric-val">33%</div><div class="metric-unit">Cluster aktiv</div><div class="metric-label">Viele nur formal angemeldet</div></div>
+    <div class="metric"><div class="metric-val">4</div><div class="metric-unit">Gründer</div><div class="metric-label">November 2025, InnCubator</div></div>
+  </div>
+
+  <div class="note"><strong>Wachstumslogik:</strong> Ca. 500-600 Personen wurden persönlich angeschrieben - davon rund 300 auf kinn.at konvertiert (50% Conversion). Die 125 noch nie erschienenen Leads sind kein Misserfolg - sie sind das nächste Aktivierungspotenzial.</div>
+
+  <h2>Die echte Herausforderung: Kapazität</h2>
+  <p>KINN wächst schneller als die verfügbaren Räume. Das ist ein Luxusproblem - aber es ist trotzdem ein Problem, das strukturiert gelöst werden muss, bevor es die Community-Qualität beschädigt.</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Venue</th><th>Kapazität</th><th>Events</th><th>Status</th></tr>
+    <tr><td><strong>InnCubator</strong></td><td>6</td><td>KINN#1 (Gründungsort)</td><td>Heimatbasis</td></tr>
+    <tr><td><strong>Impact Hub Tirol</strong></td><td>24</td><td>KINN#3, #8</td><td>Aktiv rotierend</td></tr>
+    <tr><td><strong>Werkstätte Wattens</strong></td><td>30</td><td>KINN#9</td><td>Aktiv - Wattens</td></tr>
+    <tr><td><strong>Das Wundervoll</strong></td><td>30</td><td>KINN#10</td><td>Aktiv rotierend</td></tr>
+    <tr><td><strong>WIFI Lernbar</strong></td><td>84</td><td>KINN#7, #11, #15</td><td>Großevents - voll</td></tr>
+    <tr><td><strong>FILMBASE</strong></td><td>24</td><td>KINN#12</td><td>Aktiv rotierend</td></tr>
+    <tr><td><strong>Campus Casablanca</strong></td><td>30</td><td>KINN#13</td><td>Aktiv - Schönwies</td></tr>
+    <tr><td><strong>raum13</strong></td><td>24</td><td>KINN#14</td><td>Ausgebucht, Warteliste</td></tr>
+    <tr><td><strong>START.N Kitzbühel</strong></td><td>36</td><td>KINN#16</td><td>Aktiv - Unterland</td></tr>
+    <tr><td><strong>SOHO 2</strong></td><td>36</td><td>KINN#17</td><td>Geplant</td></tr>
+    <tr><td><strong>Museen Tirol (Kramsach)</strong></td><td>30</td><td>KINN#20</td><td>Fix: 9. April</td></tr>
+    <tr><td><strong>"Kann Kommen"</strong></td><td>~70</td><td>-</td><td>In Prüfung</td></tr>
+    <tr><td><strong>Innovationsraum Kufstein</strong></td><td>30 AP / 600m²</td><td>-</td><td>Ab März/April (Chapter)</td></tr>
+    <tr><td><strong>WKO Tirol</strong></td><td>300</td><td>KI Afterwork 28.4.</td><td>Gesichert</td></tr>
+  </table></div>
+
+  <div class="warn-box"><strong>Wartelisten-Fairness:</strong> Kein Willkürprinzip. Das System muss transparent und nachvollziehbar kommuniziert werden - Luma-No-Shows beeinflussen künftige Wartelisten-Priorisierung.</div>
+</div>
+</div>
+
+<!-- MARKE -->
+<div class="page pg-decision" id="marke">
+<div class="pi">
+  <div class="sn">02</div>
+  <div class="sl">Kernentscheidung</div>
+  <h1>Markentrennung: Die wichtigste Entscheidung des Abends</h1>
+  <div class="sub">Eindeutiger Konsens des Core Teams - 17. Februar 2026</div>
+
+  <p>Die Diskussion war kurz, der Konsens eindeutig: <span class="kb">KINN bleibt Community.</span> Kein kommerzieller Deckmantel. Keine Verwischung. Wer Geld verdienen will, tut das über Libra - nicht über KINN.</p>
+
+  <div class="decision-box"><strong>Beschlossen:</strong> Der KINN-Name wird für keine kommerziellen Aktivitäten genutzt. Alle Einnahmemodelle - Provisionen, Vermittlung, Beratung - laufen über Libra Innovation FlexCo oder eine eigenständige kommerzielle Einheit.</div>
+
+  <div class="firewall">
+    <div class="fw-side community">
+      <div class="fw-badge community">Community</div>
+      <div class="fw-title">KINN</div>
+      <div class="fw-items">
+        <div class="yes">✓ Kostenlos für alle</div>
+        <div class="yes">✓ Auf Augenhöhe</div>
+        <div class="yes">✓ Offen ohne Voraussetzungen</div>
+        <div class="yes">✓ Peer-to-Peer Lernen</div>
+        <div class="yes">✓ Wöchentliche Donnerstagssevents</div>
+        <div class="yes">✓ Discord für Community-Kommunikation</div>
+        <div class="no">✗ Kein Sales</div>
+        <div class="no">✗ Keine Exklusivität</div>
+        <div class="no">✗ Keine Paywall</div>
+      </div>
+    </div>
+    <div class="fw-wall"><div class="fw-wall-label">FIREWALL</div></div>
+    <div class="fw-side commercial">
+      <div class="fw-badge commercial">Kommerz</div>
+      <div class="fw-title">Libra FlexCo</div>
+      <div class="fw-items">
+        <div class="yes">✓ Netzwerk-Matching (Provision)</div>
+        <div class="yes">✓ Expert-Vermittlung</div>
+        <div class="yes">✓ Consulting-Projekte</div>
+        <div class="yes">✓ Tool-Lizenzen</div>
+        <div class="yes">✓ B2B2B-Orchestration</div>
+        <div class="no">✗ Kein KINN-Branding</div>
+        <div class="no">✗ Kein Community-Gatekeeping</div>
+        <div class="no">✗ Kein KINN-Namedropping für Sales</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Warum diese Trennung so wichtig ist</h2>
+  <p>KINN ist der Vertrauens-Aufbauer. Libra erntet dieses Vertrauen - aber erst, wenn die Person selbst den Schritt macht. Die Kommunikation ist klar: "Willst du über Business reden? Komm nächste Woche ins Büro bei Libra - nicht beim KINN-Event."</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Risiko bei Vermischung</th><th>Konsequenz</th><th>Prävention</th></tr>
+    <tr><td>Kommerz unter KINN-Name</td><td>Community fühlt Ausgrenzung</td><td>Strikte Namenstrennung</td></tr>
+    <tr><td>Falsche Erwartungen</td><td>Markenschaden, Vertrauensverlust</td><td>Transparente Kommunikation</td></tr>
+    <tr><td>Pay-to-Play Eindruck</td><td>Zugangshürden entstehen</td><td>KINN bleibt immer gratis</td></tr>
+    <tr><td>KI Hub als "KINN Hub"</td><td>Community-Charakter verwascht</td><td>Eigener Name für physischen Ort</td></tr>
+  </table></div>
+
+  <div class="flow">
+    <div class="flow-item"><div class="flow-label">Begegnung</div><div class="flow-text">Donnerstags-Event bei KINN</div></div>
+    <div class="flow-item"><div class="flow-label">Vertrauen</div><div class="flow-text">Beziehung wächst über Zeit</div></div>
+    <div class="flow-item"><div class="flow-label">Interesse</div><div class="flow-text">Person fragt nach Business-Möglichkeiten</div></div>
+    <div class="flow-item"><div class="flow-label">Übergang</div><div class="flow-text">"Komm ins Büro bei Libra"</div></div>
+    <div class="flow-item"><div class="flow-label">Wertschöpfung</div><div class="flow-text">Libra orchestriert - KINN bleibt sauber</div></div>
+  </div>
+</div>
+</div>
+
+<!-- SKALIERUNG -->
+<div class="page" id="skalierung">
+<div class="pi">
+  <div class="sn">03</div>
+  <div class="sl">Wachstumsarchitektur</div>
+  <h1>Skalierung: Das Dunbar-Modell</h1>
+  <div class="sub">Organisches Wachstum mit Struktur - nicht trotz ihr</div>
+
+  <p>Communities scheitern nicht an mangelndem Interesse - sie scheitern daran, dass sie nicht rechtzeitig Struktur aufbauen. KINN steht aktuell an einer Schwelle: Die Phase "alle kennen sich beim Namen" neigt sich dem Ende.</p>
+
+  <div class="dunbar">
+    <div class="dunbar-step">
+      <div class="dunbar-bar" style="background:var(--spring-rain);width:90px">0-50</div>
+      <div class="dunbar-info">
+        <div>
+          <div class="dunbar-title">Gruppe - alle kennen alle beim Namen</div>
+          <div class="dunbar-text">Das soziale Limit: Jeder kennt jeden persönlich. Vertrauen entsteht ohne Struktur. KINN steht genau an dieser Schwelle - der Moment wo Subgruppen entstehen müssen.</div>
+        </div>
+        <div class="dunbar-status current">&#x25CF; WIR JETZT</div>
+      </div>
+    </div>
+    <div class="dunbar-step">
+      <div class="dunbar-bar" style="background:var(--teal);width:90px">50-150</div>
+      <div class="dunbar-info">
+        <div>
+          <div class="dunbar-title">Clans - Themen-Cluster &amp; Leader</div>
+          <div class="dunbar-text">Persönliche Beziehungen reichen nicht mehr für alle. Subgruppen nach Thema (Marketing, Technik, Recht) mit eigenen Cluster-Leadern. Moderations-Rotation wird zur Pflicht.</div>
+        </div>
+        <div class="dunbar-status">Nächste Phase</div>
+      </div>
+    </div>
+    <div class="dunbar-step">
+      <div class="dunbar-bar" style="background:var(--dark-teal);width:90px">150+</div>
+      <div class="dunbar-info">
+        <div>
+          <div class="dunbar-title">Tribes - regionale Chapters</div>
+          <div class="dunbar-text">Die Community spaltet sich in eigenständige regionale Ableger. KINN Innsbruck, KINN Kufstein, KINN Wattens - geteilte Werte, eigene Identität, verbunden durch Manifest und App.</div>
+        </div>
+        <div class="dunbar-status">Ab ca. Q3/Q4 2026</div>
+      </div>
+    </div>
+    <div class="dunbar-step">
+      <div class="dunbar-bar" style="background:var(--heavy-metal);width:90px">500+</div>
+      <div class="dunbar-info">
+        <div>
+          <div class="dunbar-title">Community of Communities</div>
+          <div class="dunbar-text">Tiroler KI-Ökosystem. Chapters agieren autonom, koordinieren sich über gemeinsame Infrastruktur (App, Manifest, Veranstaltungskalender). Thomas ist Enabler - nicht Flaschenhals.</div>
+        </div>
+        <div class="dunbar-status">Vision 2027+</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Abhängigkeit von Thomas: Das größte Risiko</h2>
+  <p>Thomas trägt aktuell 35-40 Stunden pro Woche in KINN. Das ist nicht skalierbar und kein gesundes Modell. Die Lösung ist keine Delegation - sondern echte Leader-Entwicklung.</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Maßnahme</th><th>Wer</th><th>Zeithorizont</th></tr>
+    <tr><td>Moderations-Rotation starten</td><td>Martin übernimmt KINN #15</td><td>Sofort</td></tr>
+    <tr><td>Weitere Moderatoren aufbauen</td><td>Kathi, weitere Aktive</td><td>Q1 2026</td></tr>
+    <tr><td>Chapter-Leader identifizieren</td><td>Kufstein: Juri, Karin</td><td>Freitag 20. Feb</td></tr>
+    <tr><td>App für Selbst-Organisation</td><td>Thomas + Shirin</td><td>Q2 2026</td></tr>
+    <tr><td>Community-Manifest unterzeichnen</td><td>~15 Core-Personen</td><td>~28. Feb 2026</td></tr>
+  </table></div>
+
+  <h2>Chapter-Aufbau Tirol</h2>
+  <div class="venues">
+    <div class="venue active"><div class="venue-label">Aktiv</div><div class="venue-name">Innsbruck</div><div class="venue-cap">Wöchentlich, Donnerstags 8-9 Uhr</div></div>
+    <div class="venue active"><div class="venue-label">In Aufbau</div><div class="venue-name">Kufstein</div><div class="venue-cap">Innovationsraum Kufstein, Stadtplatz 11 - 30 AP, 600m², ab März/April. Kontakt: Carina Berger. Erster Besuch: 20. Feb</div></div>
+    <div class="venue upcoming"><div class="venue-label">Geplant</div><div class="venue-name">Wattens</div><div class="venue-cap">Werkstätte Wattens, Termin offen</div></div>
+    <div class="venue upcoming"><div class="venue-label">Erprobt (KINN#13)</div><div class="venue-name">Schönwies / Oberland</div><div class="venue-cap">Campus Casablanca, 30 Plätze inkl. Frühstück. Kontakt: Maximilian Erhard</div></div>
+    <div class="venue upcoming"><div class="venue-label">Aktiv seit KINN#16</div><div class="venue-name">Kitzbühel</div><div class="venue-cap">START.N, 36 Plätze - Startup-Szene seit letztem Jahr aktiv. Kontakt: Gregor</div></div>
+    <div class="venue upcoming"><div class="venue-label">Vision</div><div class="venue-name">Tirol gesamt</div><div class="venue-cap">Community of Communities 2027+</div></div>
+  </div>
+
+  <div class="note"><strong>App-Vision:</strong> Nach dem Check-in wählt man per Handy seinen Tisch - Diktierfunktion inklusive. Wichtiger: Die App ermöglicht es jedem, ein eigenes Chapter zu starten. Skalierbarkeit durch Selbst-Organisation, nicht durch Zentral-Kontrolle.</div>
+</div>
+</div>
+
+<!-- KI HUB -->
+<div class="page pg-mix" id="hub">
+<div class="pi">
+  <div class="sn">04</div>
+  <div class="sl">Physischer Raum</div>
+  <h1>KI Hub Tirol: Das Löwenhaus-Konzept</h1>
+  <div class="sub">Optionale, aber strategisch relevante Erweiterung</div>
+
+  <p>Martin brachte eine Immobilie ins Spiel, die als physischer KI-Kompetenzort für Tirol dienen könnte. Die Diskussion war offen, die Kernentscheidung klar: Wenn, dann unter eigenem Namen - niemals als "KINN Hub".</p>
+
+  <div class="hub">
+    <div class="hub-badge">Löwenhaus - Eckdaten</div>
+    <div class="hub-title">KI Kompetenzzentrum Tirol</div>
+    <div class="hub-meta">Noch nicht unterschrieben &bull; 4-8 Wochen Entscheidungsfenster &bull; Makler kennt KINN, positiv gestimmt</div>
+    <div class="hub-grid">
+      <div class="hub-item"><div class="hub-item-label">Fläche</div><div class="hub-item-val">ca. 400 m&sup2; - zwei Stockwerke, Gastro unten separat</div></div>
+      <div class="hub-item"><div class="hub-item-label">Monatsmiete</div><div class="hub-item-val">ca. 8.000 Euro + Nebenkosten (für das Gesamtgebäude)</div></div>
+      <div class="hub-item"><div class="hub-item-label">Ankermieter</div><div class="hub-item-val">Mission Solar (Stefan) als wichtigster Stabilitätsanker</div></div>
+      <div class="hub-item"><div class="hub-item-label">Nächster Schritt</div><div class="hub-item-val">Besichtigung: Martin + Stefan + David (Immobilienkontakt), nächste Woche</div></div>
+    </div>
+  </div>
+
+  <h2>Finanzierungswege</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Quelle</th><th>Ansatz</th><th>Kontakt / Status</th></tr>
+    <tr><td>Mission Solar</td><td>Ankermieter, strategisch</td><td>Stefan - bestätigt</td></tr>
+    <tr><td>Private Investoren</td><td>Kauf statt Miete möglich</td><td>Manfred Abendung (BEMA / M Preis Netz), Stevens Geschäftspartner (~20-30 Whg.)</td></tr>
+    <tr><td>Land Tirol</td><td>Wirtschaftsförderung</td><td>Förderantrag noch offen</td></tr>
+    <tr><td>WKO Tirol</td><td>Fördersprechtag</td><td>18. März 2026</td></tr>
+    <tr><td>Standortagentur Tirol</td><td>KI-Kompetenzzentrum-Förderung</td><td>Gespräch offen</td></tr>
+    <tr><td>Co-Working Mieter</td><td>David Mulling, Daniel Meichel, Kathi u.a.</td><td>Kapital aktuell knapp - in Prüfung</td></tr>
+  </table></div>
+
+  <div class="warn-box"><strong>Kritischer Punkt:</strong> Die meisten potenziellen Nutzer haben aktuell kein freies Kapital. Ohne Ankermieter (Mission Solar) und externen Investor ist das Modell finanziell zu riskant. Realismus vor Begeisterung.</div>
+
+  <div class="manifest">
+    <div class="manifest-card is">
+      <div class="manifest-head">Hub kann sein</div>
+      <div class="manifest-item">Veranstaltungsort für KINN-Events</div>
+      <div class="manifest-item">KI Kompetenzzentrum unter eigenem Namen</div>
+      <div class="manifest-item">Co-Working für KI-Affinierte</div>
+      <div class="manifest-item">Showroom für KI-Anwendungen</div>
+      <div class="manifest-item">Sitz für Libra FlexCo</div>
+    </div>
+    <div class="manifest-card isnot">
+      <div class="manifest-head">Hub darf nicht sein</div>
+      <div class="manifest-item">"KINN Hub" - KINN-Marke bleibt davon getrennt</div>
+      <div class="manifest-item">Exklusiver Zugang nur für Zahler</div>
+      <div class="manifest-item">Kommerziell unter Community-Deckmantel</div>
+      <div class="manifest-item">Verbindlichkeit ohne solide Basis</div>
+      <div class="manifest-item">Abhängigkeit von ungesichertem Kapital</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- FINANZIERUNG -->
+<div class="page pg-fund" id="finanzierung">
+<div class="pi">
+  <div class="sn">05</div>
+  <div class="sl">Community-Finanzierung</div>
+  <h1>Finanzierung: Das Dreisäulen-Modell</h1>
+  <div class="sub">Community-Geld für Community-Zwecke - mit radikaler Transparenz</div>
+
+  <p>KINN braucht keine großen Summen. KINN braucht Verlasslichkeit. Drei Säulen machen die Finanzierung stabil - ohne die Unabhängigkeit zu gefährden.</p>
+
+  <div class="phases">
+    <div class="phase active">
+      <div class="phase-badge">Sofort starten</div>
+      <div class="phase-label">Säule 1</div>
+      <div class="phase-title">KINN:PATEN</div>
+      <div class="phase-target">500 Euro/Jahr</div>
+      <div class="phase-body">Unternehmen supporten die Community. Gegenleistung: Logo im Newsletter, Erwähnung bei Events. Ziel Phase 1: 20 Paten = 10.000 Euro/Jahr Basis.</div>
+    </div>
+    <div class="phase next">
+      <div class="phase-badge">Ab Q2 2026</div>
+      <div class="phase-label">Säule 2</div>
+      <div class="phase-title">KINN:FUND Causes</div>
+      <div class="phase-target">Konkrete Ziele</div>
+      <div class="phase-body">Micro-Crowdfunding für greifbare Dinge: Buttonmaschine, T-Shirts, besseres Frühstück, Workshops, Summit. Fortschrittsbalken, Impact-Stories, radikale Transparenz.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Säule 3</div>
+      <div class="phase-title">Premium Partner</div>
+      <div class="phase-target">Vorbild: SAP/AI</div>
+      <div class="phase-body">Größere Institutional Supporter im AI Collective-Stil. Für Events, Summit, große Formate. Sorgfältige Auswahl - Community-Charakter muss erhalten bleiben.</div>
+    </div>
+  </div>
+
+  <h2>Was KINN aktuell kostet</h2>
+  <div class="fin-streams">
+    <div class="fin-stream">
+      <div class="fin-stream-header"><div class="fin-stream-label">Frühstück / Verpflegung</div><div class="fin-stream-amount">~2-3 Euro/Person/Event</div></div>
+      <div class="fin-stream-desc">Größter laufender Posten. Steigt linear mit Teilnehmerzahl. Bei 100 Personen ca. 200-300 Euro pro Event.</div>
+      <div class="fin-bar"><div class="fin-fill" style="width:70%"></div></div>
+    </div>
+    <div class="fin-stream">
+      <div class="fin-stream-header"><div class="fin-stream-label">Venue-Kosten</div><div class="fin-stream-amount">Aktuell 0 (Rotation)</div></div>
+      <div class="fin-stream-desc">Co-Working Spaces stellen Räume kostenlos als Partnerschaft. Kann sich bei größeren Events ändern.</div>
+      <div class="fin-bar"><div class="fin-fill" style="width:15%"></div></div>
+    </div>
+    <div class="fin-stream">
+      <div class="fin-stream-header"><div class="fin-stream-label">Tools &amp; Infrastruktur</div><div class="fin-stream-amount">Gering (Non-Profit-Pläne)</div></div>
+      <div class="fin-stream-desc">Monday.com (Non-Profit via Verein), Luma, Discord - großteils kostenlos oder günstig.</div>
+      <div class="fin-bar"><div class="fin-fill" style="width:10%"></div></div>
+    </div>
+    <div class="fin-stream">
+      <div class="fin-stream-header"><div class="fin-stream-label">Core-Team Aufwand</div><div class="fin-stream-amount">Derzeit: Ehrenamt</div></div>
+      <div class="fin-stream-desc">Thomas ~35-40h/Woche, Martin ~15h/Woche. Ab Phase 3 soll eine faire Koordinations-Pauschale möglich sein. Burnout-Prävention ist kein Luxus.</div>
+      <div class="fin-bar"><div class="fin-fill" style="width:85%"></div></div>
+    </div>
+  </div>
+
+  <div class="warn-box"><strong>Steuerliche Warnung (Steven):</strong> Spenden sind nicht automatisch steuerfrei. Die Finanzierungsstruktur muss mit einem Steuerberater abgestimmt werden, bevor KINN:PATEN publik gemacht werden. Rechtlich sauber - von Anfang an.</div>
+
+  <h2>Transparenzmodell</h2>
+  <p>Monatliche Veröffentlichung: Kategorien und Summen - keine Einzelbeträge, keine Personen. Community-Geld fliesst in Community-Zwecke. Libra hat ein eigenes Budget. Diese Firewall wird aktiv kommuniziert.</p>
+
+  <div class="note"><strong>Nächster Schritt:</strong> Ersten Cause definieren ("Besseres Frühstück"), Steuerberater konsultieren, kinn.at/fund aufsetzen, persönliche Einladungen an 10 Early Supporters verschicken.</div>
+</div>
+</div>
+
+<!-- FORMATE -->
+<div class="page" id="formate">
+<div class="pi">
+  <div class="sn">06</div>
+  <div class="sl">Community-Angebote</div>
+  <h1>Formate: Was KINN konkret tut</h1>
+  <div class="sub">Jedes Format hat einen klaren Zweck - und eine klare Grenze</div>
+
+  <div class="formats">
+    <div class="format weekly">
+      <div class="format-icon">&#x2615;</div>
+      <div class="format-name">KINN Weekly</div>
+      <div class="format-tag">Kern-Format</div>
+      <div class="format-body">Donnerstags 8-9 Uhr, rotierende Venues in Innsbruck. Peer Learning, Networking, keine Agenda-Pflicht. Das Herzstück - unveränderlich.</div>
+    </div>
+    <div class="format learning">
+      <div class="format-icon">&#x1F4DA;</div>
+      <div class="format-name">KINN:PRAXIS</div>
+      <div class="format-tag">Neu - startet Q1 2026</div>
+      <div class="format-body">Community-Mitglieder halten Mini-Kurse und Workshops. Ju's Kurs als erster "Banger". Petra (KI+WordPress), Maxim, Barbara in Pipeline. Freiwillig, Qualitätssicherung notwendig bevor KINN-Stempel.</div>
+    </div>
+    <div class="format podcast">
+      <div class="format-icon">&#x1F3A7;</div>
+      <div class="format-name">MENSCH:MASCHINE</div>
+      <div class="format-tag">Laufend</div>
+      <div class="format-body">Thomas + Steven erkunden Mensch-KI-Beziehungen. KINN:RAUS als neues Format: echte Use Cases aus Tiroler Unternehmen. Eva Lichtenberger, Dr. Gernot Grömer als Gäste.</div>
+    </div>
+    <div class="format hub">
+      <div class="format-icon">&#x1F4AC;</div>
+      <div class="format-name">Tech Talk</div>
+      <div class="format-tag">Bestehend</div>
+      <div class="format-body">Gut angenommen - aber kein Hauptwachstumstreiber. Transkription sensibler als gedacht. Moderatoren mit intrinsischer Motivation sind der Schlüssel. Lokale KI-Gruppe (Timo, Lukas) docked an - VORSICHT: kein KINN-Stempel ohne Qualitätsprüfung.</div>
+    </div>
+    <div class="format weekly">
+      <div class="format-icon">&#x1F3DB;</div>
+      <div class="format-name">WKO Großevent</div>
+      <div class="format-tag">Ende April 2026</div>
+      <div class="format-body">300 Plätze, anderes Publikum als Community. Finanzstarke KMU-Unternehmer. Thomas lädt gezielt 10 Schlüsselpersonen ein. Als Kapazitäts-Sicherheitsnetz gedacht.</div>
+    </div>
+    <div class="format learning">
+      <div class="format-icon">&#x1F3AE;</div>
+      <div class="format-name">Theater Präsent Projekt</div>
+      <div class="format-tag">MVP nächste Woche</div>
+      <div class="format-body">Martin, David Mulling, Christoph Ranhalter, Shirin, Daniel Meichel. Läuft unter KINN-Community-Label. MVP-Präsentation steht kurz bevor.</div>
+    </div>
+  </div>
+
+  <h2>Qualitätsregel für alle Formate</h2>
+
+  <div class="quote">
+    <p>"KINN-Stempel gibt es nicht für gut gemeinte Projekte - sondern für bewiesenermassen gute Projekte."</p>
+    <cite>Core Team Konsens, 17. Feb 2026</cite>
+  </div>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Format</th><th>KINN-Label</th><th>Bedingung</th></tr>
+    <tr><td>KINN:PRAXIS</td><td class="yes">Ja - wenn</td><td>Qualitätssicherung durch Core Team vor Veröffentlichung</td></tr>
+    <tr><td>Tech Talk Gastgruppen</td><td class="no">Nein - bis</td><td>Vertrauensbasis und Qualitätsprüfung bestehen</td></tr>
+    <tr><td>Community-Projekte</td><td class="yes">Ja - wenn</td><td>Klarer Community-Mehrwert, kein versteckter Sales</td></tr>
+    <tr><td>Kommerzielle Angebote</td><td class="no">Niemals</td><td>Immer über Libra - KINN-Name ist kein Vertriebskanal</td></tr>
+  </table></div>
+</div>
+</div>
+
+<!-- ROADMAP -->
+<div class="page pg-warn" id="roadmap">
+<div class="pi">
+  <div class="sn">07</div>
+  <div class="sl">Operative Nächste Schritte</div>
+  <h1>Roadmap: Was jetzt passiert</h1>
+  <div class="sub">Konkrete Termine, klare Verantwortlichkeiten</div>
+
+  <div class="timeline">
+    <div class="tl-item done">
+      <div class="tl-date">17. Februar 2026</div>
+      <div class="tl-title">Core Team Hands-Down Meeting</div>
+      <div class="tl-body">Alle strategischen Entscheidungen getroffen: Markentrennung, Dunbar-Skalierung, Hub-Konzept, Finanzierungsmodell, Formate.</div>
+      <div class="tl-who">Thomas, Martin, Steven, Stefan</div>
+    </div>
+    <div class="tl-item active">
+      <div class="tl-date">20. Februar 2026 - Freitag</div>
+      <div class="tl-title">Kufstein Chapter anteasern</div>
+      <div class="tl-body">Erster Kontakt für Chapter-Aufbau ausserhalb Innsbruck. Juri und Karin als potenzielle Chapter-Leader.</div>
+      <div class="tl-who">Thomas + Juri + Karin</div>
+    </div>
+    <div class="tl-item next">
+      <div class="tl-date">26. Februar 2026 - Donnerstag</div>
+      <div class="tl-title">KINN #15 - Martin moderiert</div>
+      <div class="tl-body">Erste Moderation durch Martin - bewusster Schritt gegen Thomas-Abhängigkeit. 100+ Registrierungen, Raum 13 komplett voll.</div>
+      <div class="tl-who">Martin moderiert - Thomas im Hintergrund</div>
+    </div>
+    <div class="tl-item next">
+      <div class="tl-date">Nächste Woche (KW 9)</div>
+      <div class="tl-title">Löwenhaus-Besichtigung</div>
+      <div class="tl-body">Gemeinsamer Besichtigungstermin für die potenzielle Hub-Immobilie. Entscheidungsgrundlage für das 4-8 Wochen-Fenster.</div>
+      <div class="tl-who">Martin + Stefan + David (Makler-Kontakt)</div>
+    </div>
+    <div class="tl-item next">
+      <div class="tl-date">Nächste Woche (KW 9)</div>
+      <div class="tl-title">AI Austria Abend-Event</div>
+      <div class="tl-body">KINN präsentiert sich im überregionalen Kontext. Vernetzung mit österreichweitem KI-Ecosystem.</div>
+      <div class="tl-who">KINN Core Team</div>
+    </div>
+    <div class="tl-item next">
+      <div class="tl-date">ca. 3. März 2026</div>
+      <div class="tl-title">Community-Manifest unterzeichnen</div>
+      <div class="tl-body">~15 aktive Community-Mitglieder kommen zusammen. Werte, Mission und Spielregeln werden gemeinsam schriftlich fixiert. Ort: Libra Lab oder Martins Büro (Chalmerstraße).</div>
+      <div class="tl-who">~15 Personen - Einladung folgt</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">18. März 2026</div>
+      <div class="tl-title">WKO Fördersprechtag</div>
+      <div class="tl-body">Fördermöglichkeiten für Hub-Projekt und Community-Infrastruktur prüfen.</div>
+      <div class="tl-who">Interessierte aus Core Team</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">27. März 2026</div>
+      <div class="tl-title">WKO TechTalk Summit</div>
+      <div class="tl-body">Großer TechTalk im WKO Gebäude. Breitere Öffentlichkeit, institutioneller Rahmen. KINN-Präsenz als regionale KI-Community.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">KW 14 - Anfang April</div>
+      <div class="tl-title">Hacker-Event</div>
+      <div class="tl-body">In Bestätigung. Technisches Community-Format für KI-Enthusiasten.</div>
+      <div class="tl-who">KINN Community</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">9. April 2026 - Donnerstag</div>
+      <div class="tl-title">KINN #20 - Museen Tirol (Kramsach)</div>
+      <div class="tl-body">Glasfront-Halle mitten im Wald, 9 Hektar, 37 historische Gebäude. TikTok-Reichweite 796k. Termin fix. Unterland-Expansion mit Max Herbst.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">28. April 2026 - Dienstag</div>
+      <div class="tl-title">WKO Großevent - KI Afterwork</div>
+      <div class="tl-body">300 Plätze, andere Zielgruppe (finanzstarke KMU). Thomas lädt gezielt 10 Schlüssel-Unternehmer ein. WKO bewirbt nicht selbst - volle Hoheit bei KINN.</div>
+      <div class="tl-who">KINN - WKO als Raumgeber</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Q2/Q3 2026</div>
+      <div class="tl-title">Monetarisierung starten</div>
+      <div class="tl-body">Expert-Vermittlung via Libra (10-15% Provision), KMU-Mitgliedsbeiträge, institutionelle Supporter. KINN bleibt gratis - Libra verdient.</div>
+      <div class="tl-who">Thomas + Stefan - Libra FlexCo</div>
+    </div>
+  </div>
+
+  <h2>Offene Kontakte - niemand fällt unter den Tisch</h2>
+  <ul class="actions">
+    <li>Hugh - Follow-up noch offen <span class="who">Monday.com Task</span></li>
+    <li>Matthias - Nachverfolgen <span class="who">Monday.com Task</span></li>
+    <li>Verena - Zweiter Kontakt <span class="who">Monday.com Task</span></li>
+    <li>Petra (KI + WordPress) - Für KINN:PRAXIS anfragen <span class="who">Thomas</span></li>
+    <li>Shirin - App-Termin vereinbaren: Tisch-Wahl per Handy nach Check-in + Diktierfunktion <span class="who">Thomas, demnächst</span></li>
+    <li>Steuerberater - Finanzierungsstruktur abstimmen vor KINN:PATEN-Launch <span class="who">Dringend</span></li>
+    <li>"Kann Kommen" - Besichtigung als neue Venue <span class="who">Thomas, 20. Feb</span></li>
+    <li>Manfred Abendung - Investoren-Kontakt für Hub <span class="who">Stefan</span></li>
+  </ul>
+</div>
+</div>
+
+<!-- MANIFEST -->
+<div class="page pg-decision" id="manifest">
+<div class="pi">
+  <div class="sn">08</div>
+  <div class="sl">Identität &amp; Werte</div>
+  <h1>KINN: Was wir sind - und was nicht</h1>
+  <div class="sub">Das wird nächste Woche gemeinsam unterschrieben</div>
+
+  <div class="manifest">
+    <div class="manifest-card is">
+      <div class="manifest-head">KINN ist</div>
+      <div class="manifest-item">Eine Community auf Augenhöhe - nicht Experte zu Laie</div>
+      <div class="manifest-item">Kostenlos und offen für alle - immer</div>
+      <div class="manifest-item">Peer-to-Peer Lernen - "Wir lernen von euch"</div>
+      <div class="manifest-item">Regional verwurzelt - Tiroler helfen Tirolern</div>
+      <div class="manifest-item">Authentisch und verletzlich - keine Hochglanzkommunikation</div>
+      <div class="manifest-item">Transparent in Finanzen und Entscheidungen</div>
+      <div class="manifest-item">Unabhängig - kein Anhängsel einer Organisation</div>
+      <div class="manifest-item">Lernend statt belehrend</div>
+      <div class="manifest-item">Sprungbrett für echte Verbindungen</div>
+    </div>
+    <div class="manifest-card isnot">
+      <div class="manifest-head">KINN ist nicht</div>
+      <div class="manifest-item">Ein Vertriebskanal für Libra oder andere</div>
+      <div class="manifest-item">Ein Unternehmensverband mit Mitgliedsbeiträgen</div>
+      <div class="manifest-item">Eine Weiterbildungsplattform mit Zertifikaten</div>
+      <div class="manifest-item">Abhängig von einer einzelnen Person</div>
+      <div class="manifest-item">Ein KI-Hype-Vehikel - Praxis vor Theorie</div>
+      <div class="manifest-item">Kommerziell - auch nicht indirekt</div>
+      <div class="manifest-item">Geschlossen oder exklusiv</div>
+      <div class="manifest-item">Eine Unterabteilung von WKO, DIH oder AI Austria</div>
+      <div class="manifest-item">Ein Selbsthilfezirkel - sondern ein Tat-Netzwerk</div>
+    </div>
+  </div>
+
+  <div class="quote">
+    <p>"Es ist anstrengend und gleichzeitig geil. Und es gibt keinen Grund auf die Bremse zu treten."</p>
+    <cite>Thomas Seiger, Core Team Meeting, 17. Februar 2026</cite>
+  </div>
+
+  <div class="quote">
+    <p>"Reich wird man nicht durch harte Arbeit - sondern durch die richtigen Connections zum richtigen Zeitpunkt."</p>
+    <cite>Stefan Seiger, zum strategischen Wert von KINN als Netzwerk-Investition</cite>
+  </div>
+
+  <h2>Die drei Ebenen des KINN-Werts</h2>
+  <div class="stake">
+    <div class="stake-card">
+      <div class="stake-name">Für Teilnehmer</div>
+      <div class="stake-body">Wissen, Verbindungen, Vertrauen. Lernen von Peers die dieselben Fragen haben. KI-Kompetenz aufbauen ohne Verkaufsdruck.</div>
+    </div>
+    <div class="stake-card">
+      <div class="stake-name">Für das Core Team</div>
+      <div class="stake-body">Reputation, Netzwerk, Auftragskanal. KINN ist die beste Investition für alle Beteiligten - auch wenn die Rendite nicht sofort in Euro messbar ist.</div>
+    </div>
+    <div class="stake-card">
+      <div class="stake-name">Für Tirol</div>
+      <div class="stake-body">Eine eigenständige, unabhängige KI-Expertise-Infrastruktur. Nicht importiert - von hier für hier. Erstes Community-getragendes KI-Netzwerk Westösterreichs.</div>
+    </div>
+  </div>
+
+  <h2>Strategische Überzeugungen</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Überzeugung</th><th>Konsequenz</th></tr>
+    <tr><td>Growth before Monetization</td><td>Q1 aufbauen, Q2/Q3 monetarisieren - nicht umgekehrt</td></tr>
+    <tr><td>Vertrauen vor Geschäft</td><td>Libra verdient durch KINN - nicht bei KINN</td></tr>
+    <tr><td>Geben vor Nehmen</td><td>Anerkennung verteilen, Ownership abgeben - nicht delegieren</td></tr>
+    <tr><td>Tiroler brauchen Tiroler</td><td>Regionale Nähe ist der Differentiator - kein Zufall</td></tr>
+    <tr><td>Die kommen zu uns</td><td>Kein desperat Nachlaufen - der Wert zieht an</td></tr>
+    <tr><td>Second Mover Advantage</td><td>Aus Fehlern anderer lernen bevor man selbst umsetzt</td></tr>
+  </table></div>
+
+</div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div class="page pg-mix">
+<div class="pi">
+  <div class="sn">09</div>
+  <div class="sl">Executive Summary</div>
+  <h1>Auf einen Blick: Die drei Dokumente</h1>
+  <div class="sub">Was KINN:FUND, Community Building und diese Strategie zusammen ergeben</div>
+
+  <div class="phases">
+    <div class="phase active">
+      <div class="phase-label">Dokument 1</div>
+      <div class="phase-title">KINN:FUND</div>
+      <div class="phase-target">Finanzierung</div>
+      <div class="phase-body">Paten-Modell, Micro-Crowdfunding, Transparenz-Dashboard, Firewall zwischen Community und Libra. Wie KINN nachhaltig finanziert wird ohne die Seele zu verkaufen.</div>
+    </div>
+    <div class="phase next">
+      <div class="phase-label">Dokument 2</div>
+      <div class="phase-title">Community Building</div>
+      <div class="phase-target">Retention</div>
+      <div class="phase-body">Lifecycle, Onboarding, Engagement-Metriken, Resilienz-Strategien. Wie man aus Teilnehmern Stammgäste macht - und aus Stammgästen Leader.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Dokument 3</div>
+      <div class="phase-title">Gesamtstrategie</div>
+      <div class="phase-target">Entscheidungen</div>
+      <div class="phase-body">Markentrennung, Dunbar-Skalierung, Hub-Konzept, Roadmap, Manifest. Was am 17. Feb 2026 entschieden wurde und warum.</div>
+    </div>
+  </div>
+
+  <h2>Kennzahlen-Übersicht</h2>
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">3</div><div class="metric-unit">Entitäten</div><div class="metric-label">KINN / Libra / KI Hub - klar getrennt</div></div>
+    <div class="metric highlight"><div class="metric-val">0</div><div class="metric-unit">Paywalls</div><div class="metric-label">KINN bleibt immer gratis</div></div>
+    <div class="metric"><div class="metric-val">4</div><div class="metric-unit">Core Team</div><div class="metric-label">Thomas, Martin, Steven, Stefan</div></div>
+    <div class="metric"><div class="metric-val">100+</div><div class="metric-unit">/Event</div><div class="metric-label">Aktuell KINN #15</div></div>
+  </div>
+
+  <h2>Was als nächstes auf keinen Fall vergessen werden darf</h2>
+  <ul class="actions">
+    <li>Steuerberater VOR KINN:PATEN-Launch konsultieren</li>
+    <li>Manifest-Meeting mit ~15 Personen organisieren (ca. Anfang März)</li>
+    <li>Löwenhaus-Besichtigung - Entscheidung innerhalb von 4-8 Wochen</li>
+    <li>Monday.com für alle einrichten - niemand fällt durch den Rost</li>
+    <li>Moderations-Rotation offiziell kommunizieren - Martin übernimmt #15</li>
+    <li>kinn.at/fund entwickeln - Erster Cause definieren</li>
+    <li>Kufstein Chapter konkret anteasern - Freitag 20. Feb</li>
+    <li>Shirin App-Termin fixieren</li>
+  </ul>
+
+  <div style="margin-top:3rem;text-align:center;padding-top:2rem;border-top:2px solid var(--spring-rain)">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg" style="width:90px;fill:var(--heavy-metal);margin-bottom:0.75rem">
+      <polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/>
+      <path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/>
+      <polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/>
+      <path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/>
+    </svg>
+    <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--text-muted)">KI Netzwerk Tirol</div>
+    <div style="font-size:0.8rem;color:var(--teal);margin-top:0.25rem"><a class="ext" href="https://kinn.at" target="_blank" rel="noopener">kinn.at</a></div>
+    <div style="font-size:0.7rem;color:var(--kangaroo);margin-top:1.25rem;font-style:italic">Gesamtstrategie &amp; Entscheidungsbasis v1.0 - Februar 2026 - Libra Innovation FlexCo</div>
+    <div style="font-size:0.68rem;color:var(--kangaroo);margin-top:0.35rem">Erstellt auf Basis des Core Team Meetings vom 17. Februar 2026 &bull; Thomas, Martin, Steven, Stefan</div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>

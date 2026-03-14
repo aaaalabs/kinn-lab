@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN:PLATFORM — Software Architektur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family:'Futura'; src:local('Futura'),local('Futura-Medium'),local('FuturaPT-Book'); font-weight:400; }
+    :root {
+      --mintgreen:#5ED9A6; --heavy-metal:#2B3228; --ecru-white:#F5F0E6; --spring-rain:#A8C8B0;
+      --malta:#BDB2A1; --kangaroo:#C6C3B5; --teal:#4A9B8C; --dark-teal:#2D6B60; --cream:#F5F1E8;
+      --mint-glow:rgba(94,217,166,0.15); --mint-subtle:rgba(94,217,166,0.08);
+      --bg:var(--ecru-white); --text:var(--heavy-metal); --text-muted:#6B7068;
+      --surface:#FFFFFF; --border:rgba(43,50,40,0.1);
+      --warn:#D4956A; --warn-bg:rgba(212,149,106,0.08);
+    }
+    *{margin:0;padding:0;box-sizing:border-box} html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Futura','Work Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.618;-webkit-font-smoothing:antialiased}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,240,230,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.6rem 2rem;display:flex;align-items:center;gap:1.5rem}
+    nav .logo-nav{display:flex;align-items:center;text-decoration:none} nav .logo-nav svg{height:18px;width:auto;fill:var(--heavy-metal)}
+    nav .nav-links{display:flex;gap:0.15rem;flex-wrap:wrap}
+    nav a.nl{font-family:'Futura','Work Sans',sans-serif;font-size:0.7rem;color:var(--text-muted);text-decoration:none;padding:0.3rem 0.55rem;border-radius:6px;transition:all 0.2s;letter-spacing:0.04em;text-transform:uppercase}
+    nav a.nl:hover{background:var(--mint-glow);color:var(--heavy-metal)}
+    nav .nav-tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--mintgreen);color:var(--heavy-metal);padding:0.2rem 0.5rem;border-radius:4px;margin-left:auto}
+
+    .page{min-height:100vh;padding:5.5rem 2rem 4rem;display:flex;align-items:flex-start;justify-content:center;position:relative}
+    .pi{max-width:920px;width:100%}
+    .page::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 30%,var(--mint-subtle) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(168,200,176,0.06) 0%,transparent 50%);pointer-events:none}
+    .page:nth-child(even){background:linear-gradient(180deg,var(--ecru-white) 0%,#F0EBE1 100%)}
+    .page:nth-child(even)::before{background:radial-gradient(circle at 70% 20%,rgba(189,178,161,0.08) 0%,transparent 50%),radial-gradient(circle at 30% 80%,var(--mint-subtle) 0%,transparent 50%)}
+
+    .cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+    .cover::before{content:'';position:absolute;top:-20%;left:-20%;width:140%;height:140%;background:radial-gradient(ellipse at 30% 20%,rgba(94,217,166,0.12) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(168,200,176,0.08) 0%,transparent 60%);pointer-events:none;animation:cp 12s ease-in-out infinite}
+    @keyframes cp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:0.8}}
+    .cl{width:280px;max-width:65%;margin:0 auto 1rem;z-index:1;position:relative} .cl svg{width:100%;height:auto;fill:var(--heavy-metal);filter:drop-shadow(0 4px 16px rgba(0,0,0,0.06))}
+    .ct{font-size:0.9rem;color:var(--text-muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:2rem;z-index:1;position:relative}
+    .ch{font-family:'Montserrat',sans-serif;font-weight:800;font-size:2.2rem;color:var(--heavy-metal);margin-bottom:1rem;z-index:1;position:relative}
+    .cs{font-size:1rem;color:var(--text-muted);margin-bottom:0.5rem;z-index:1;position:relative}
+    .cb{display:inline-block;font-size:0.75rem;color:var(--heavy-metal);background:var(--mint-glow);border:1px solid rgba(94,217,166,0.3);padding:0.4rem 1rem;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;margin-top:3rem;z-index:1;position:relative}
+    .ml{width:60px;height:3px;background:var(--mintgreen);border-radius:2px;margin:1.5rem auto;z-index:1;position:relative}
+
+    h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.2rem;color:var(--heavy-metal);letter-spacing:0.02em;line-height:1.15;margin-bottom:1.5rem}
+    h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.4rem;color:var(--heavy-metal);line-height:1.3;margin-top:2.5rem;margin-bottom:1rem}
+    h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.05rem;color:var(--teal);margin-top:1.5rem;margin-bottom:0.75rem}
+    p{margin-bottom:1rem;line-height:1.7}
+    .sn{font-family:'Montserrat',sans-serif;font-weight:900;font-size:4rem;color:var(--spring-rain);opacity:0.4;line-height:1;margin-bottom:-0.5rem}
+    .sl{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .kb{font-family:'Montserrat',sans-serif;font-weight:900}
+    .sub{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--teal);letter-spacing:0.04em;margin-bottom:1.25rem}
+
+    .st-wrap{overflow-x:auto;margin:1.25rem 0 1.5rem;border-radius:12px;border:1px solid var(--border);-webkit-overflow-scrolling:touch}
+    .st{width:100%;min-width:480px;border-collapse:separate;border-spacing:0}
+    .st th{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;text-align:left;padding:0.75rem 1rem;background:var(--heavy-metal);color:var(--ecru-white)}
+    .st td{padding:0.65rem 1rem;font-size:0.88rem;border-bottom:1px solid var(--border)} .st tr:last-child td{border-bottom:none}
+    .st tr:nth-child(even) td{background:rgba(168,200,176,0.06)} .st td:first-child{font-weight:600;color:var(--heavy-metal)}
+    .st th:first-child{border-radius:12px 0 0 0} .st th:last-child{border-radius:0 12px 0 0}
+
+    .note{background:rgba(94,217,166,0.08);border-left:3px solid var(--mintgreen);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem} .note strong{color:var(--teal)}
+    .warn{background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem} .warn strong{color:#B07840}
+
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+    .metric{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+    .metric-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.8rem;color:var(--teal);line-height:1.1}
+    .metric-unit{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;color:var(--kangaroo);letter-spacing:0.05em;text-transform:uppercase;margin-top:0.15rem}
+    .metric-label{font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem}
+
+    .flow{display:flex;align-items:stretch;gap:0;margin:1.5rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .flow-item{flex:1;padding:1.25rem 1rem;background:var(--surface);position:relative;text-align:center}
+    .flow-item:not(:last-child){border-right:1px solid var(--border)}
+    .flow-item:not(:last-child)::after{content:'→';position:absolute;right:-0.6rem;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--mintgreen);z-index:2;background:var(--surface);width:1.2rem;height:1.2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;line-height:1}
+    .flow-icon{font-size:1.3rem;margin-bottom:0.5rem}
+    .flow-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .flow-text{font-size:0.78rem;color:var(--text-muted);line-height:1.5}
+
+    .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .phase{background:var(--surface);border-radius:16px;padding:1.5rem;border:1px solid var(--border);position:relative;overflow:hidden}
+    .phase::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--spring-rain)}
+    .phase.public::before{background:var(--mintgreen)}
+    .phase.radar::before{background:var(--teal)}
+    .phase.admin::before{background:var(--heavy-metal)}
+    .phase.badge::before{background:var(--warn)}
+    .phase.fund::before{background:var(--spring-rain)}
+    .phase.gov::before{background:var(--malta)}
+    .phase.misc::before{background:var(--kangaroo)}
+    .phase-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:0.5rem}
+    .phase-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1rem;color:var(--heavy-metal);margin-bottom:0.35rem}
+    .phase-count{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.3rem;color:var(--mintgreen);margin-bottom:0.75rem}
+    .phase-body{font-size:0.82rem;color:var(--text-muted);line-height:1.65}
+    .phase-body code{font-family:'SF Mono','Fira Code',monospace;font-size:0.78rem;background:rgba(43,50,40,0.06);padding:0.1rem 0.35rem;border-radius:3px;color:var(--heavy-metal)}
+
+    /* System cards — 3-column */
+    .systems{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .sys-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+    .sys-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.07)}
+    .sys-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--spring-rain)}
+    .sys-card.active::before{background:var(--mintgreen)}
+    .sys-name{font-family:'Montserrat',sans-serif;font-weight:900;font-size:0.9rem;color:var(--heavy-metal);margin-bottom:0.35rem}
+    .sys-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.55;margin-bottom:0.75rem}
+    .sys-files{font-family:'SF Mono','Fira Code',monospace;font-size:0.75rem;background:rgba(43,50,40,0.04);border-radius:6px;padding:0.5rem 0.65rem;color:var(--teal);line-height:1.7;border:1px solid var(--border)}
+    .sys-badge{display:inline-block;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.5rem;border-radius:4px;background:rgba(94,217,166,0.15);color:var(--teal);margin-top:0.6rem}
+
+    .timeline{position:relative;margin:2rem 0;padding-left:2.5rem}
+    .timeline::before{content:'';position:absolute;left:0.5rem;top:0;bottom:0;width:2px;background:var(--spring-rain);border-radius:1px}
+    .tl-item{position:relative;margin-bottom:1.5rem}
+    .tl-item::before{content:'';position:absolute;left:-2.5rem;top:0.35rem;width:12px;height:12px;border-radius:50%;background:var(--surface);border:3px solid var(--spring-rain)}
+    .tl-item.active::before{border-color:var(--mintgreen);background:var(--mintgreen)}
+    .tl-date{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:0.15rem}
+    .tl-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.95rem;color:var(--heavy-metal);margin-bottom:0.25rem}
+    .tl-body{font-size:0.88rem;color:var(--text-muted);line-height:1.55}
+    .tl-body code{font-family:'SF Mono','Fira Code',monospace;font-size:0.82rem;background:rgba(43,50,40,0.06);padding:0.1rem 0.35rem;border-radius:3px;color:var(--heavy-metal)}
+
+    code{font-family:'SF Mono','Fira Code',monospace;font-size:0.82rem;background:rgba(43,50,40,0.06);padding:0.15rem 0.4rem;border-radius:4px;color:var(--heavy-metal)}
+    .st td code{background:rgba(43,50,40,0.05);font-size:0.78rem}
+
+    .badge-tag{display:inline-block;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.15rem 0.45rem;border-radius:3px;vertical-align:middle;margin-left:0.35rem}
+    .badge-tag.get{background:rgba(94,217,166,0.15);color:var(--teal)}
+    .badge-tag.post{background:rgba(212,149,106,0.15);color:var(--warn)}
+    .badge-tag.put{background:rgba(74,155,140,0.15);color:var(--dark-teal)}
+    .badge-tag.del{background:rgba(189,178,161,0.2);color:var(--text-muted)}
+    .badge-tag.auth{background:rgba(43,50,40,0.1);color:var(--heavy-metal)}
+
+    @media(max-width:768px){
+      .cl{width:200px}.ch{font-size:1.6rem}h1{font-size:1.6rem}
+      .metrics{grid-template-columns:repeat(2,1fr)}.flow{flex-direction:column}
+      .flow-item:not(:last-child){border-right:none;border-bottom:1px solid var(--border)}
+      .flow-item:not(:last-child)::after{display:none}
+      .phases{grid-template-columns:1fr}.systems{grid-template-columns:1fr}
+      nav .nav-links{display:none}
+    }
+    @media print{nav{display:none}.page{min-height:auto;page-break-after:always;padding:2rem}body{background:white}}
+    [id]{scroll-margin-top:4rem}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#cover" class="logo-nav"><svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg></a>
+  <div class="nav-links">
+    <a href="#systeme" class="nl">Überblick</a>
+    <a href="#routes" class="nl">Routes</a>
+    <a href="#api" class="nl">API</a>
+    <a href="#core" class="nl">Systeme</a>
+    <a href="#daten" class="nl">Data Layer</a>
+    <a href="#auth" class="nl">Auth</a>
+    <a href="#infra" class="nl">Infra</a>
+    <a href="#onboarding" class="nl">Onboarding</a>
+  </div>
+  <div class="nav-tag">Arch v1.0</div>
+</nav>
+
+
+<!-- COVER -->
+<div class="page cover" id="cover">
+  <div>
+    <div class="cl"><svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg></div>
+    <div class="ct">Tirols KI-Community</div>
+    <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.15rem;color:var(--mintgreen);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;z-index:1;position:relative">:PLATFORM</div>
+    <div class="ml"></div>
+    <div class="ch">Software Architektur</div>
+    <div class="cs">Entwickler-Dokumentation</div>
+    <div class="cs" style="font-size:0.85rem;color:var(--kangaroo);margin-top:0.5rem">Stand März 2026</div>
+    <div class="cb">Intern &mdash; kinn.at</div>
+  </div>
+</div>
+
+
+<!-- 01 SYSTEMÜBERBLICK -->
+<div class="page" id="systeme"><div class="pi">
+  <div class="sn">01</div><div class="sl">Systemüberblick</div>
+  <h1>Wie kinn.at funktioniert</h1>
+  <div class="sub">Vanilla Stack, serverless, kein Build-Schritt</div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">34</div><div class="metric-unit">Routen</div><div class="metric-label">Rewrites &amp; Redirects in vercel.json</div></div>
+    <div class="metric"><div class="metric-val">121</div><div class="metric-unit">Endpoints</div><div class="metric-label">API Functions in /api</div></div>
+    <div class="metric"><div class="metric-val">10</div><div class="metric-unit">Systeme</div><div class="metric-label">Eigenständige Feature-Module</div></div>
+    <div class="metric"><div class="metric-val">20</div><div class="metric-unit">Namespaces</div><div class="metric-label">Redis Key-Gruppen</div></div>
+  </div>
+
+  <h2>Request-Flow</h2>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-label">Browser</div>
+      <div class="flow-text">HTML/CSS/JS, kein Framework, direkte Datei-Auslieferung</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Vercel Edge / CDN</div>
+      <div class="flow-text">Routing via vercel.json, Security-Header, Cron-Trigger</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Serverless Functions</div>
+      <div class="flow-text">Node.js ESM, /api/**/*.js, max 60s Laufzeit</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Upstash Redis</div>
+      <div class="flow-text">Primäre Datenbank — Events, Profile, Fund, Badges</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Externe APIs</div>
+      <div class="flow-text">Resend, Stripe, Groq, AssemblyAI, Firecrawl, Luma</div>
+    </div>
+  </div>
+
+  <h2>Tech Stack</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Schicht</th><th>Technologie</th><th>Details</th></tr></thead>
+    <tbody>
+      <tr><td>Frontend</td><td>Vanilla HTML / CSS / JS</td><td>Kein Framework, direkte Vercel-Auslieferung</td></tr>
+      <tr><td>Backend</td><td>Vercel Serverless Functions</td><td>Node.js ESM (<code>"type":"module"</code> in package.json)</td></tr>
+      <tr><td>Datenbank</td><td>Upstash Redis</td><td><code>@upstash/redis</code> (neu) + <code>@vercel/kv</code> (Radar-Legacy)</td></tr>
+      <tr><td>E-Mail</td><td>Resend</td><td>Transaktionale E-Mails, Double Opt-In, Newsletter</td></tr>
+      <tr><td>Zahlungen</td><td>Stripe</td><td>Fund-Beiträge, Kaffee-Links, Webhooks</td></tr>
+      <tr><td>KI (Radar)</td><td>Groq LLM + Firecrawl</td><td>Event-Extraktion aus 20+ Quellen täglich</td></tr>
+      <tr><td>KI (RAUS)</td><td>AssemblyAI + Groq</td><td>Voice Transcription + KI-Processing</td></tr>
+      <tr><td>Deployment</td><td>Vercel</td><td>Git-Integration, Cron Jobs, Edge Security-Header</td></tr>
+      <tr><td>Event-Management</td><td>Luma</td><td>RSVP, Einladungen, Reminder — primäres Event-Tool</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note"><strong>Kein Build-Schritt:</strong> HTML/CSS/JS-Dateien werden direkt deployed. Vercel CLI emuliert Serverless Functions lokal via <code>vercel dev</code>. Kein Webpack, kein Vite, kein Bundler.</div>
+</div></div>
+
+
+<!-- 02 PAGES & ROUTES -->
+<div class="page" id="routes"><div class="pi">
+  <div class="sn">02</div><div class="sl">Pages &amp; Routes</div>
+  <h1>Seitenstruktur &amp; Routing</h1>
+  <div class="sub">Konfiguriert in vercel.json — 31 Rewrites, 3 Redirects</div>
+
+  <h2>Öffentliche Seiten</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>URL</th><th>Datei</th><th>Beschreibung</th></tr></thead>
+    <tbody>
+      <tr><td>/</td><td>index.html</td><td>Startseite (Landing Page)</td></tr>
+      <tr><td>/anmeldung</td><td>pages/anmeldung.html</td><td>Event-Anmeldungsformular</td></tr>
+      <tr><td>/dabei</td><td>pages/dabei.html</td><td>Mitmachen-Seite</td></tr>
+      <tr><td>/stimme</td><td>pages/stimme.html</td><td>Testimonial einreichen</td></tr>
+      <tr><td>/stimmen</td><td>pages/testimonials-grid.html</td><td>Community-Stimmen Übersicht</td></tr>
+      <tr><td>/usecase</td><td>pages/usecase.html</td><td>Use Case einreichen</td></tr>
+      <tr><td>/roadmap</td><td>pages/roadmap.html</td><td>Feature-Voting Roadmap</td></tr>
+      <tr><td>/danke</td><td>pages/danke.html</td><td>Bestätigungsseite nach Anmeldung</td></tr>
+      <tr><td>/datenschutz</td><td>pages/privacy.html</td><td>Datenschutzerklärung</td></tr>
+      <tr><td>/agb</td><td>pages/agb.html</td><td>Allgemeine Geschäftsbedingungen</td></tr>
+      <tr><td>/gfragt</td><td>survey/survey.html</td><td>Community-Umfrage</td></tr>
+      <tr><td>/start</td><td>pages/start.html</td><td>Onboarding-Startseite</td></tr>
+      <tr><td>/tech</td><td>pages/tech.html</td><td>TechTalk Programm &amp; Anmeldung</td></tr>
+      <tr><td>/badge</td><td>badge/index.html</td><td>QR-Code Namensschild erstellen</td></tr>
+      <tr><td>/lade</td><td>lade/index.html</td><td>KINN:LADE Newsletter-Archiv</td></tr>
+      <tr><td>/lade/:id</td><td>lade/:id/index.html</td><td>Einzelne Newsletter-Ausgabe (z.B. /lade/01)</td></tr>
+      <tr><td>/spotlight</td><td>spotlight/index.html</td><td>Member Showcase Übersicht</td></tr>
+      <tr><td>/spotlight/:id</td><td>spotlight/:id/index.html</td><td>Einzelnes Member-Profil</td></tr>
+      <tr><td>/fund</td><td>pages/fund.html</td><td>KINN:FUND Community-Beiträge</td></tr>
+      <tr><td>/fund/claim</td><td>pages/fund/claim.html</td><td>Fund Beitritts-Flow</td></tr>
+      <tr><td>/fund/danke</td><td>pages/fund/danke.html</td><td>Bestätigung nach Fund-Beitritt</td></tr>
+      <tr><td>/gov</td><td>gov/index.html</td><td>Governance Abstimmungen</td></tr>
+      <tr><td>/print</td><td>print/index.html</td><td>Merch &amp; Design-Toolkit (Passwort)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>API-Shortlinks &amp; Dynamishe Routen</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>URL-Muster</th><th>Ziel</th><th>Funktion</th></tr></thead>
+    <tbody>
+      <tr><td><code>/:id(\d+)</code></td><td>/api/event/:id</td><td>Event-Shortlink, z.B. kinn.at/16 → Luma-Redirect</td></tr>
+      <tr><td><code>/:id(\d+)-:chapter([a-z]+)</code></td><td>/api/event/chapter</td><td>Event + Kapitel-Shortlink</td></tr>
+      <tr><td><code>/b/:id(\d+)</code></td><td>/api/b/:id</td><td>Badge QR-Code Redirect (inkl. Click-Counter)</td></tr>
+      <tr><td><code>/tech/:id</code></td><td>/api/tech/:id</td><td>TechTalk-Shortlink-Redirect</td></tr>
+      <tr><td>/oc</td><td>/api/fund/claim/callback</td><td>OpenCollective OAuth Callback</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Redirects</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Von</th><th>Nach</th><th>Typ</th></tr></thead>
+    <tbody>
+      <tr><td>/profil</td><td>/</td><td>Temporary (Legacy-URL)</td></tr>
+      <tr><td>/kaffee</td><td>buy.stripe.com/...</td><td>Temporary (Kaffee-Spende)</td></tr>
+      <tr><td>/beta/badge</td><td>/badge</td><td>Permanent (Beta-URL Ablöse)</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note"><strong>Konfigurationsort:</strong> Alle Rewrites, Redirects, Security-Header und Cron-Jobs sind in <code>vercel.json</code> definiert. Bei neuen Routen immer dort eintragen.</div>
+</div></div>
+
+
+<!-- 03 API ENDPOINTS -->
+<div class="page" id="api"><div class="pi">
+  <div class="sn">03</div><div class="sl">API Endpoints</div>
+  <h1>API-Übersicht (121 Endpoints)</h1>
+  <div class="sub">Alle Functions unter /api — gruppiert nach Domäne</div>
+
+  <div class="phases">
+    <div class="phase public">
+      <div class="phase-label">Öffentlich</div>
+      <div class="phase-title">Public APIs</div>
+      <div class="phase-count">~19 Endpoints</div>
+      <div class="phase-body">
+        <code>POST /api/signup</code> — E-Mail Anmeldung (Double Opt-In)<br>
+        <code>GET /api/confirm</code> — E-Mail Bestätigung<br>
+        <code>GET /api/calendar.ics</code> — iCal Feed<br>
+        <code>GET /api/events</code> — Upcoming Events<br>
+        <code>GET /api/fund</code> — Fund Causes + Stripe-Live-Daten<br>
+        <code>GET /api/stats</code> — Community KPIs<br>
+        <code>GET /api/testimonials</code> — Approved Testimonials<br>
+        <code>GET /api/profile</code> — User Preferences (JWT)<br>
+        <code>PUT /api/profile/update</code> — Profil aktualisieren<br>
+        <code>PUT /api/profile/update-extended</code> — Supply/Demand<br>
+        <code>POST /api/profile/unsubscribe</code> — Abmelden<br>
+        <code>POST /api/anmeldung</code> — Event-Anmeldung<br>
+        <code>POST /api/tech/signup</code> — TechTalk Anmeldung<br>
+        <code>GET /api/spotlight/view</code> — Spotlight-Seite rendern<br>
+        <code>GET /api/roadmap/features</code> — Feature-Liste<br>
+        <code>POST /api/roadmap/vote</code> — Feature-Vote toggeln
+      </div>
+    </div>
+
+    <div class="phase radar">
+      <div class="phase-label">Automatisiert</div>
+      <div class="phase-title">Radar System</div>
+      <div class="phase-count">~20 Endpoints</div>
+      <div class="phase-body">
+        <code>GET /api/radar/check-sites</code> — Quellen scannen (Cron)<br>
+        <code>GET /api/radar/update-sources</code> — Quell-Liste aktualisieren<br>
+        <code>GET /api/radar/update-info</code> — Event-Infos updaten<br>
+        <code>GET /api/radar/cleanup-cron</code> — Alte Events löschen<br>
+        <code>GET /api/radar/weekly-digest</code> — Weekly E-Mail<br>
+        <code>POST /api/radar/extract-url</code> — URL manuell extrahieren<br>
+        <code>GET /api/radar/metrics</code> — Radar-Statistiken<br>
+        <code>GET /api/radar/health</code> — System-Health-Check<br>
+        Weitere Functions in <code>/api/radar/</code> (20 Dateien gesamt)
+      </div>
+    </div>
+
+    <div class="phase admin">
+      <div class="phase-label">Bearer Auth</div>
+      <div class="phase-title">Admin Dashboard</div>
+      <div class="phase-count">~40 Endpoints</div>
+      <div class="phase-body">
+        <code>GET/POST/PUT/DELETE /api/admin/fund</code> — Fund CRUD<br>
+        <code>GET/PUT/DELETE /api/admin/radar-events</code> — Events verwalten<br>
+        <code>POST /api/admin/add-from-luma</code> — Luma URL → Radar<br>
+        <code>GET/POST/PUT/DELETE /api/admin/testimonials</code> — Stimmen<br>
+        <code>GET /api/admin/subscribers</code> — Abonnenten-Liste<br>
+        <code>GET /api/admin/stripe-donations</code> — Stripe Dashboard<br>
+        <code>GET /api/admin/event-attendees</code> — Teilnehmer-Listen<br>
+        <code>GET /api/admin/badges</code> — Badge-Verwaltung<br>
+        <code>GET/POST /api/admin/sources</code> — Radar-Quellen<br>
+        <code>GET /api/admin/techtalk-signups</code> — TechTalk-Liste<br>
+        Weitere: voting-stats, raus, scans, kinn-events
+      </div>
+    </div>
+
+    <div class="phase badge">
+      <div class="phase-label">Badge</div>
+      <div class="phase-title">Badge System</div>
+      <div class="phase-count">3 Endpoints</div>
+      <div class="phase-body">
+        <code>GET /api/badge/eligible</code> — Berechtigung prüfen<br>
+        <code>POST /api/badge/create</code> — Badge erstellen<br>
+        <code>POST /api/badge/link</code> — Badge-Link aktualisieren<br>
+        <br>
+        Click-Tracking via <code>GET /api/b/:id</code> (Rewrite)
+      </div>
+    </div>
+
+    <div class="phase fund">
+      <div class="phase-label">Stripe</div>
+      <div class="phase-title">Fund &amp; Stripe</div>
+      <div class="phase-count">4 Endpoints</div>
+      <div class="phase-body">
+        <code>GET /api/fund/claim/callback</code> — OC OAuth Callback<br>
+        <code>POST /api/fund/claim/initiate</code> — Beitritt starten<br>
+        <code>GET /api/fund/tx-by-session</code> — Transaktion nachschlagen<br>
+        <code>POST /api/stripe-webhook</code> — Stripe Events empfangen
+      </div>
+    </div>
+
+    <div class="phase gov">
+      <div class="phase-label">Auth &amp; Gov</div>
+      <div class="phase-title">Governance</div>
+      <div class="phase-count">6 Endpoints</div>
+      <div class="phase-body">
+        <code>POST /api/auth/login</code> — Admin Login (JWT)<br>
+        <code>GET /api/gov/me</code> — Eigenes Profil<br>
+        <code>GET /api/gov/decisions</code> — Offene Abstimmungen<br>
+        <code>POST /api/gov/vote</code> — Abstimmung abgeben<br>
+        <code>POST /api/gov/close</code> — Abstimmung schließen<br>
+        <code>GET /api/gov/cron/close-expired</code> — Cron: Abläufe
+      </div>
+    </div>
+
+    <div class="phase misc">
+      <div class="phase-label">Sonstiges</div>
+      <div class="phase-title">Weitere Endpoints</div>
+      <div class="phase-count">~30 Endpoints</div>
+      <div class="phase-body">
+        <code>POST /api/newsletter/send</code> — Newsletter senden<br>
+        <code>/api/raus/*</code> — Voice Transcription<br>
+        <code>/api/voting/*</code> — Topic-Voting<br>
+        <code>/api/survey-*</code> — Umfrage-Endpoints
+      </div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Admin-Authentifizierung:</strong> Alle <code>/api/admin/*</code> Endpoints erwarten <code>Authorization: Bearer {ADMIN_PASSWORD}</code>. Timing-safe Vergleich via <code>crypto.timingSafeEqual</code>.</div>
+</div></div>
+
+
+<!-- 04 CORE SYSTEME -->
+<div class="page" id="core"><div class="pi">
+  <div class="sn">04</div><div class="sl">Core Systeme</div>
+  <h1>12 eigenständige Feature-Module</h1>
+  <div class="sub">Jedes System hat eigene API-Files, Frontend-Seiten und Redis-Keys</div>
+
+  <div class="systems">
+
+    <div class="sys-card active">
+      <div class="sys-name">Radar</div>
+      <div class="sys-desc">Automatisierte Event-Extraktion aus 20+ Quellen täglich. Groq AI verarbeitet Scraping-Ergebnisse von Firecrawl. Admin-Review-Queue für unbekannte Events.</div>
+      <div class="sys-files">api/radar/ (20 Dateien)<br>api/admin/radar-events.js<br>admin/js/radar.js</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">Fund</div>
+      <div class="sys-desc">Community-Crowdfunding mit OpenCollective-Integration. Stripe für direkte Beiträge. Causes mit Fortschrittsbalken, wiederkehrende Ziele (wöchentlich/monatlich).</div>
+      <div class="sys-files">api/fund.js<br>api/admin/fund.js<br>pages/fund.html</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">Badge</div>
+      <div class="sys-desc">QR-Code Namensschilder mit automatischem Click-Tracking. Berechtigung basiert auf Event-Teilnahme. Links zu LinkedIn oder Website.</div>
+      <div class="sys-files">api/badge/<br>api/b/[id].js<br>badge/index.html</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">Spotlight</div>
+      <div class="sys-desc">Member-Showcase-Pages für ausgewählte Community-Mitglieder. Statischer Inhalt in content.json, Admin-Genehmigung via Redis. 14 aktive Profile.</div>
+      <div class="sys-files">api/spotlight/<br>spotlight/{id}/index.html</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">TechTalk</div>
+      <div class="sys-desc">Speaker-Programm mit eigenem Anmeldungs-Flow und Double Opt-In. Separate E-Mail-Liste, Admin-Verwaltung über Dashboard.</div>
+      <div class="sys-files">api/tech/<br>pages/tech.html</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">RAUS</div>
+      <div class="sys-desc">Voice-Transcription-System: AssemblyAI verarbeitet Audio, Groq übernimmt KI-Processing der Transkripte. Erfordert Mikrofon-Berechtigung.</div>
+      <div class="sys-files">api/raus/<br>(Permissions-Policy: microphone)</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">Voting</div>
+      <div class="sys-desc">Topic-Voting für KINN-Events und öffentliche Feature-Roadmap. Zwei Subsysteme: Event-Topics (intern) und Roadmap-Features (öffentlich).</div>
+      <div class="sys-files">api/voting/<br>api/roadmap/<br>api/admin/voting-*.js</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">Governance</div>
+      <div class="sys-desc">Abstimmungssystem für Community-Entscheidungen. JWT-geschützte Voting-Flows, Cron-Job schließt abgelaufene Abstimmungen täglich um 09:00.</div>
+      <div class="sys-files">api/gov/<br>gov/index.html</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">Print</div>
+      <div class="sys-desc">Merch- und Design-Toolkit für das KINN-Team. Separater Passwortschutz via TEAM_PASSWORD, unabhängig vom Admin-Login.</div>
+      <div class="sys-files">print/<br>api/print-auth.js</div>
+      <div class="sys-badge">Passwortgeschützt</div>
+    </div>
+
+    <div class="sys-card active">
+      <div class="sys-name">Lade</div>
+      <div class="sys-desc">KINN:LADE Newsletter-Archiv — monatlicher Thought-Leadership-Newsletter ("Ladestation für Wissen"). Statische HTML-E-Mails mit Archiv-Seite, versandt via Resend API.</div>
+      <div class="sys-files">lade/index.html (Archiv)<br>lade/{nr}/email.html (Ausgabe)</div>
+      <div class="sys-badge">Aktiv</div>
+    </div>
+
+  </div>
+
+  <div class="note"><strong>Admin Dashboard:</strong> Single-Page-App unter <code>/admin</code>, JS aufgeteilt in Module unter <code>admin/js/</code> (auth, dashboard, radar, fund, badges, subscribers, stimmen, stripe, techtalks, sources, kinn-events, raus, radar-calendar).</div>
+</div></div>
+
+
+<!-- 05 DATA LAYER -->
+<div class="page" id="daten"><div class="pi">
+  <div class="sn">05</div><div class="sl">Data Layer</div>
+  <h1>Redis Key-Schema</h1>
+  <div class="sub">Upstash Redis als einzige Datenbank — kein SQL, kein ORM</div>
+
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Namespace</th><th>Key-Pattern</th><th>Typ</th><th>Beschreibung</th></tr></thead>
+    <tbody>
+      <tr><td>Radar</td><td><code>radar:events</code></td><td>Set</td><td>Alle bekannten Event-IDs</td></tr>
+      <tr><td>Radar</td><td><code>radar:event:{id}</code></td><td>Hash</td><td>Event-Daten: title, date, location, source, detailUrl ...</td></tr>
+      <tr><td>Radar</td><td><code>radar:events:by-date:{date}</code></td><td>Set</td><td>Index zur Duplikat-Erkennung</td></tr>
+      <tr><td>Radar</td><td><code>radar:sources</code></td><td>Set</td><td>Konfigurierte Scraping-Quellen</td></tr>
+      <tr><td>Events</td><td><code>kinn:event-links</code></td><td>JSON</td><td><code>{ "16": "https://lu.ma/..." }</code> — Shortlink-Map</td></tr>
+      <tr><td>Events</td><td><code>kinn:tech-links</code></td><td>JSON</td><td>TechTalk Event-Redirects</td></tr>
+      <tr><td>Events</td><td><code>event:attendees:{eventId}</code></td><td>Set</td><td>Teilnehmer-E-Mails pro Event (admin-managed)</td></tr>
+      <tr><td>Subscribers</td><td><code>subscribers:confirmed</code></td><td>Set</td><td>Alle bestätigten Abonnenten</td></tr>
+      <tr><td>Profile</td><td><code>user:preferences:{email}</code></td><td>Hash</td><td>Basis-Einstellungen (notifications, subscribedAt)</td></tr>
+      <tr><td>Profile</td><td><code>profile:{email}</code></td><td>Hash</td><td>Erweitertes Profil: identity, supply, demand, preferences</td></tr>
+      <tr><td>Badges</td><td><code>badges:counter</code></td><td>INT</td><td>Auto-Increment ID via INCR</td></tr>
+      <tr><td>Badges</td><td><code>badge:id:{id}</code></td><td>STRING</td><td>Reverse Lookup: Badge-ID → externe URL</td></tr>
+      <tr><td>Badges</td><td><code>badge:clicks:{id}</code></td><td>INT</td><td>Click-Counter (atomic INCR, reset bei URL-Änderung)</td></tr>
+      <tr><td>Badges</td><td><code>badges:eligible</code></td><td>Set</td><td>E-Mails, die einen Badge erstellen dürfen</td></tr>
+      <tr><td>Testimonials</td><td><code>testimonials:list</code></td><td>Array</td><td>Alle Testimonials (mit status: pending/approved/rejected)</td></tr>
+      <tr><td>Fund</td><td><code>fund:causes</code></td><td>Array</td><td>Alle Fund-Causes (active/funded/upcoming/hidden)</td></tr>
+      <tr><td>Fund</td><td><code>fund:oc:{tierId}</code></td><td>Hash</td><td>OpenCollective Stats-Cache (TTL 300s)</td></tr>
+      <tr><td>Spotlight</td><td><code>spotlight:{id}</code></td><td>Hash</td><td>Status + Genehmigungsdatum</td></tr>
+      <tr><td>TechTalk</td><td><code>techtalk:signups</code></td><td>Set</td><td>Angemeldete E-Mails</td></tr>
+      <tr><td>RAUS</td><td><code>raus:submissions</code></td><td>List</td><td>Voice-Einreichungen</td></tr>
+      <tr><td>RAUS</td><td><code>raus:stats:total</code></td><td>INT</td><td>Gesamt-Einreichungen</td></tr>
+      <tr><td>RAUS</td><td><code>raus:stats:verified</code></td><td>INT</td><td>Verifizierte Einreichungen</td></tr>
+      <tr><td>Roadmap</td><td><code>roadmap:features</code></td><td>Array</td><td>Feature-Voting-Liste (öffentlich)</td></tr>
+      <tr><td>Config</td><td><code>config:sources</code></td><td>Array</td><td>Radar-Quellliste</td></tr>
+      <tr><td>E-Mail</td><td><code>email:alias:{old}</code></td><td>STRING</td><td>E-Mail-Migration (JWT Rückwärtskompatibilität)</td></tr>
+      <tr><td>Stats</td><td><code>stats:cache</code></td><td>Hash</td><td>KPI-Cache (TTL 300s)</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note"><strong>Zwei Redis-Clients:</strong> <code>@upstash/redis</code> (Großteil des Codes: <code>new Redis({ url, token })</code>) und <code>@vercel/kv</code> (Legacy in Radar-Files: <code>createClient({ url, token })</code>). Beide nutzen dieselben <code>KINNST_KV_REST_API_*</code> Umgebungsvariablen. <strong>Niemals</strong> <code>Redis.fromEnv()</code> verwenden.</div>
+
+  <div class="warn"><strong>Redis Helper Pflicht:</strong> Immer den Singleton aus <code>/api/utils/redis.js</code> verwenden. Kein direktes Initialisieren von Redis-Clients in einzelnen API-Dateien.</div>
+</div></div>
+
+
+<!-- 06 AUTH & SICHERHEIT -->
+<div class="page" id="auth"><div class="pi">
+  <div class="sn">06</div><div class="sl">Auth &amp; Sicherheit</div>
+  <h1>Authentifizierung &amp; Sicherheitsmodell</h1>
+  <div class="sub">Kein Session-Store, kein Rollen-System — Admin oder nicht</div>
+
+  <h2>Token-Typen</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Token</th><th>Typ</th><th>Payload</th><th>Ablauf</th><th>Verwendung</th></tr></thead>
+    <tbody>
+      <tr><td>Admin</td><td>Plaintext</td><td><code>ADMIN_PASSWORD</code></td><td>—</td><td>Timing-safe Vergleich via <code>crypto.timingSafeEqual</code>. Kein JWT, kein Hash.</td></tr>
+      <tr><td>User-JWT</td><td>JWT (signed)</td><td><code>{ email, type: 'profile' }</code></td><td>Nie</td><td>Long-lived Token für User-Profil-Verwaltung</td></tr>
+      <tr><td>Confirm-JWT</td><td>JWT (signed)</td><td><code>{ email, type: 'confirm' }</code></td><td>24 Stunden</td><td>E-Mail-Bestätigung (Double Opt-In)</td></tr>
+      <tr><td>Print</td><td>Plaintext</td><td><code>TEAM_PASSWORD</code></td><td>—</td><td>Zugang zum Print/Design-Toolkit (von Admin getrennt)</td></tr>
+      <tr><td>Radar-Cron</td><td>Secret</td><td><code>RADAR_CRON_SECRET</code></td><td>—</td><td>Authentifiziert Vercel Cron-Requests</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Security-Header (aus vercel.json)</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Header</th><th>Wert</th></tr></thead>
+    <tbody>
+      <tr><td>X-Frame-Options</td><td>DENY</td></tr>
+      <tr><td>X-Content-Type-Options</td><td>nosniff</td></tr>
+      <tr><td>X-XSS-Protection</td><td>1; mode=block</td></tr>
+      <tr><td>Referrer-Policy</td><td>strict-origin-when-cross-origin</td></tr>
+      <tr><td>Permissions-Policy</td><td>camera=(), geolocation=() (global) | microphone=(self) (nur /raus/*)</td></tr>
+      <tr><td>Content-Security-Policy</td><td>default-src 'self'; script-src 'self' 'unsafe-inline' fonts.googleapis.com embed.lu.ma; connect-src 'self' *.upstash.io api.lu.ma; frame-src lu.ma embed.lu.ma; frame-ancestors 'none'</td></tr>
+      <tr><td>Cache-Control</td><td>no-cache, must-revalidate (alle .html + Root)</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="warn"><strong>Kein Rollen-System:</strong> Es gibt nur zwei Zustände — authentifizierter Admin (via Bearer Token) oder kein Admin. Kein Middleware-Layer, jede Admin-Route prüft selbst. JWTs werden nicht rotiert und nicht widerrufen — kein Token-Store vorhanden.</div>
+</div></div>
+
+
+<!-- 07 CRON & INFRA -->
+<div class="page" id="infra"><div class="pi">
+  <div class="sn">07</div><div class="sl">Cron &amp; Infra</div>
+  <h1>Geplante Jobs &amp; Infrastruktur</h1>
+  <div class="sub">6 Cron Jobs, alle via Vercel konfiguriert</div>
+
+  <h2>Cron Jobs</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Schedule</th><th>Endpoint</th><th>Zweck</th></tr></thead>
+    <tbody>
+      <tr><td>täglich 08:00</td><td><code>/api/radar/check-sites?priority=primary</code></td><td>Primäre Quellen scannen, neue Events extrahieren</td></tr>
+      <tr><td>täglich 08:15</td><td><code>/api/radar/update-sources</code></td><td>Quellliste aktualisieren</td></tr>
+      <tr><td>täglich 03:00</td><td><code>/api/radar/cleanup-cron</code></td><td>Alte/abgelaufene Events aus Redis entfernen</td></tr>
+      <tr><td>Mo 09:00</td><td><code>/api/radar/update-info</code></td><td>Event-Metadaten wöchentlich aktualisieren</td></tr>
+      <tr><td>Mo 09:00</td><td><code>/api/radar/weekly-digest</code></td><td>Wöchentlichen E-Mail-Digest versenden</td></tr>
+      <tr><td>täglich 09:00</td><td><code>/api/gov/cron/close-expired</code></td><td>Abgelaufene Governance-Abstimmungen schließen</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Umgebungsvariablen</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Gruppe</th><th>Variable</th><th>Beschreibung</th></tr></thead>
+    <tbody>
+      <tr><td>Redis</td><td><code>KINNST_KV_REST_API_URL</code></td><td>Upstash REST API URL</td></tr>
+      <tr><td>Redis</td><td><code>KINNST_KV_REST_API_TOKEN</code></td><td>Upstash REST API Token</td></tr>
+      <tr><td>E-Mail</td><td><code>RESEND_API_KEY</code></td><td>Resend API-Schlüssel</td></tr>
+      <tr><td>E-Mail</td><td><code>SENDER_EMAIL</code></td><td>Absender: "KINN &lt;thomas@kinn.at&gt;"</td></tr>
+      <tr><td>KI</td><td><code>GROQ_API_KEY</code></td><td>Groq API — RAUS Voice-Processing</td></tr>
+      <tr><td>KI</td><td><code>ASSEMBLYAI_API_KEY</code></td><td>AssemblyAI — Transkription</td></tr>
+      <tr><td>KI</td><td><code>RADAR_GROQ_API_KEY</code></td><td>Groq API — Radar (separater Key!)</td></tr>
+      <tr><td>KI</td><td><code>FIRECRAWL_API_KEY</code></td><td>Firecrawl — JS-heavy Site Scraping</td></tr>
+      <tr><td>Auth</td><td><code>JWT_SECRET</code></td><td>JWT Signing-Secret</td></tr>
+      <tr><td>Auth</td><td><code>ADMIN_PASSWORD</code></td><td>Admin-Passwort (Plaintext, timing-safe)</td></tr>
+      <tr><td>Auth</td><td><code>ADMIN_USERNAME</code></td><td>Admin E-Mail</td></tr>
+      <tr><td>Auth</td><td><code>TEAM_PASSWORD</code></td><td>Print-System Zugang</td></tr>
+      <tr><td>Auth</td><td><code>RADAR_ADMIN_TOKEN</code></td><td>Radar Admin-Token</td></tr>
+      <tr><td>Auth</td><td><code>RADAR_CRON_SECRET</code></td><td>Cron-Job Authentifizierung</td></tr>
+      <tr><td>Dienste</td><td><code>BASE_URL</code></td><td>"https://kinn.at"</td></tr>
+      <tr><td>Dienste</td><td><code>STRIPE_SECRET_KEY</code></td><td>Stripe Live-Schlüssel</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Externe Dienste</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Dienst</th><th>Verwendung</th><th>SDK / Client</th></tr></thead>
+    <tbody>
+      <tr><td>Upstash Redis</td><td>Primäre Datenbank</td><td><code>@upstash/redis</code> + <code>@vercel/kv</code></td></tr>
+      <tr><td>Resend</td><td>Transaktionale E-Mails</td><td>REST API</td></tr>
+      <tr><td>Stripe</td><td>Fund-Beiträge, Zahlungen</td><td><code>stripe</code> npm</td></tr>
+      <tr><td>Groq</td><td>LLM: Radar + RAUS</td><td><code>groq-sdk</code></td></tr>
+      <tr><td>AssemblyAI</td><td>Voice-Transkription</td><td><code>assemblyai</code></td></tr>
+      <tr><td>Firecrawl</td><td>Web-Scraping (JS-heavy)</td><td><code>@mendable/firecrawl-js</code></td></tr>
+      <tr><td>Vercel</td><td>Hosting, Serverless, Crons</td><td>Vercel CLI + Git</td></tr>
+      <tr><td>OpenCollective</td><td>Fund-Tier-Statistiken</td><td>REST API</td></tr>
+      <tr><td>Luma</td><td>Event-Management, RSVP</td><td>API + Embed</td></tr>
+
+    </tbody>
+  </table></div>
+
+  <div class="note"><strong>Lokale Entwicklung:</strong> <code>vercel dev</code> emuliert Serverless Functions und Environment Variables lokal. <code>.env.local</code> für lokale Overrides.</div>
+</div></div>
+
+
+<!-- 08 ONBOARDING -->
+<div class="page" id="onboarding"><div class="pi">
+  <div class="sn">08</div><div class="sl">Onboarding</div>
+  <h1>Erste Schritte für neue Entwickler</h1>
+  <div class="sub">Von Zero zum ersten PR in fünf Schritten</div>
+
+  <div class="timeline">
+
+    <div class="tl-item active">
+      <div class="tl-date">Schritt 1</div>
+      <div class="tl-title">Repo clonen &amp; Umgebung einrichten</div>
+      <div class="tl-body">
+        Repo clonen, <code>npm install</code> ausführen.<br>
+        <code>.env.local</code> aus <code>.env.example</code> erstellen und mit Werten befüllen.<br>
+        Alle nötigen API-Keys von Thomas oder einem Core-Team-Mitglied anfordern.
+      </div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-date">Schritt 2</div>
+      <div class="tl-title">Lokal starten mit vercel dev</div>
+      <div class="tl-body">
+        <code>vercel dev</code> startet den lokalen Dev-Server auf Port 3000.<br>
+        Serverless Functions werden automatisch emuliert — kein separater API-Server nötig.<br>
+        Kein Build-Schritt, kein Webpack, keine Bundler-Konfiguration.
+      </div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-date">Schritt 3</div>
+      <div class="tl-title">Diese Architekturdokumentation lesen</div>
+      <div class="tl-body">
+        <code>kinn-architecture.html</code> gibt den vollständigen Überblick:<br>
+        API-Endpoints, Redis-Schema, Token-Typen, Env-Vars, System-Architektur.<br>
+        Danach <code>vercel.json</code> für Routing- und Infra-Details.
+      </div>
+    </div>
+
+    <div class="tl-item active">
+      <div class="tl-date">Schritt 4 &amp; 5</div>
+      <div class="tl-title">Platform TechTalk als KickStart</div>
+      <div class="tl-body">
+        Bei gemeinsamer Entwicklung wird ein dedizierter TechTalk organisiert — Walk-through durch Architektur, Live-Systeme und offene Baustellen.<br>
+        Bei Interesse direkt an Thomas wenden: <a href="mailto:thomas@kinn.at" style="color:var(--teal);text-decoration:none;border-bottom:1px solid var(--mint-glow)">thomas@kinn.at</a>
+      </div>
+    </div>
+
+  </div>
+
+  <h2>Key Files zum Lesen</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Datei</th><th>Warum wichtig</th></tr></thead>
+    <tbody>
+      <tr><td><code>kinn-architecture.html</code></td><td>Diese Datei — vollständiger Überblick über Architektur, APIs, Redis, Auth, Infra</td></tr>
+      <tr><td><code>vercel.json</code></td><td>Routing, Security-Header, Cron-Jobs, Redirects — Infrastruktur-Zentrale</td></tr>
+      <tr><td><code>package.json</code></td><td>Dependencies, <code>"type":"module"</code> (ESM!), Vercel CLI</td></tr>
+      <tr><td><code>api/utils/redis.js</code></td><td>Redis Singleton — immer dieser Client, nie direkt initialisieren</td></tr>
+      <tr><td><code>admin/js/admin.js</code></td><td>Admin-SPA Entry-Point, lädt alle 16 Module</td></tr>
+      <tr><td><code>.githooks/pre-commit</code></td><td>PII-Scanner — blockiert E-Mails/Telefonnummern vor dem Commit</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Wichtige Conventions auf einen Blick</h2>
+  <div class="st-wrap"><table class="st">
+    <thead><tr><th>Thema</th><th>Convention</th></tr></thead>
+    <tbody>
+      <tr><td>Module</td><td>ES Modules überall — <code>import</code>/<code>export</code>, kein <code>require()</code></td></tr>
+      <tr><td>Redis</td><td>Immer <code>api/utils/redis.js</code> Singleton, <code>KINNST_KV_</code> Prefix für Env-Vars</td></tr>
+      <tr><td>Umlaute</td><td>Echte Umlaute (ü, ö, ä, ß) im Frontend — kein ASCII-Ersatz</td></tr>
+      <tr><td>Auth</td><td>Admin: Bearer Token; User: JWT in URL-Param oder Header</td></tr>
+      <tr><td>Design</td><td>Kein Framework — Vanilla CSS, KINN Brand Design System (Mintgrün, Ecru, Futura)</td></tr>
+      <tr><td>PII</td><td>Public Repo — kein echtes User-Daten in Code oder Commits</td></tr>
+      <tr><td>Deployment</td><td><code>vercel --prod</code> für Production — nur nach Review</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note"><strong>Kein Build-Schritt nötig:</strong> <code>vercel dev</code> kümmert sich um Serverless-Emulation lokal. Was lokal funktioniert, funktioniert in Production — es gibt keine Build-Artefakte oder Transpiling-Schritte.</div>
+
+</div></div>
+
+</body>
+</html>

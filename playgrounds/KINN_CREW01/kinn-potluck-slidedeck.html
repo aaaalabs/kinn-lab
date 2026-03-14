@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN Potluck · 28. Feb 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family: 'Futura'; src: local('Futura'), local('Futura-Medium'), local('FuturaPT-Book'); font-weight: 400; }
+
+    :root {
+      --mintgreen: #5ED9A6;
+      --heavy-metal: #2B3228;
+      --ecru-white: #F5F0E6;
+      --spring-rain: #A8C8B0;
+      --teal: #4A9B8C;
+      --dark-teal: #2D6B60;
+      --malta: #BDB2A1;
+      --kangaroo: #C6C3B5;
+      --slide-pad: clamp(2rem, 5vw, 5rem);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; font-family: 'Futura', 'Work Sans', system-ui, sans-serif; background: var(--heavy-metal); -webkit-font-smoothing: antialiased; }
+
+    #deck { position: fixed; inset: 0; }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: var(--slide-pad);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      overflow: hidden;
+    }
+    .slide.active { opacity: 1; pointer-events: auto; }
+
+    .slide[data-theme="dark"] { background: var(--heavy-metal); color: var(--ecru-white); }
+    .slide[data-theme="light"] { background: var(--ecru-white); color: var(--heavy-metal); }
+    .slide[data-theme="mint"] {
+      background: linear-gradient(135deg, #38C98A 0%, #5ED9A6 55%, #7BE6B8 100%);
+      color: var(--heavy-metal);
+    }
+
+    /* Shared slide inner */
+    .si { width: 100%; max-width: 960px; }
+
+    /* Nav dots */
+    #nav-dots {
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 200;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.25); cursor: pointer;
+      transition: all 0.25s; border: none; padding: 0;
+    }
+    .dot.active { background: var(--mintgreen); transform: scale(1.5); }
+
+    #slide-counter {
+      position: fixed; bottom: 1.25rem; right: 1.5rem;
+      font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.65rem;
+      color: rgba(255,255,255,0.3); letter-spacing: 0.06em; z-index: 200;
+      transition: color 0.3s;
+    }
+
+    #nav-prev, #nav-next {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      width: 2.75rem; height: 2.75rem; border: none;
+      background: rgba(255,255,255,0.07); border-radius: 50%; cursor: pointer;
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.35); font-size: 1.1rem;
+      transition: all 0.2s; backdrop-filter: blur(6px);
+    }
+    #nav-prev { left: 1rem; }
+    #nav-next { right: 1rem; }
+    #nav-prev:hover, #nav-next:hover { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); }
+    #nav-prev:disabled, #nav-next:disabled { opacity: 0.2; cursor: default; }
+  </style>
+</head>
+<body>
+  <div id="deck"></div>
+  <div id="nav-dots"></div>
+  <div id="slide-counter"></div>
+  <button id="nav-prev">&#8592;</button>
+  <button id="nav-next">&#8594;</button>
+
+  <script>window.KINN_SLIDES = [];</script>
+  <script src="slides/slide-01-cover.js"></script>
+  <script src="slides/slide-02-warum.js"></script>
+  <script src="slides/slide-03-wachstum.js"></script>
+  <script src="slides/slide-04-kinn15.js"></script>
+  <script src="slides/slide-05-demand.js"></script>
+  <script src="slides/slide-06-kapazitaet.js"></script>
+  <script src="slides/slide-07-chapters.js"></script>
+  <script src="slides/slide-08-chapter-map.js"></script>
+  <script src="slides/slide-09-testimonials.js"></script>
+  <script src="slides/slide-10-regulars.js"></script>
+  <script src="slides/slide-11-team.js"></script>
+  <script src="slides/slide-12-heatmap.js"></script>
+  <script src="slides/slide-13-roadmap.js"></script>
+  <script src="slides/slide-14-fund.js"></script>
+  <script src="slides/slide-15-diskussion.js"></script>
+  <script src="slides/slide-16-manifest.js"></script>
+  <script src="slides/slide-17-prost.js"></script>
+  <script src="slides/engine.js"></script>
+</body>
+</html>

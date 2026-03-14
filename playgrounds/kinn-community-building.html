@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN - Community Building & Retention</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family:'Futura'; src:local('Futura'),local('Futura-Medium'),local('FuturaPT-Book'); font-weight:400; }
+    :root {
+      --mintgreen:#5ED9A6; --heavy-metal:#2B3228; --ecru-white:#F5F0E6; --spring-rain:#A8C8B0;
+      --malta:#BDB2A1; --kangaroo:#C6C3B5; --teal:#4A9B8C; --dark-teal:#2D6B60; --cream:#F5F1E8;
+      --mint-glow:rgba(94,217,166,0.15); --mint-subtle:rgba(94,217,166,0.08);
+      --bg:var(--ecru-white); --text:var(--heavy-metal); --text-muted:#6B7068;
+      --surface:#FFFFFF; --border:rgba(43,50,40,0.1);
+      --warn:#D4956A; --warn-bg:rgba(212,149,106,0.08);
+    }
+    *{margin:0;padding:0;box-sizing:border-box} html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Futura','Work Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.618;-webkit-font-smoothing:antialiased}
+    a.ext{color:var(--teal);text-decoration:none;border-bottom:1px solid var(--mint-glow);transition:border-color 0.2s}
+    a.ext:hover{border-color:var(--mintgreen)} a.ext::after{content:'\2009\2197';font-size:0.75em;opacity:0.5}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,240,230,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.6rem 2rem;display:flex;align-items:center;gap:1.5rem}
+    nav .logo-nav{display:flex;align-items:center;text-decoration:none} nav .logo-nav svg{height:18px;width:auto;fill:var(--heavy-metal)}
+    nav .nav-links{display:flex;gap:0.15rem;flex-wrap:wrap}
+    nav a.nl{font-family:'Futura','Work Sans',sans-serif;font-size:0.7rem;color:var(--text-muted);text-decoration:none;padding:0.3rem 0.55rem;border-radius:6px;transition:all 0.2s;letter-spacing:0.04em;text-transform:uppercase}
+    nav a.nl:hover{background:var(--mint-glow);color:var(--heavy-metal)}
+    nav .nav-tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--mintgreen);color:var(--heavy-metal);padding:0.2rem 0.5rem;border-radius:4px;margin-left:auto}
+
+    .page{min-height:100vh;padding:5.5rem 2rem 4rem;display:flex;align-items:center;justify-content:center;position:relative}
+    .pi{max-width:920px;width:100%}
+    .page::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 30%,var(--mint-subtle) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(168,200,176,0.06) 0%,transparent 50%);pointer-events:none}
+    .page:nth-child(even){background:linear-gradient(180deg,var(--ecru-white) 0%,#F0EBE1 100%)}
+    .page:nth-child(even)::before{background:radial-gradient(circle at 70% 20%,rgba(189,178,161,0.08) 0%,transparent 50%),radial-gradient(circle at 30% 80%,var(--mint-subtle) 0%,transparent 50%)}
+    .page.pg-fund{background:linear-gradient(180deg,rgba(94,217,166,0.04) 0%,rgba(94,217,166,0.08) 100%);border-left:3px solid var(--mintgreen)}
+    .page.pg-mix{background:linear-gradient(180deg,rgba(94,217,166,0.03) 0%,rgba(189,178,161,0.07) 100%);border-left:3px solid var(--spring-rain)}
+
+    .cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+    .cover::before{content:'';position:absolute;top:-20%;left:-20%;width:140%;height:140%;background:radial-gradient(ellipse at 30% 20%,rgba(94,217,166,0.12) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(168,200,176,0.08) 0%,transparent 60%);pointer-events:none;animation:cp 12s ease-in-out infinite}
+    @keyframes cp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:0.8}}
+    .cl{width:320px;max-width:70%;margin:0 auto 1rem;z-index:1;position:relative} .cl svg{width:100%;height:auto;fill:var(--heavy-metal);filter:drop-shadow(0 4px 16px rgba(0,0,0,0.06))}
+    .ct{font-size:0.9rem;color:var(--text-muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:2rem;z-index:1;position:relative}
+    .ch{font-family:'Montserrat',sans-serif;font-weight:800;font-size:2.5rem;color:var(--heavy-metal);margin-bottom:1rem;z-index:1;position:relative}
+    .cs{font-size:1rem;color:var(--text-muted);margin-bottom:0.5rem;z-index:1;position:relative}
+    .cb{display:inline-block;font-size:0.75rem;color:var(--heavy-metal);background:var(--mint-glow);border:1px solid rgba(94,217,166,0.3);padding:0.4rem 1rem;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;margin-top:3rem;z-index:1;position:relative}
+    .ml{width:60px;height:3px;background:var(--mintgreen);border-radius:2px;margin:1.5rem auto;z-index:1;position:relative}
+
+    h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:2.5rem;color:var(--heavy-metal);letter-spacing:0.02em;line-height:1.15;margin-bottom:1.5rem}
+    h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:1.5rem;color:var(--heavy-metal);line-height:1.3;margin-top:2.5rem;margin-bottom:1rem}
+    h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.1rem;color:var(--teal);margin-top:1.5rem;margin-bottom:0.75rem}
+    p{margin-bottom:1rem;line-height:1.7}
+    .sn{font-family:'Montserrat',sans-serif;font-weight:900;font-size:4rem;color:var(--spring-rain);opacity:0.4;line-height:1;margin-bottom:-0.5rem}
+    .sl{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .kb{font-family:'Montserrat',sans-serif;font-weight:900}
+    .sub{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--teal);letter-spacing:0.04em;margin-bottom:1.25rem}
+
+    .st-wrap{overflow-x:auto;margin:1.25rem 0 1.5rem;border-radius:12px;border:1px solid var(--border);-webkit-overflow-scrolling:touch}
+    .st{width:100%;min-width:480px;border-collapse:separate;border-spacing:0}
+    .st th{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;text-align:left;padding:0.75rem 1rem;background:var(--heavy-metal);color:var(--ecru-white)}
+    .st td{padding:0.65rem 1rem;font-size:0.9rem;border-bottom:1px solid var(--border)} .st tr:last-child td{border-bottom:none}
+    .st tr:nth-child(even) td{background:rgba(168,200,176,0.06)} .st td:first-child{font-weight:600;color:var(--heavy-metal)}
+
+    .note{background:rgba(94,217,166,0.08);border-left:3px solid var(--mintgreen);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem} .note strong{color:var(--teal)}
+    .warn{background:var(--warn-bg);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem} .warn strong{color:#B07840}
+    .quote{display:block;border-left:3px solid var(--mintgreen);padding:1rem 1.5rem;margin:1.25rem 0;background:var(--mint-glow);border-radius:0 12px 12px 0}
+    .quote p{font-size:1rem;font-style:italic;color:var(--heavy-metal);margin-bottom:0.35rem;line-height:1.6}
+    .quote cite{font-size:0.8rem;color:var(--teal);font-style:normal;font-family:'Montserrat',sans-serif;font-weight:700}
+
+    .flow{display:flex;align-items:stretch;gap:0;margin:1.5rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .flow-item{flex:1;padding:1.25rem 1rem;background:var(--surface);position:relative;text-align:center}
+    .flow-item:not(:last-child){border-right:1px solid var(--border)}
+    .flow-item:not(:last-child)::after{content:'\2192';position:absolute;right:-0.6rem;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--mintgreen);z-index:2;background:var(--surface);width:1.2rem;height:1.2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;line-height:1}
+    .flow-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .flow-text{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
+
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+    .metric{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+    .metric-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.8rem;color:var(--teal);line-height:1.1}
+    .metric-unit{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;color:var(--kangaroo);letter-spacing:0.05em;text-transform:uppercase;margin-top:0.15rem}
+    .metric-label{font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem}
+
+    .stake{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.5rem 0}
+    .stake-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;position:relative}
+    .stake-card::before{content:'';position:absolute;top:0;left:1rem;right:1rem;height:2px;border-radius:1px}
+    .stake-card.direct::before{background:var(--mintgreen)}
+    .stake-card.indirect::before{background:var(--spring-rain)}
+    .stake-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.95rem;color:var(--heavy-metal);margin-bottom:0.5rem}
+    .stake-body{font-size:0.88rem;color:var(--text-muted);line-height:1.6}
+
+    .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .phase{background:var(--surface);border-radius:16px;padding:1.75rem 1.5rem;border:1px solid var(--border);position:relative;overflow:hidden}
+    .phase::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--spring-rain)}
+    .phase.active::before{background:var(--mintgreen)}
+    .phase-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:0.5rem}
+    .phase-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--heavy-metal);margin-bottom:0.25rem}
+    .phase-body{font-size:0.88rem;color:var(--text-muted);line-height:1.6}
+
+    .prog{margin:1.5rem 0}
+    .prog-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem}
+    .prog-label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.8rem;color:var(--heavy-metal);width:140px;text-align:right;flex-shrink:0}
+    .prog-bar{flex:1;height:28px;background:rgba(43,50,40,0.05);border-radius:8px;overflow:hidden;position:relative}
+    .prog-fill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:0.75rem;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;color:white;transition:width 0.6s ease}
+    .prog-fill.mint{background:linear-gradient(90deg,var(--teal),var(--mintgreen))}
+    .prog-fill.spring{background:linear-gradient(90deg,var(--spring-rain),var(--teal))}
+    .prog-fill.warm{background:linear-gradient(90deg,var(--malta),var(--warn))}
+
+    /* Kodex cards */
+    .kodex{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0}
+    .kodex-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;position:relative;overflow:hidden}
+    .kodex-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--mintgreen)}
+    .kodex-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.5rem;color:var(--mintgreen);line-height:1}
+    .kodex-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.8rem;color:var(--heavy-metal);margin:0.25rem 0 0.35rem;letter-spacing:0.03em;text-transform:uppercase}
+    .kodex-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5;font-style:italic}
+
+    /* Expandable source/detail blocks */
+    details.src{margin:0.75rem 0;border-left:2px solid var(--spring-rain);border-radius:0 6px 6px 0;background:rgba(168,200,176,0.06)}
+    details.src summary{cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.75rem;letter-spacing:0.03em;color:var(--teal);padding:0.5rem 0.75rem;list-style:none;display:flex;align-items:center;gap:0.4rem;user-select:none}
+    details.src summary::-webkit-details-marker{display:none}
+    details.src summary::before{content:'\25B8';font-size:0.7rem;transition:transform 0.2s}
+    details.src[open] summary::before{transform:rotate(90deg)}
+    details.src .src-body{padding:0.25rem 0.75rem 0.75rem;font-size:0.82rem;color:var(--text-muted);line-height:1.65}
+    details.src .src-body a{color:var(--teal);text-decoration:none;border-bottom:1px solid rgba(74,155,140,0.25)}
+    details.src .src-body a:hover{border-color:var(--mintgreen)}
+    details.src .src-body ul{margin:0.25rem 0 0;padding-left:1.1rem}
+    details.src .src-body li{margin-bottom:0.2rem}
+
+    /* Funnel/ladder visualization */
+    .ladder{margin:2rem 0;display:flex;flex-direction:column;gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .ladder-step{display:flex;align-items:stretch}
+    .ladder-bar{flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.72rem;color:white;letter-spacing:0.06em;text-transform:uppercase;padding:0 0.75rem;min-height:42px}
+    .ladder-info{flex:1;display:flex;align-items:center;gap:0.5rem;padding:0.45rem 1rem;background:var(--surface);border-bottom:1px solid var(--border)}
+    .ladder-step:last-child .ladder-info{border-bottom:none}
+    .ladder-title{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.82rem;color:var(--heavy-metal);white-space:nowrap}
+    .ladder-text{font-size:0.78rem;color:var(--text-muted);flex:1;line-height:1.4}
+    .ladder-pct{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.85rem;color:var(--teal);white-space:nowrap;text-align:right;min-width:4rem}
+
+    .quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+    .quote-grid .quote{margin:0}
+
+    /* Dashboard mockup */
+    .dash{background:var(--surface);border:2px solid var(--spring-rain);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative}
+    .dash-badge{position:absolute;top:-10px;left:1.5rem;font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--spring-rain);color:var(--heavy-metal);padding:0.2rem 0.6rem;border-radius:4px}
+    .dash-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--heavy-metal);margin-bottom:0.25rem;margin-top:0.25rem}
+    .dash-sub{font-size:0.85rem;color:var(--kangaroo);margin-bottom:0.75rem}
+    .dash-cat{display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.85rem;border-radius:10px;margin:1rem -0.5rem 0.75rem;position:relative}
+    .dash-cat svg{width:20px;height:20px;flex-shrink:0}
+    .dash-cat-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase}
+    .dash-cat-hint{font-size:0.72rem;color:var(--text-muted);margin-left:auto}
+    .dash-cat.cat-engage{background:rgba(74,155,140,0.08);border-left:3px solid var(--teal)}
+    .dash-cat.cat-engage .dash-cat-label{color:var(--teal)}
+    .dash-cat.cat-sentiment{background:rgba(94,217,166,0.08);border-left:3px solid var(--mintgreen)}
+    .dash-cat.cat-sentiment .dash-cat-label{color:var(--dark-teal)}
+    .dash-cat.cat-team{background:rgba(189,178,161,0.08);border-left:3px solid var(--malta)}
+    .dash-cat.cat-team .dash-cat-label{color:var(--heavy-metal)}
+    .dash-cat.cat-health{background:rgba(43,50,40,0.05);border-left:3px solid var(--heavy-metal)}
+    .dash-cat.cat-health .dash-cat-label{color:var(--heavy-metal)}
+    .bar-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:0.5rem;flex-shrink:0}
+    .bar-dot.green{background:var(--mintgreen)}.bar-dot.orange{background:var(--warn)}.bar-dot.red{background:#C06050}
+    .dash-2col{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
+
+    .actions{list-style:none;margin:1.25rem 0}
+    .actions li{padding:0.5rem 0 0.5rem 2rem;position:relative;font-size:0.9rem;border-bottom:1px solid var(--border)}
+    .actions li:last-child{border-bottom:none}
+    .actions li::before{content:'\2610';position:absolute;left:0.25rem;top:0.5rem;font-size:1rem;color:var(--teal)}
+
+    @media(max-width:768px){
+      .page{padding:4.5rem 1rem 3rem}
+      .cl{width:220px}.ch{font-size:1.75rem}h1{font-size:1.75rem}h2{font-size:1.2rem}
+      .phases{grid-template-columns:1fr}.stake{grid-template-columns:1fr}.kodex{grid-template-columns:1fr}
+      .metrics{grid-template-columns:repeat(2,1fr)}.flow{flex-direction:column}
+      .quote-grid{grid-template-columns:1fr}
+      .ladder-bar{font-size:0.6rem;padding:0 0.5rem;min-height:36px}.ladder-title{font-size:0.75rem}.ladder-text{font-size:0.72rem}.ladder-pct{font-size:0.75rem;min-width:3rem}
+      .flow-item:not(:last-child){border-right:none;border-bottom:1px solid var(--border)}
+      .flow-item:not(:last-child)::after{display:none}
+      nav .nav-links{display:none}.prog-label{width:80px;font-size:0.7rem}
+      .metric-val{font-size:1.4rem}.metric-label{font-size:0.72rem}
+      .st{min-width:400px}
+      .st th{font-size:0.65rem;padding:0.55rem 0.6rem}
+      .st td{font-size:0.8rem;padding:0.5rem 0.6rem}
+      .prog-bar{height:22px}.prog-fill{font-size:0.6rem}
+      svg{max-width:100%}
+      .dash{padding:1.25rem 1rem}
+      .dash-cat{margin:0.75rem -0.25rem 0.5rem;padding:0.5rem 0.65rem}
+      .dash-cat-hint{display:none}
+      .dash-2col{grid-template-columns:1fr}
+    }
+    @media print{nav{display:none}.page{min-height:auto;page-break-after:always;padding:2rem}body{background:white}}
+    [id]{scroll-margin-top:4rem}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#cover" class="logo-nav"><svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg></a>
+  <div class="nav-links">
+    <a href="#datenbasis" class="nl">Daten</a><a href="#leads" class="nl">Leads</a><a href="#lifecycle" class="nl">Lifecycle</a><a href="#onboarding" class="nl">Onboarding</a><a href="#retention" class="nl">Retention</a><a href="#kanaele" class="nl">Kanäle</a><a href="#resilienz" class="nl">Resilienz</a><a href="#dashboard" class="nl">Dashboard</a>
+  </div>
+  <div class="nav-tag">Community v1.0</div>
+</nav>
+
+<!-- COVER -->
+<div class="page cover" id="cover">
+  <div>
+    <div class="cl"><svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg></div>
+    <div class="ct">Tirols KI-Community</div>
+    <div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.2rem;color:var(--mintgreen);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;z-index:1;position:relative">Community Building</div>
+    <div class="ml"></div>
+    <div class="ch">Von Erstbesuchern<br>zu Mitgestaltern</div>
+    <div class="cs">Retention, Onboarding & Community Health</div>
+    <div class="cs">Basierend auf "The Business of Belonging" & KINN-Manifest</div>
+    <div class="cs" style="font-size:0.85rem;color:var(--kangaroo);margin-top:1rem">Internes Strategiepapier - Februar 2026</div>
+    <div class="cb">Companion zu <a class="ext" href="kinn-fund-konzept.html">KINN:FUND Konzept v2.3</a></div>
+  </div>
+</div>
+
+<!-- DATENBASIS -->
+<div class="page pg-mix" id="datenbasis"><div class="pi">
+  <div class="sl">Luma-Auswertung · Stand 28. Februar 2026</div>
+  <h1>KINN in Zahlen</h1>
+  <div class="sub">429 Teilnehmer · 20 Events · 14 Spielorte (exkl. KINN#15: 110 Teilnehmer in 2 Städten)</div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">4→110</div><div class="metric-unit">Wachstum</div><div class="metric-label">In 4 Monaten (KINN#15 bestätigt)</div></div>
+    <div class="metric"><div class="metric-val">300+</div><div class="metric-unit">Leads</div><div class="metric-label">Gesamter Lead-Pool (Luma + Import)</div></div>
+    <div class="metric"><div class="metric-val">87%</div><div class="metric-unit">Anwesenheit</div><div class="metric-label">Angemeldet → Erschienen</div></div>
+    <div class="metric"><div class="metric-val">4.8</div><div class="metric-unit">★ Rating</div><div class="metric-label">77 Luma-Bewertungen</div></div>
+  </div>
+
+  <h2>Wachstumskurve: KINN#1-#18</h2>
+  <div class="sub">Teilnehmerzahlen aus events.json (manuell gepflegt, inkl. Walk-ins ohne Luma Check-in)</div>
+  <div class="st-wrap"><table class="st">
+    <tr><th></th><th>Event</th><th>Datum</th><th>Teilnehmer</th><th>Location</th><th>Quelle</th></tr>
+    <tr><td><img src="img/kinn-1.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#1</td><td>6.11.25</td><td>4</td><td>InnCubator (Gründung)</td><td>Manuell</td></tr>
+    <tr><td><img src="img/kinn-2.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#2</td><td>13.11.</td><td>11</td><td>Das Wundervoll</td><td>Manuell</td></tr>
+    <tr><td><img src="img/kinn-3.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#3</td><td>20.11.</td><td>11</td><td>Impact Hub Tirol</td><td>Manuell</td></tr>
+    <tr><td><img src="img/kinn-4.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#4</td><td>27.11.</td><td>14</td><td>Das Wundervoll</td><td>Manuell</td></tr>
+    <tr><td><img src="img/kinn-5.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#5</td><td>4.12.</td><td>25</td><td>raum13</td><td>Manuell</td></tr>
+    <tr><td><img src="img/kinn-6.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#6</td><td>11.12.</td><td>35</td><td>SOHO 2</td><td>Manuell</td></tr>
+    <tr style="background:rgba(189,178,161,0.1)"><td colspan="6" style="text-align:center;font-style:italic;color:var(--kangaroo);font-size:0.8rem">— 4 Wochen Pause (Weihnachten / Neujahr) —</td></tr>
+    <tr><td><img src="img/kinn-7.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#7</td><td>8.1.26</td><td style="color:var(--teal);font-weight:700">50</td><td>WIFI Lernbar</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-8.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#8</td><td>15.1.</td><td>22</td><td>Impact Hub Tirol</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-9.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#9</td><td>22.1.</td><td>32</td><td>Werkstätte Wattens</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-10.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#10</td><td>29.1.</td><td>30</td><td>Das Wundervoll</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-11.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#11</td><td>5.2.</td><td style="color:var(--mintgreen);font-weight:700">71</td><td>WIFI Lernbar (Rekord)</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-12.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#12</td><td>12.2.</td><td>36</td><td>FILMBASE</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-13.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#13</td><td>19.2.</td><td>22</td><td>Campus Schönwies (~1h)</td><td>Manuell</td></tr>
+    <tr><td><img src="img/kinn-14.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#14</td><td>26.2.</td><td>24</td><td>raum13</td><td>Manuell</td></tr>
+    <tr><td><img src="img/kinn-15.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td style="color:var(--mintgreen);font-weight:700">KINN#15 IBK</td><td style="font-weight:700">5.3.</td><td style="color:var(--mintgreen);font-weight:700">86 +1 WL <span style="font-size:0.72em;background:var(--mintgreen);color:var(--heavy-metal);padding:1px 5px;border-radius:3px;margin-left:4px;font-weight:700">AUSGEBUCHT</span></td><td>WIFI Lernbar</td><td>Luma</td></tr>
+    <tr><td></td><td style="color:var(--mintgreen);font-weight:700">KINN#15 KUF</td><td style="font-weight:700">5.3.</td><td style="color:var(--mintgreen);font-weight:700">24 (max cap) <span style="font-size:0.72em;background:var(--mintgreen);color:var(--heavy-metal);padding:1px 5px;border-radius:3px;margin-left:4px;font-weight:700">AUSGEBUCHT</span></td><td>Kufstein</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-16.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#16</td><td>12.3.</td><td style="color:var(--spring-rain);font-weight:700">34/36 Regs <span style="font-size:0.72em;color:var(--kangaroo)">(aufgestockt von 24)</span></td><td>Kitzbühel (~1h)</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-17.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#17</td><td>19.3.</td><td style="color:var(--teal);font-weight:700">~36 <span style="font-size:0.72em;color:var(--kangaroo)">(erwartet ausgebucht)</span></td><td>Das Wundervoll</td><td>Luma</td></tr>
+    <tr><td><img src="img/kinn-18.jpg" style="width:28px;height:28px;border-radius:4px;object-fit:cover" onerror="this.remove()"></td><td>KINN#18</td><td>26.3.</td><td style="color:var(--kangaroo)">30 <span style="font-size:0.72em;color:var(--kangaroo)">(Kapazität)</span></td><td>Das Wundervoll</td><td>Luma</td></tr>
+  </table></div>
+
+  <h2>Wachstumskurve</h2>
+  <svg viewBox="0 0 600 225" style="width:100%;display:block;margin:1rem auto" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="proj" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#5ED9A6" stop-opacity="0.05"/><stop offset="100%" stop-color="#5ED9A6" stop-opacity="0.2"/></linearGradient></defs>
+    <!-- Grid (0–150, Schritte à 50, y = 175 − value) -->
+    <line x1="45" y1="175" x2="575" y2="175" stroke="#e8e4dc" stroke-width="1"/>
+    <line x1="45" y1="125" x2="575" y2="125" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <line x1="45" y1="75" x2="575" y2="75" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <line x1="45" y1="25" x2="575" y2="25" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <!-- Y labels -->
+    <text x="40" y="178" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">0</text>
+    <text x="40" y="128" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">50</text>
+    <text x="40" y="78" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">100</text>
+    <text x="40" y="28" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">150</text>
+    <text x="14" y="100" text-anchor="middle" font-family="Futura,sans-serif" font-size="7" fill="#6B7068" transform="rotate(-90 14 100)">Teilnehmer</text>
+    <!-- Phase labels -->
+    <text x="120" y="16" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="600" fill="#BDB2A1">PRE-LUMA</text>
+    <text x="333" y="16" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="600" fill="#4A9B8C">LUMA-DATEN</text>
+    <text x="511" y="16" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="600" fill="#5ED9A6">AUSGEBUCHT</text>
+    <!-- Phase dividers -->
+    <line x1="192" y1="20" x2="192" y2="175" stroke="#BDB2A1" stroke-width="0.5" stroke-dasharray="3"/>
+    <line x1="473" y1="20" x2="473" y2="175" stroke="#BDB2A1" stroke-width="0.5" stroke-dasharray="3"/>
+    <!-- Holiday pause -->
+    <rect x="177" y="20" width="28" height="155" fill="#BDB2A1" fill-opacity="0.08" rx="4"/>
+    <text x="191" y="98" text-anchor="middle" font-family="Futura,sans-serif" font-size="6" fill="#BDB2A1" transform="rotate(-90 191 98)">PAUSE</text>
+    <!-- #1–#5 (pre-Luma, muted): y = 175 − value -->
+    <polyline points="55,171 85,164 115,164 145,161 175,150" fill="none" stroke="#BDB2A1" stroke-width="1.5" stroke-dasharray="4"/>
+    <circle cx="55" cy="171" r="3" fill="#BDB2A1"/><text x="55" y="166" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#BDB2A1">4</text>
+    <circle cx="85" cy="164" r="3" fill="#BDB2A1"/><text x="85" y="159" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#BDB2A1">11</text>
+    <circle cx="115" cy="164" r="3" fill="#BDB2A1"/>
+    <circle cx="145" cy="161" r="3" fill="#BDB2A1"/><text x="145" y="156" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#BDB2A1">14</text>
+    <circle cx="175" cy="150" r="3" fill="#BDB2A1"/><text x="175" y="145" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#BDB2A1">25</text>
+    <!-- #5 to #6 across pause -->
+    <line x1="175" y1="150" x2="210" y2="140" stroke="#BDB2A1" stroke-width="1" stroke-dasharray="3"/>
+    <!-- #6–#14 (Luma verified, durchgehende Linie) -->
+    <polyline points="210,140 240,125 270,153 300,143 330,145 360,104 390,139 420,153 455,151" fill="none" stroke="#4A9B8C" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="210" cy="140" r="4" fill="#4A9B8C"/><text x="210" y="135" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">35</text>
+    <circle cx="240" cy="125" r="4" fill="#4A9B8C"/><text x="240" y="120" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">50</text>
+    <circle cx="270" cy="153" r="4" fill="#4A9B8C"/><text x="270" y="163" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">22</text>
+    <polygon points="300,137 306,143 300,149 294,143" fill="#A8C8B0"/><text x="300" y="132" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#A8C8B0">32</text>
+    <circle cx="330" cy="145" r="4" fill="#4A9B8C"/><text x="330" y="155" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">30</text>
+    <circle cx="360" cy="104" r="4" fill="#5ED9A6"/><text x="360" y="99" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#5ED9A6">71</text>
+    <circle cx="390" cy="139" r="4" fill="#4A9B8C"/><text x="390" y="134" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">36</text>
+    <!-- #13 außerhalb IBK: Raute statt Kreis -->
+    <polygon points="420,147 426,153 420,159 414,153" fill="#A8C8B0"/>
+    <text x="420" y="163" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#A8C8B0">22</text>
+    <!-- #14 confirmed, #15 bestätigt ausgebucht -->
+    <circle cx="455" cy="151" r="4" fill="#4A9B8C"/><text x="455" y="146" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#4A9B8C">24</text>
+    <line x1="455" y1="151" x2="490" y2="65" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/>
+    <circle cx="490" cy="65" r="4" fill="none" stroke="#5ED9A6" stroke-width="2"/><text x="490" y="59" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#5ED9A6">110</text>
+    <text x="490" y="77" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">IBK+KUF</text>
+    <!-- #16 Kitzbühel (außerhalb IBK, 34/36) und #17 (10/20 EB) -->
+    <line x1="490" y1="65" x2="510" y2="141" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/>
+    <line x1="510" y1="141" x2="530" y2="139" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/>
+    <polygon points="510,135 516,141 510,147 504,141" fill="#A8C8B0"/>
+    <text x="510" y="130" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#A8C8B0">34</text>
+    <circle cx="530" cy="139" r="4" fill="none" stroke="#5ED9A6" stroke-width="2"/>
+    <text x="530" y="134" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#5ED9A6">~36</text>
+    <!-- #18 Das Wundervoll (IBK, 30 max cap) -->
+    <line x1="530" y1="139" x2="550" y2="145" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="6"/>
+    <circle cx="550" cy="145" r="4" fill="none" stroke="#5ED9A6" stroke-width="2"/>
+    <text x="550" y="140" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#5ED9A6">30</text>
+    <!-- Q2 realistischer Trend: ~130 (IBK Großvenue + Satelliten) -->
+    <path d="M490,65 L510,141 L530,139 L550,145 C562,115 566,70 570,45 L570,175 L490,175 Z" fill="url(#proj)"/>
+    <line x1="550" y1="145" x2="570" y2="45" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="3 2"/>
+    <text x="570" y="40" text-anchor="end" font-family="Montserrat,sans-serif" font-size="8" font-weight="700" fill="#5ED9A6">~150</text>
+    <!-- X labels -->
+    <text x="55" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#1</text>
+    <text x="85" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#2</text>
+    <text x="115" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#3</text>
+    <text x="145" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#4</text>
+    <text x="175" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6" font-weight="600" fill="#BDB2A1">#5</text>
+    <text x="210" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#6</text>
+    <text x="240" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#7</text>
+    <text x="270" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#8</text>
+    <text x="300" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#9</text>
+    <text x="330" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#10</text>
+    <text x="360" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#11</text>
+    <text x="390" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#12</text>
+    <text x="420" y="188" text-anchor="middle" font-family="Futura,sans-serif" font-size="6" fill="#BDB2A1">#13</text>
+    <text x="455" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#6B7068">#14</text>
+    <text x="490" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#5ED9A6">#15</text>
+    <text x="510" y="188" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#A8C8B0">#16</text>
+    <text x="530" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="5.5" font-weight="600" fill="#5ED9A6">#17</text>
+    <text x="550" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="5.5" font-weight="600" fill="#5ED9A6">#18</text>
+    <text x="570" y="188" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="600" fill="#5ED9A6">Q2</text>
+    <!-- Date row -->
+    <text x="55" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Nov</text>
+    <text x="145" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Dez</text>
+    <text x="240" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Jan</text>
+    <text x="360" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Feb</text>
+    <text x="520" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Mär</text>
+    <text x="570" y="197" text-anchor="middle" font-family="Futura,sans-serif" font-size="5.5" fill="#9B9890">Apr+</text>
+    <!-- Legend -->
+    <line x1="55" y1="212" x2="70" y2="212" stroke="#BDB2A1" stroke-width="1.5" stroke-dasharray="4"/><circle cx="62" cy="212" r="2" fill="#BDB2A1"/>
+    <text x="75" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Pre-Luma (manuell)</text>
+    <line x1="185" y1="212" x2="200" y2="212" stroke="#4A9B8C" stroke-width="2"/><circle cx="192" cy="212" r="2.5" fill="#4A9B8C"/>
+    <text x="205" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Luma Check-ins</text>
+    <line x1="300" y1="212" x2="318" y2="212" stroke="#4A9B8C" stroke-width="2" stroke-dasharray="6"/><circle cx="309" cy="212" r="2.5" fill="none" stroke="#4A9B8C" stroke-width="1.5"/>
+    <text x="323" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Registrierungen</text>
+    <line x1="405" y1="212" x2="420" y2="212" stroke="#5ED9A6" stroke-width="2" stroke-dasharray="3 2"/>
+    <text x="425" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Projektion</text>
+    <polygon points="480,210 484,214 480,218 476,214" fill="#A8C8B0"/>
+    <text x="488" y="215" font-family="Futura,sans-serif" font-size="6.5" fill="#6B7068">Außerh. IBK</text>
+  </svg>
+
+  <div class="note"><strong>◆ Außerhalb Innsbruck</strong> = Remote-Standorte (~1h Fahrzeit). KINN#13 Schönwies (22 TN) und KINN#16 Kitzbühel (34/36 Regs) zeigen: das Format funktioniert auch regional stark. Ab 20+ Teilnehmern als Erfolg gewertet.</div>
+
+  <h2>Registrierungs-Geschwindigkeit</h2>
+  <p>Wie schnell Events ausgebucht sind, zeigt die wahre Nachfrage besser als reine Teilnehmerzahlen:</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Event</th><th>Datum</th><th>Buchbar ab</th><th>Voll nach</th><th>Tag-1 Regs</th><th>3-Tage Regs</th></tr>
+    <tr><td>KINN#7</td><td>8.1.</td><td>18.12.</td><td>--</td><td>3</td><td>6</td></tr>
+    <tr><td>KINN#8</td><td>15.1.</td><td>10.1.</td><td style="color:var(--warn);font-weight:700">2 Tage</td><td>7</td><td>29</td></tr>
+    <tr><td>KINN#10</td><td>29.1.</td><td>13.1.</td><td>6 Tage</td><td>8</td><td>17</td></tr>
+    <tr><td>KINN#11</td><td>5.2.</td><td>16.1.</td><td>--</td><td>6</td><td>13</td></tr>
+    <tr><td>KINN#14</td><td>26.2.</td><td>30.1.</td><td>5 Tage</td><td>2</td><td>14</td></tr>
+    <tr><td style="color:var(--mintgreen);font-weight:700">KINN#15 IBK</td><td style="font-weight:700">5.3.</td><td style="font-weight:700">9.2.</td><td style="color:var(--mintgreen);font-weight:700">7 Tage</td><td style="color:var(--mintgreen);font-weight:700">44</td><td style="color:var(--mintgreen);font-weight:700">63</td></tr>
+    <tr><td style="color:var(--mintgreen);font-weight:700">KINN#15 KUF</td><td style="font-weight:700">5.3.</td><td style="font-weight:700">22.2.</td><td style="color:var(--mintgreen);font-weight:700">Ausgebucht</td><td colspan="2" style="color:var(--mintgreen);font-weight:700">24 (max cap)</td></tr>
+    <tr><td>KINN#16 (KIB)</td><td>12.3.</td><td>13.2.</td><td style="color:var(--spring-rain);font-weight:700">fast voll (2 Wo. vorher)</td><td style="color:var(--spring-rain);font-weight:700">34</td><td>--</td></tr>
+    <tr><td>KINN#17</td><td>19.3.</td><td>26.2.</td><td style="color:var(--teal);font-weight:700">erwartet voll</td><td style="color:var(--teal);font-weight:700">~5</td><td style="color:var(--teal);font-weight:700">~36 (erw.)</td></tr>
+    <tr><td>KINN#18</td><td>26.3.</td><td>--</td><td>--</td><td>--</td><td>--</td></tr>
+  </table></div>
+
+  <div class="note"><strong>KINN#15 -- bestätigt ausgebucht:</strong> Innsbruck: 86 Teilnehmer + 1 Waitlist. Kufstein: 24 Teilnehmer (max cap). <strong>110 Teilnehmer in Tirol</strong> -- beide Standorte voll. Innsbruck war nach 7 Tagen ausgebucht (44 Regs am Eröffnungstag, 63 in 3 Tagen). Das ist das erste Event mit simultanem Multi-City-Format.</div>
+
+  <h2>Trend-Prognose</h2>
+  <p>Gesamtreichweite pro Woche (alle simultanen Standorte). Ab KINN#19 läuft Kufstein regelmäßig parallel (+18 TN/Woche):</p>
+
+  <div class="phases">
+    <div class="phase active">
+      <div class="phase-label">April</div>
+      <div class="phase-title">~100-120 / Woche</div>
+      <div class="phase-body">IBK (~80+) + Kufstein fix (+18). Mögliche 2. simultane IBK-Venue. Wochentakt in Vorbereitung.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Ende April</div>
+      <div class="phase-title">~130-150 / Woche</div>
+      <div class="phase-body">+ Reutte (~24 TN). 3 simultane Standorte. Bei 2x IBK-Event: 150+ realistisch.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Ende Mai</div>
+      <div class="phase-title">~150-180 / Woche</div>
+      <div class="phase-body">+ Lienz (~18 TN, konservativ). 4 Regionen parallel. Wochentakt etabliert. Infrastruktur entscheidend.</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Kernaussage:</strong> KINN wächst schneller als die Venue-Kapazität. KINN#15 bestätigt 110 Teilnehmer in 2 Städten -- das 27-fache der Gründung vor 4 Monaten. Mit Kufstein, Reutte und Lienz im Wochentakt ist <strong>150+ TN/Woche bis Sommer</strong> konservativ. Das ist der Use Case für KINN:FUND.</div>
+
+  <h2>Venue-Kapazität</h2>
+  <div class="sub">14 genutzte Spielorte -- aber nur 2 können 80+ Personen aufnehmen</div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">14</div><div class="metric-unit">Spielorte</div><div class="metric-label">Genutzt (exkl. KINN#15 KUF)</div></div>
+    <div class="metric"><div class="metric-val">~30</div><div class="metric-unit">Ø Kapazität</div><div class="metric-label">Median der Venues</div></div>
+    <div class="metric"><div class="metric-val">2</div><div class="metric-unit">für 80+</div><div class="metric-label">WIFI Lernbar (84), WKO (300)</div></div>
+    <div class="metric"><div class="metric-val">8</div><div class="metric-unit">Regionen</div><div class="metric-label">IBK, KUF, KIB, Wattens + Reutte, Lienz (geplant)</div></div>
+  </div>
+
+  <svg viewBox="0 0 480 170" style="width:100%;display:block;margin:1rem auto" xmlns="http://www.w3.org/2000/svg">
+    <!-- Grid -->
+    <line x1="130" y1="25" x2="460" y2="25" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <line x1="130" y1="55" x2="460" y2="55" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <line x1="130" y1="85" x2="460" y2="85" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <line x1="130" y1="115" x2="460" y2="115" stroke="#e8e4dc" stroke-width="0.5" stroke-dasharray="4"/>
+    <line x1="130" y1="145" x2="460" y2="145" stroke="#e8e4dc" stroke-width="1"/>
+    <!-- Capacity scale labels -->
+    <text x="460" y="152" text-anchor="end" font-family="Futura,sans-serif" font-size="6" fill="#9B9890">0</text>
+    <text x="460" y="122" text-anchor="end" font-family="Futura,sans-serif" font-size="6" fill="#9B9890">25</text>
+    <text x="460" y="92" text-anchor="end" font-family="Futura,sans-serif" font-size="6" fill="#9B9890">50</text>
+    <text x="460" y="62" text-anchor="end" font-family="Futura,sans-serif" font-size="6" fill="#9B9890">75</text>
+    <text x="460" y="32" text-anchor="end" font-family="Futura,sans-serif" font-size="6" fill="#9B9890">100+</text>
+    <!-- Bars: scale 1.2px per person, max capped at 100 -->
+    <!-- InnCubator (6) -->
+    <text x="125" y="19" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">InnCubator</text>
+    <rect x="130" y="11" width="7" height="12" rx="2" fill="#BDB2A1"/>
+    <text x="140" y="20" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#BDB2A1">6</text>
+    <!-- Impact Hub (24) -->
+    <text x="125" y="34" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">Impact Hub</text>
+    <rect x="130" y="26" width="29" height="12" rx="2" fill="#4A9B8C"/>
+    <text x="162" y="35" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#4A9B8C">24</text>
+    <!-- raum13 (24) -->
+    <text x="125" y="49" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">raum13</text>
+    <rect x="130" y="41" width="29" height="12" rx="2" fill="#4A9B8C"/>
+    <text x="162" y="50" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#4A9B8C">24</text>
+    <!-- FILMBASE (24) -->
+    <text x="125" y="64" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">FILMBASE</text>
+    <rect x="130" y="56" width="29" height="12" rx="2" fill="#4A9B8C"/>
+    <text x="162" y="65" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#4A9B8C">24</text>
+    <!-- Wundervoll / Werkstätte / Campus / Kufstein / Bauernhöfe (30) -->
+    <text x="125" y="79" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">Wundervoll</text>
+    <rect x="130" y="71" width="36" height="12" rx="2" fill="#4A9B8C"/>
+    <text x="169" y="80" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#4A9B8C">30</text>
+    <text x="125" y="94" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">Werkstätte W.</text>
+    <rect x="130" y="86" width="36" height="12" rx="2" fill="#4A9B8C"/>
+    <!-- SOHO 2 / START.N (36) -->
+    <text x="125" y="109" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">SOHO 2</text>
+    <rect x="130" y="101" width="43" height="12" rx="2" fill="#4A9B8C"/>
+    <text x="176" y="110" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#4A9B8C">36</text>
+    <!-- WIFI Lernbar (84) -->
+    <text x="125" y="124" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068" font-weight="700">WIFI Lernbar</text>
+    <rect x="130" y="116" width="101" height="12" rx="2" fill="#5ED9A6"/>
+    <text x="234" y="125" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#5ED9A6">84</text>
+    <!-- WKO (300, capped) -->
+    <text x="125" y="139" text-anchor="end" font-family="Futura,sans-serif" font-size="7" fill="#6B7068" font-weight="700">WKO</text>
+    <rect x="130" y="131" width="120" height="12" rx="2" fill="#5ED9A6"/>
+    <text x="253" y="140" font-family="Montserrat,sans-serif" font-size="6.5" font-weight="700" fill="#5ED9A6">300</text>
+    <!-- Demand line at 100 -->
+    <line x1="250" y1="8" x2="250" y2="148" stroke="#D4956A" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <text x="252" y="158" font-family="Montserrat,sans-serif" font-size="7" font-weight="700" fill="#D4956A">Nachfrage: 100+</text>
+  </svg>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Kapazitäts-Klasse</th><th>Venues</th><th>Anteil</th><th>Geeignet für</th></tr>
+    <tr><td>Klein (≤24)</td><td>5</td><td>33%</td><td>TechTalks, Workshops</td></tr>
+    <tr><td>Mittel (25-40)</td><td>8</td><td>53%</td><td>Reguläre KINN Meetups (historisch)</td></tr>
+    <tr><td style="color:var(--mintgreen);font-weight:700">Groß (80+)</td><td style="color:var(--mintgreen);font-weight:700">2</td><td style="color:var(--mintgreen);font-weight:700">13%</td><td style="color:var(--mintgreen);font-weight:700">KINN ab Q2 2026</td></tr>
+  </table></div>
+
+  <div class="warn"><strong>Der Kapazitäts-Engpass in Zahlen:</strong> 87% der bestätigten Venues fassen maximal 40 Personen. Bei 100+ Registrierungen pro Event sind nur WIFI Lernbar und WKO realistisch -- und beide sind nicht jede Woche verfügbar. Ohne Venue-Upgrade wird die Warteliste zum Default.</div>
+
+  <div class="note"><strong>Positiv:</strong> Alle 15 Locations sind <strong>kostenlos</strong> inkl. Kaffee. Location-Hosts stellen Räume aus Eigeninteresse zur Verfügung (Netzwerk, Sichtbarkeit). Das KINN-Modell funktioniert ohne Location-Budget -- aber KINN:FUND ermöglicht die Miete größerer Venues wenn nötig.</div>
+
+  <h2>Wiederkehrende Besucher</h2>
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">37%</div><div class="metric-unit">Regulars</div><div class="metric-label">52 von 141 (Luma) bei 2+ Events</div></div>
+    <div class="metric"><div class="metric-val">26</div><div class="metric-unit">Super</div><div class="metric-label">Bei 4+ Events dabei</div></div>
+    <div class="metric"><div class="metric-val">10</div><div class="metric-unit">Ultra</div><div class="metric-label">Bei 6+ Events dabei</div></div>
+    <div class="metric"><div class="metric-val">74%</div><div class="metric-unit">Return</div><div class="metric-label">KINN#12 Returning-Rate</div></div>
+  </div>
+
+  <h3>Returning-Rate pro Event</h3>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Event</th><th>Tatsächlich</th><th>Returning*</th><th>Neue</th><th>Return-Rate</th></tr>
+    <tr><td>KINN#7</td><td>50</td><td>--</td><td>50</td><td style="color:var(--kangaroo)">Baseline</td></tr>
+    <tr><td>KINN#8</td><td>22</td><td>10</td><td>12</td><td>45.5%</td></tr>
+    <tr><td>KINN#9</td><td>32</td><td>17</td><td>15</td><td>53.1%</td></tr>
+    <tr><td>KINN#10</td><td>30</td><td>13</td><td>17</td><td>43.3%</td></tr>
+    <tr><td>KINN#11</td><td>71</td><td>32</td><td>39</td><td>45.1%</td></tr>
+    <tr><td>KINN#12</td><td>36</td><td>23</td><td>13</td><td style="color:var(--mintgreen);font-weight:700">63.9%</td></tr>
+  </table></div>
+  <p style="font-size:0.75rem;color:var(--kangaroo);margin-top:0.25rem">* Returning = via Luma-Email-Matching. Walk-ins ohne Luma Check-in zählen als "Neue". Tatsächliche Teilnehmer laut events.json.</p>
+
+  <h3>Top-Regulars (4+ Meetup-Check-ins)</h3>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Name</th><th>Check-ins</th><th>Von 6 Meetups</th></tr>
+    <tr><td>Kathy Alume</td><td style="color:var(--mintgreen);font-weight:700">6/6</td><td>100%</td></tr>
+    <tr><td>Rafael (WK Tirol)</td><td>5/6</td><td>83%</td></tr>
+    <tr><td>David Moling</td><td>5/6</td><td>83%</td></tr>
+    <tr><td>Steven Lahmann</td><td>5/6</td><td>83%</td></tr>
+    <tr><td>Matthias Sammer</td><td>4/6</td><td>67%</td></tr>
+    <tr><td>Daniel Meischl</td><td>4/6</td><td>67%</td></tr>
+    <tr><td>Martin Hies</td><td>4/6</td><td>67%</td></tr>
+    <tr><td>Maxim Danilov</td><td>4/6</td><td>67%</td></tr>
+    <tr><td>Jannik Kuchler</td><td>4/6</td><td>67%</td></tr>
+  </table></div>
+
+  <h2>Nachfrage vs. Kapazität</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Event</th><th>Nachfrage</th><th>Approved</th><th>Warteliste</th><th>Auslastung</th></tr>
+    <tr><td>KINN#13 (Schönwies)</td><td>27</td><td>24</td><td>3</td><td>112%</td></tr>
+    <tr><td>KINN#14</td><td style="color:var(--warn);font-weight:700">51</td><td>24</td><td style="color:var(--warn);font-weight:700">27</td><td style="color:var(--warn);font-weight:700">212%</td></tr>
+    <tr><td style="color:var(--mintgreen);font-weight:700">KINN#15 IBK</td><td style="color:var(--mintgreen);font-weight:700">87</td><td style="color:var(--mintgreen);font-weight:700">86</td><td style="color:var(--mintgreen);font-weight:700">1</td><td style="color:var(--mintgreen);font-weight:700">102%</td></tr>
+    <tr><td style="color:var(--mintgreen);font-weight:700">KINN#15 KUF</td><td style="color:var(--mintgreen);font-weight:700">24</td><td style="color:var(--mintgreen);font-weight:700">24</td><td>0</td><td style="color:var(--mintgreen);font-weight:700">100%</td></tr>
+    <tr><td>KINN#16 (Kitzbühel)</td><td style="color:var(--spring-rain);font-weight:700">34</td><td>34</td><td>0</td><td style="color:var(--spring-rain);font-weight:700">94% <span style="font-size:0.8em;color:var(--kangaroo)">(cap 36, aufgestockt)</span></td></tr>
+    <tr><td>KINN#17</td><td style="color:var(--teal)">~36 (erw.)</td><td>36</td><td>0</td><td style="color:var(--teal);font-weight:700">100% (erwartet)</td></tr>
+    <tr><td>KINN#18</td><td style="color:var(--kangaroo)">--</td><td style="color:var(--kangaroo)">30</td><td>0</td><td style="color:var(--kangaroo)">-- (offen)</td></tr>
+  </table></div>
+
+  <div class="warn"><strong>Venue-Kapazität ist der Engpass.</strong> Bei KINN#14 kamen 53% der Interessierten nicht rein (27 auf WL nach Nachrückern). Lösung: KINN#15 mit 2 simultanen Standorten -- beide sofort ausgebucht. Das ist das stärkste Argument für KINN:FUND -- stabile Finanzierung ermöglicht konsistent adäquate Venues.</div>
+
+  <div class="note"><strong>Top KINN:PATE-Kandidaten:</strong> 12 Personen haben sich für 3+ kommende Events registriert: Maxim Danilov, Daniel Meischl, David Moling, Stephan Pichler, Tim Delhaes, Marco Königer, Markus Kirchmair, Christoph Ranalter, Kevin Erhart, Marc Alwers, Gerhard Kohle, Verena Kofler.</div>
+
+  <h2>Community-Stimmen</h2>
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">45</div><div class="metric-unit">Testimonials</div><div class="metric-label">Gesammelt auf kinn.at</div></div>
+    <div class="metric"><div class="metric-val">4.8</div><div class="metric-unit">★ Ø Rating</div><div class="metric-label">77 Luma-Bewertungen</div></div>
+    <div class="metric"><div class="metric-val">97%</div><div class="metric-unit">≥ 4 Sterne</div><div class="metric-label">Nur 2 Ratings unter 4*</div></div>
+    <div class="metric"><div class="metric-val">7/9</div><div class="metric-unit">Top Regulars</div><div class="metric-label">...haben Testimonial</div></div>
+  </div>
+  <p style="font-size:0.75rem;color:var(--kangaroo);margin-top:-0.5rem">* Beide 1-Sterne-Ratings sind wahrscheinliche Fehl-Eingaben (einer schrieb "all is amazing!" als Kommentar).</p>
+
+  <div class="quote-grid">
+    <div class="quote"><p>"Dieses KI-Format kostet nichts. Und ist trotzdem unbezahlbar. Kein Programm. Keine Slides. Keine Pitches."</p><cite>Desiree Schier, Founder Wependio</cite></div>
+    <div class="quote"><p>"5 Uhr auf, 110 km Fahrt, nur für ein Meetup? Wenn es KINN ist auf jeden Fall."</p><cite>Fabian Jenewein, Founder Avora</cite></div>
+    <div class="quote"><p>"Das einzige öffentliche Netzwerk in der Region, das Einzelpersonen, Startups und Konzerne wirklich in einem Raum versammelt."</p><cite>Andre Daberto, CXO Fullet</cite></div>
+    <div class="quote"><p>"Echte Ökosysteme entstehen durch Menschen, Rhythmus und Vertrauen -- nicht durch Hype."</p><cite>Jurij Tkaciov, Founder FaceAR</cite></div>
+    <div class="quote"><p>"Ich war heute das erste Mal beim KINN dabei und bin hin und weg. Freu mich schon auf nächsten Donnerstag!"</p><cite>Nelson Scalet, AI Ops Manager -- KINN#11, 5★</cite></div>
+    <div class="quote"><p>"Ohne Zeitbegrenzung hätten wir wahrscheinlich 3 Stunden geredet. Aber genau diese Zeitbegrenzung macht KINN mega wertvoll."</p><cite>Verena Köfler, verTEXTET -- KINN#12, 5★</cite></div>
+    <div class="quote"><p>"Nicht nur die Zahlen beeindrucken, sondern die Dynamik der Community."</p><cite>Patricia Hueber, KI Akademie WIFI Tirol</cite></div>
+    <div class="quote"><p>"Every time I leave a KINN event, I feel excited and inspired."</p><cite>Sherin Grimbergen, Agentic AI Engineer @ Cloudflight</cite></div>
+  </div>
+
+  <h3>Luma-Bewertungen pro Event</h3>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Event</th><th>Ø Rating</th><th>Anzahl</th><th>Highlights</th></tr>
+    <tr><td>KINN#7</td><td>4.70</td><td>20</td><td>"Tolle Gespräche, die wirklich in die Tiefe gingen"</td></tr>
+    <tr><td>KINN#8</td><td style="color:var(--mintgreen);font-weight:700">5.00</td><td>7</td><td>"EINFACH GENIAL: DANKE!"</td></tr>
+    <tr><td>KINN#9</td><td style="color:var(--mintgreen);font-weight:700">5.00</td><td>3</td><td>"Großartiges, lockeres Format"</td></tr>
+    <tr><td>KINN#10</td><td>4.40</td><td>10</td><td>"Mega Event zum Vernetzen und Austauschen"</td></tr>
+    <tr><td>KINN#11</td><td>4.71</td><td>24</td><td>"Richtig coole Sache, spannende Menschen!"</td></tr>
+    <tr><td>KINN#12</td><td>4.78</td><td>9</td><td>"Wundervoll zu sehen mit welchem Enthusiasmus die Teilnehmer erzählen"</td></tr>
+    <tr><td>TechTalks</td><td style="color:var(--mintgreen);font-weight:700">5.00</td><td>4</td><td>Voice AI, Vibe Coding, KI im Business</td></tr>
+  </table></div>
+
+  <div class="warn"><strong>Feedback-Konsistenz:</strong> Über alle Events hinweg wiederholen sich 3 Kernthemen: (1) Gesprächstiefe -- "echte" Gespräche statt Small Talk. (2) Vielfalt -- verschiedene Branchen, Rollen, Erfahrungslevel. (3) Demand &gt; Supply -- "1h ist einfach zu kurz", "Locations werden langsam eng". Das dritte Thema ist der stärkste Indikator für den KINN:FUND Use Case.</div>
+
+  <div class="note"><strong>Regulars = Testimonial-Geber:</strong> 7 der 9 Top-Regulars (4+ Besuche) haben aktiv ein Testimonial auf kinn.at hinterlassen. Die engagiertesten Besucher sind auch die lautesten Befürworter -- ein starkes Retention-Signal und die natürliche KINN:PATE-Basis.</div>
+
+  <h2 id="leads">Lead-Pool & Organisationen</h2>
+  <div class="sub">308 Leads aus KINN_Leads.csv -- Luma-Registrierungen + manuelle Imports + FebImport</div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">308</div><div class="metric-unit">Leads gesamt</div><div class="metric-label">~301 unique (nach Dedup)</div></div>
+    <div class="metric"><div class="metric-val">~175</div><div class="metric-unit">Event-aktiv</div><div class="metric-label">Mind. 1 Registrierung</div></div>
+    <div class="metric"><div class="metric-val">140+</div><div class="metric-unit">Org-Domains</div><div class="metric-label">Firmenadressen (nicht @gmail etc.)</div></div>
+    <div class="metric"><div class="metric-val">9</div><div class="metric-unit">Cluster 3+</div><div class="metric-label">Organisationen mit 3+ Leads</div></div>
+  </div>
+
+  <h3>Conversion Funnel</h3>
+  <div class="ladder">
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:100%;background:var(--spring-rain)">Lead-Pool</div>
+      <div class="ladder-info">
+        <div class="ladder-title">308 Leads</div>
+        <div class="ladder-text">Gesamter Pool: Luma-Registrierungen, FebImport (47), manuelle Imports (14 "New")</div>
+        <div class="ladder-pct">100%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:57%;background:var(--teal)">Event-aktiv</div>
+      <div class="ladder-info">
+        <div class="ladder-title">~175 Personen</div>
+        <div class="ladder-text">Mindestens 1 Event-Registrierung auf Luma</div>
+        <div class="ladder-pct">57%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:36%;background:var(--teal)">Check-in</div>
+      <div class="ladder-info">
+        <div class="ladder-title">~110 Personen</div>
+        <div class="ladder-text">Mind. 1x tatsächlich erschienen (Luma Check-in)</div>
+        <div class="ladder-pct">36%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:17%;background:var(--dark-teal)">Regulars</div>
+      <div class="ladder-info">
+        <div class="ladder-title">52 Personen</div>
+        <div class="ladder-text">2+ Events besucht -- echte Wiederkommer</div>
+        <div class="ladder-pct">17%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:8%;background:var(--heavy-metal)">Super</div>
+      <div class="ladder-info">
+        <div class="ladder-title">26 Personen</div>
+        <div class="ladder-text">4+ Events, kennen 10+ Leute beim Namen</div>
+        <div class="ladder-pct">8%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:3%;background:var(--heavy-metal);min-width:40px">Ultra</div>
+      <div class="ladder-info">
+        <div class="ladder-title">10 Personen</div>
+        <div class="ladder-text">6+ Events -- der harte Kern der Community</div>
+        <div class="ladder-pct">3%</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Organisations-Cluster (3+ Leads aus einer Organisation)</h3>
+  <div class="st-wrap"><table class="st" style="min-width:580px">
+    <tr><th>Organisation</th><th>Leads</th><th>Sektor</th><th>Events</th><th>Check-in</th><th>Show-up</th><th>Ankerperson</th></tr>
+    <tr><td style="color:var(--mintgreen);font-weight:700">Mission Solar</td><td>5+</td><td>Energie / Startup</td><td>13</td><td>5</td><td style="color:var(--mintgreen);font-weight:700">38%*</td><td>Stefan Seiger (6/2), Thomas S. (CIO)</td></tr>
+    <tr><td style="color:var(--mintgreen);font-weight:700">WKO Tirol</td><td>4</td><td>Institutionell</td><td>11</td><td>7</td><td style="color:var(--mintgreen);font-weight:700">64%</td><td>Rafael (7/5)</td></tr>
+    <tr><td style="color:var(--mintgreen);font-weight:700">ICONS</td><td>3</td><td>IT / Consulting</td><td>12</td><td>7</td><td style="color:var(--mintgreen);font-weight:700">58%</td><td>Jannik (6/4), Marc (5/3)</td></tr>
+    <tr><td>MCI</td><td>4</td><td>Akademisch</td><td>1</td><td>0</td><td style="color:var(--warn)">0%</td><td>--</td></tr>
+    <tr><td>DataLab Hell</td><td>4</td><td>AI / Data Science</td><td>1</td><td>0</td><td style="color:var(--warn)">0%</td><td>--</td></tr>
+    <tr><td>Speed-U-Up</td><td>3</td><td>Digital Agentur</td><td>3</td><td>0</td><td style="color:var(--warn)">0%</td><td>--</td></tr>
+    <tr><td>BTV Bank</td><td>3</td><td>Finance</td><td>1</td><td>0</td><td style="color:var(--warn)">0%</td><td>--</td></tr>
+    <tr><td>Fraunhofer Austria</td><td>3</td><td>Forschung</td><td>1</td><td>0</td><td style="color:var(--warn)">0%</td><td>--</td></tr>
+    <tr><td>Emergo.dev</td><td>3</td><td>Dev Agentur</td><td>2</td><td>0</td><td style="color:var(--warn)">0%</td><td>--</td></tr>
+  </table></div>
+
+  <p style="font-size:0.75rem;color:var(--kangaroo);margin-top:0.25rem">* Mission Solar: Stefan Seiger (libralab.ai) und Thomas Seiger (kinn.at) nutzen andere E-Mail-Domains -- Domain-Analyse allein unterschätzt die Clustergröße. Niedrige Show-up-Rate weil Organisatoren selten via Luma einchecken.</p>
+
+  <div class="warn"><strong>Aktivierungs-Lücke:</strong> 5 von 9 Org-Clustern haben fast null Show-up trotz mehrerer Leads. Diese "schlafenden Riesen" (DataLab Hell, BTV, Fraunhofer, MCI) wurden importiert aber nie aktiviert. Gezielte Einladungs-Kampagnen pro Organisation könnten 15-20 zusätzliche Regulars erschließen.</div>
+
+  <h3>Organisationen mit 2 Leads (Referral-Signal)</h3>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Organisation</th><th>Sektor</th><th>Events (total)</th><th>Aktive Person</th></tr>
+    <tr><td>Casablanca Hotelsoftware</td><td>Software</td><td>2 / 0</td><td>Maximilian Ehrhart</td></tr>
+    <tr><td>Dudality</td><td>Startup</td><td>2 / 1</td><td>Elias Lindner, René Duda</td></tr>
+    <tr><td>MED-EL</td><td>MedTech / Konzern</td><td>0 / 0</td><td>--</td></tr>
+    <tr><td>Tirol Kliniken</td><td>Gesundheit / Öffentl.</td><td>0 / 0</td><td>--</td></tr>
+    <tr><td>Treffai</td><td>AI Startup</td><td>7 / 4</td><td style="color:var(--mintgreen);font-weight:700">Martin Hies (Core Team)</td></tr>
+    <tr><td>SOS Kinderdorf</td><td>Social / NPO</td><td>4 / 2</td><td>Verena Anwald (3/2)</td></tr>
+    <tr><td>Tiroler Tageszeitung</td><td>Medien</td><td>2 / 2</td><td>Simone, Gregor</td></tr>
+    <tr><td>Energieagentur Tirol</td><td>Öffentlich</td><td>1 / 0</td><td>--</td></tr>
+    <tr><td>Cancom</td><td>IT / Managed Services</td><td>2 / 0</td><td>--</td></tr>
+    <tr><td>Uni Innsbruck</td><td>Akademisch</td><td>1 / 0</td><td>--</td></tr>
+    <tr><td>World-Direct</td><td>IT / Telekom</td><td>1 / 0</td><td>--</td></tr>
+    <tr><td>Agentovo</td><td>AI Startup</td><td>4 / 3</td><td>Patrick (3/3), Filip (2/2)</td></tr>
+    <tr><td>Terra Institute</td><td>Nachhaltigkeit</td><td>3 / 2</td><td>Hanna Thaller (2/2)</td></tr>
+  </table></div>
+
+  <h3>Sektor-Verteilung der 140+ Org-Domains</h3>
+  <div class="prog">
+    <div class="prog-row"><div class="prog-label">Tech / IT / Dev</div><div class="prog-bar"><div class="prog-fill mint" style="width:38%">~55</div></div></div>
+    <div class="prog-row"><div class="prog-label">Startups</div><div class="prog-bar"><div class="prog-fill mint" style="width:22%">~30</div></div></div>
+    <div class="prog-row"><div class="prog-label">Institutionell</div><div class="prog-bar"><div class="prog-fill spring" style="width:12%">~17</div></div></div>
+    <div class="prog-row"><div class="prog-label">Corporate</div><div class="prog-bar"><div class="prog-fill spring" style="width:10%">~14</div></div></div>
+    <div class="prog-row"><div class="prog-label">Akademisch</div><div class="prog-bar"><div class="prog-fill warm" style="width:7%">~10</div></div></div>
+    <div class="prog-row"><div class="prog-label">Kreativ / Medien</div><div class="prog-bar"><div class="prog-fill warm" style="width:6%">~8</div></div></div>
+    <div class="prog-row"><div class="prog-label">Finance / Sonstige</div><div class="prog-bar"><div class="prog-fill warm" style="width:5%">~6</div></div></div>
+  </div>
+
+  <details class="src">
+    <summary>Auszug: Bemerkenswerte Einzel-Organisationen</summary>
+    <div class="src-body">
+      <ul>
+        <li><strong>Swarovski Optik</strong> -- Florian Haggag (Head E-Commerce), Testimonial-Geber</li>
+        <li><strong>SWARCO</strong> -- Sophia Fritsche</li>
+        <li><strong>IKB</strong> (Kommunalbetriebe) -- Stefan Hofmann</li>
+        <li><strong>IBM</strong> -- Alexander Kapp</li>
+        <li><strong>TIWAG</strong> -- Raphael Krabacher</li>
+        <li><strong>Stadt Innsbruck</strong> -- Miriam Kröll</li>
+        <li><strong>Tirol Werbung</strong> -- Armin Möller</li>
+        <li><strong>Startup Tirol</strong> -- Lea Krebs</li>
+        <li><strong>Gründungsfonds</strong> -- Dominik Kukovec</li>
+        <li><strong>FH Kufstein</strong> -- Karin Steiner</li>
+        <li><strong>Cloudflight</strong> -- Sherin Grimbergen (Testimonial, Super-Regular)</li>
+        <li><strong>Agrarmarketing Tirol</strong> -- Matthias Mayr</li>
+      </ul>
+    </div>
+  </details>
+
+  <div class="note"><strong>Referral-Muster:</strong> Bei aktiven Org-Clustern (WKO, ICONS, Treffai, Agentovo) gibt es immer eine <strong>Ankerperson</strong> mit hoher Besuchsfrequenz, die Kolleg:innen nachzieht. Die "Show-up Rate" korreliert direkt mit der Anwesenheit der Ankerperson. Keine Ankerperson = kein Org-Referral trotz importierter Leads.</div>
+
+  <div class="note"><strong>KINN:PATE-Implikation:</strong> Die 140+ Org-Domains zeigen: KINN erreicht Tirols Wirtschaft breit -- von Konzernen (Swarovski, MED-EL, TIWAG) über Institutionen (WKO, Stadt IBK) bis Startups. Für den KINN:FUND sind die <strong>dormanten Org-Cluster</strong> das größte Potenzial: Gezielte Org-Aktivierung könnte ~50 neue aktive Teilnehmer:innen erschließen, ohne einen einzigen neuen Lead zu generieren.</div>
+</div></div>
+
+<!-- 01 LIFECYCLE -->
+<div class="page pg-fund" id="lifecycle"><div class="pi">
+  <div class="sn">01</div><div class="sl">Community Lifecycle</div>
+  <h1>Der Weg vom Fremden zum KINN'er</h1>
+  <div class="sub">Spinks' Commitment Curve, angewandt auf KINN</div>
+
+  <quote class="quote">
+    <p>"You need to design the path from stranger to superfan."</p>
+    <cite>David Spinks, The Business of Belonging, Kap. 4</cite>
+  </quote>
+
+  <p>Communities wachsen nicht linear -- sie bauen Schichten auf. Jede Schicht hat andere Bedürfnisse, andere Motivation und andere Bindungsmechanismen. KINN hat das intuitiv richtig gemacht. Jetzt formalisieren wir es.</p>
+
+  <h2>Die KINN Commitment Curve</h2>
+
+  <div class="ladder">
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:40%;background:var(--mintgreen);border-radius:10px 0 0 0">Erstbesucher</div>
+      <div class="ladder-info">
+        <div class="ladder-title">Neugierige</div>
+        <div class="ladder-text">Kommen einmal, schauen sich um. Warteliste ist mittlerweile länger als Teilnehmerliste.</div>
+        <div class="ladder-pct">~30-35%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:65%;background:var(--teal)">Regular</div>
+      <div class="ladder-info">
+        <div class="ladder-title">Stammgäste</div>
+        <div class="ladder-text">Kommen 3+ Mal, kennen 5+ Leute beim Namen.</div>
+        <div class="ladder-pct">~65%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:34%;background:var(--dark-teal)">KINN:PATE</div>
+      <div class="ladder-info">
+        <div class="ladder-title">Mittragende</div>
+        <div class="ladder-text">Tragen finanziell bei, identifizieren sich mit KINN.</div>
+        <div class="ladder-pct">~10-20%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:22%;background:var(--heavy-metal)">Contributor</div>
+      <div class="ladder-info">
+        <div class="ladder-title">Beitragende</div>
+        <div class="ladder-text">Helfen bei Events mit, bringen Neue mit.</div>
+        <div class="ladder-pct">~5-10%</div>
+      </div>
+    </div>
+    <div class="ladder-step">
+      <div class="ladder-bar" style="width:12%;background:var(--heavy-metal);border-radius:0 0 0 10px">Core</div>
+      <div class="ladder-info">
+        <div class="ladder-title">Kern-Team</div>
+        <div class="ladder-text">Thomas, Stefan, Steven, Martin.</div>
+        <div class="ladder-pct">5-8 Pers.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Commitment Curve</h3>
+  <svg viewBox="0 0 480 180" style="width:100%;max-width:480px;display:block;margin:0.5rem auto 1.5rem" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gc" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0%" stop-color="#5ED9A6" stop-opacity="0.05"/>
+        <stop offset="100%" stop-color="#2B3228" stop-opacity="0.2"/>
+      </linearGradient>
+    </defs>
+    <line x1="50" y1="20" x2="50" y2="140" stroke="#e8e4dc" stroke-width="1"/>
+    <line x1="50" y1="140" x2="450" y2="140" stroke="#e8e4dc" stroke-width="1"/>
+    <path d="M50,132 C83,132 117,108 150,108 C183,108 217,76 250,76 C283,76 317,40 350,40 C383,40 417,24 450,24 L450,140 L50,140 Z" fill="url(#gc)"/>
+    <path d="M50,132 C83,132 117,108 150,108 C183,108 217,76 250,76 C283,76 317,40 350,40 C383,40 417,24 450,24" fill="none" stroke="#4A9B8C" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="50" cy="132" r="5" fill="#5ED9A6"/>
+    <circle cx="150" cy="108" r="5" fill="#4A9B8C"/>
+    <circle cx="250" cy="76" r="5" fill="#2D6B60"/>
+    <circle cx="350" cy="40" r="5" fill="#2B3228"/>
+    <circle cx="450" cy="24" r="5" fill="#2B3228"/>
+    <text x="50" y="150" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="8" font-weight="700" fill="#5ED9A6">Erstbesucher</text>
+    <text x="150" y="96" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="8" font-weight="700" fill="#4A9B8C">Regular</text>
+    <text x="250" y="64" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="8" font-weight="700" fill="#2D6B60">PATE</text>
+    <text x="350" y="28" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="8" font-weight="700" fill="#2B3228">Contributor</text>
+    <text x="450" y="14" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="8" font-weight="700" fill="#2B3228">Core</text>
+    <text x="18" y="85" text-anchor="middle" font-family="Futura,sans-serif" font-size="7.5" fill="#6B7068" transform="rotate(-90 18 85)">Commitment</text>
+    <text x="250" y="168" text-anchor="middle" font-family="Futura,sans-serif" font-size="7.5" fill="#6B7068">Engagement-Tiefe →</text>
+  </svg>
+
+  <div class="note"><strong>KINNs umgekehrte Pyramide:</strong> Normalerweise sind 60-70% Erstbesucher und nur 20-30% Stammgäste. Bei KINN ist es umgekehrt: ~65% Regulars, ~35% Neue. Noch bemerkenswerter: Die Warteliste ist mittlerweile länger als die Teilnehmerliste. Das ist ein extrem starkes Signal für Product-Community-Fit.</div>
+
+  <h2>Conversion-Ziele pro Stufe</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Übergang</th><th>Ziel-Rate</th><th>Hebel</th></tr>
+    <tr><td>Erstbesucher → Regular (3+ Besuche)</td><td>30-50%</td><td>Onboarding, persönliche Ansprache, KINN:TAG</td></tr>
+    <tr><td>Regular → KINN:PATE</td><td>10-20%</td><td>KINN:FUND Einladung, Causes, Belonging</td></tr>
+    <tr><td>Regular → Contributor</td><td>10-15%</td><td>Event Support, Neue mitbringen</td></tr>
+    <tr><td>Contributor → Core Team</td><td>5-10%</td><td>Domain Ownership, Format-Verantwortung</td></tr>
+  </table></div>
+
+  <details class="src"><summary>Quellen: Commitment Curve & Participation</summary><div class="src-body"><ul>
+    <li>Spinks, D. (2021) <em>The Business of Belonging</em>, Kap. 4: Mapping the Community Participation Journey</li>
+    <li>Bacon, J. (2012) <em>The Art of Community</em> -- Contribution Ladder</li>
+    <li>Nielsen, J. (2006) "The 90-9-1 Rule for Participation Inequality"</li>
+    <li>Lave & Wenger (1991) <em>Situated Learning</em> -- Legitimate Peripheral Participation</li>
+  </ul></div></details>
+</div></div>
+
+<!-- 02 ONBOARDING -->
+<div class="page pg-fund" id="onboarding"><div class="pi">
+  <div class="sn">02</div><div class="sl">Onboarding</div>
+  <h1>Die ersten drei Donnerstage</h1>
+  <div class="sub">Wer beim dritten Mal kommt, bleibt -- die Forschung ist eindeutig</div>
+
+  <quote class="quote">
+    <p>"Repetition, Repetition, Repetition. That's how you build a community habit."</p>
+    <cite>David Spinks, The Business of Belonging, Kap. 6</cite>
+  </quote>
+
+  <p>Meetup.com-Daten aus Millionen von Events zeigen: Wenn jemand <strong>dreimal kommt</strong>, springt die Wahrscheinlichkeit, ein Regular zu werden, von ~15% auf über 70%. Die ersten drei Besuche entscheiden alles.</p>
+
+  <h2>Das KINN-Onboarding (ARRIVE-Modell)</h2>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Schritt</th><th>Was passiert</th><th>Wann</th><th>Wer</th></tr>
+    <tr><td><strong>Acknowledge</strong></td><td>Begrüßung, KINN:TAG ausgeben, Name merken</td><td>Ankunft</td><td>Host / Greeter</td></tr>
+    <tr><td><strong>Relate</strong></td><td>Mit 1-2 Stammgästen verbinden, die ähnliche Interessen haben</td><td>Erste 10 Min.</td><td>Host</td></tr>
+    <tr><td><strong>Ritual</strong></td><td>In die Gruppe einbinden -- Thementisch, Vorstellungsrunde</td><td>Erste 20 Min.</td><td>Moderator</td></tr>
+    <tr><td><strong>Invite</strong></td><td>Explizit zum nächsten Donnerstag einladen, bevor sie gehen</td><td>Ende des Events</td><td>Jeder Stammgast</td></tr>
+    <tr><td><strong>Validate</strong></td><td>Follow-up Nachricht innerhalb von 24h ("Schön, dass du da warst")</td><td>Tag danach</td><td>Thomas / Host</td></tr>
+    <tr><td><strong>Engage</strong></td><td>Beim 2.-3. Besuch eine Mini-Aufgabe anbieten (Tisch mitaufbauen, jemanden vorstellen)</td><td>Besuch 2-3</td><td>Core Team</td></tr>
+  </table></div>
+
+  <div class="warn"><strong>Die 5-Minuten-Regel (Priya Parker):</strong> Wenn ein Erstbesucher länger als 5 Minuten allein steht ohne angesprochen zu werden, sinkt die Rückkehr-Wahrscheinlichkeit drastisch. Das ist der wichtigste Moment im gesamten Community Building.</div>
+
+  <h2>Der KINN-Kodex als Onboarding-Versprechen</h2>
+  <p>Der KINN-Community Kodex definiert bereits, was Erstbesucher erwarten dürfen:</p>
+
+  <div class="kodex">
+    <div class="kodex-card">
+      <div class="kodex-num">1</div>
+      <div class="kodex-title">Menschen vor Business</div>
+      <div class="kodex-desc">"Erstmal lernst du einen Menschen kennen, nicht die Firma."</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">2</div>
+      <div class="kodex-title">Lernen statt Lehren</div>
+      <div class="kodex-desc">"Wir teilen, was wir wissen. Wir fragen, was wir nicht wissen."</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">3</div>
+      <div class="kodex-title">Kein Pitch, kein Push</div>
+      <div class="kodex-desc">"Austausch ohne Verkaufen -- das sollte man nicht angreifen."</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">4</div>
+      <div class="kodex-title">Augenhöhe immer</div>
+      <div class="kodex-desc">"Es funktioniert, weil es auf Augenhöhe ist."</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">5</div>
+      <div class="kodex-title">Zeig dich -- auch allein</div>
+      <div class="kodex-desc">"Auch alleine zeigen -- das zeigt Commitment."</div>
+    </div>
+    <div class="kodex-card">
+      <div class="kodex-num">6</div>
+      <div class="kodex-title">Vertrauen & Verlässlichkeit</div>
+      <div class="kodex-desc">"Ich kann mich auf die verlassen."</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>An Erstbesucher (aus dem Manifest):</strong> Du wirst willkommen sein. Niemand hält dich für dumm. Jede Frage ist erlaubt.</div>
+
+  <details class="src"><summary>Quellen: Onboarding-Forschung</summary><div class="src-body"><ul>
+    <li>Meetup.com Engineering Blog: "Rule of Three" -- 3 Besuche = 70%+ Retention</li>
+    <li>CMX Hub (2019): Greeter Effect -- 2-3x höhere Rückkehrrate mit dedizierten Greetern</li>
+    <li>Parker, P. (2018) <em>The Art of Gathering</em> -- First 5 Minutes</li>
+    <li>Dunbar, R. (2010): Name-to-Face Recognition Threshold (2-3 Personen bis Besuch 3)</li>
+  </ul></div></details>
+</div></div>
+
+<!-- 03 RETENTION -->
+<div class="page pg-mix" id="retention"><div class="pi">
+  <div class="sn">03</div><div class="sl">Retention & Churn</div>
+  <h1>Wer bleibt -- und warum manche gehen</h1>
+  <div class="sub">Churn ist kein Bug, sondern ein Feature das man managen muss</div>
+
+  <quote class="quote">
+    <p>"When you start paying people for what they used to do for free, you destroy the magic."</p>
+    <cite>David Spinks, The Business of Belonging, Kap. 5</cite>
+  </quote>
+
+  <h2>Warum Menschen gehen</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Grund</th><th>Anteil</th><th>Steuerbar?</th><th>KINN-Maßnahme</th></tr>
+    <tr><td>Life Events (Jobwechsel, Umzug, Kind)</td><td>30-40%</td><td>Nein</td><td>Re-Entry friktionslos machen</td></tr>
+    <tr><td>Social Debt ("Zu lange nicht da gewesen")</td><td>15-25%</td><td>Ja</td><td>Nie Guilt-Trippen, "Reunion"-Events</td></tr>
+    <tr><td>Cliquen-Bildung (fühle mich als Outsider)</td><td>10-15%</td><td>Ja</td><td>Rotierende Thementische, Mixing</td></tr>
+    <tr><td>Format-Müdigkeit (immer dasselbe)</td><td>10-15%</td><td>Ja</td><td>3-4 Format-Typen rotieren</td></tr>
+    <tr><td>Mangelnde Engagement-Tiefe</td><td>10-15%</td><td>Ja</td><td>Commitment Curve aktivieren</td></tr>
+  </table></div>
+
+  <h2>KINNs natürliche Anti-Churn-Mechanismen</h2>
+  <div class="stake">
+    <div class="stake-card direct">
+      <div class="stake-name">Wöchentlicher Face-to-Face-Kontakt</div>
+      <div class="stake-body">Feste-Schedule-Gruppen retainen 2x besser als variable (Meetup.com-Daten). Donnerstag 8 Uhr ist kein Zufall -- es ist ein Habit-Anker. Nie ausfallen lassen.</div>
+    </div>
+    <div class="stake-card direct">
+      <div class="stake-name">KINN:TAG Badge</div>
+      <div class="stake-body">Physische Artefakte (Sticker, Badges, Tags) signalisieren Identität im Alltag. Hackerspace-Forschung zeigt: sichtbare Zugehörigkeit verstärkt Commitment.</div>
+    </div>
+    <div class="stake-card direct">
+      <div class="stake-name">Gemeinsames Frühstück</div>
+      <div class="stake-body">Breaking Bread Together aktiviert Oxytocin und baut Vertrauen auf (Dunbar, 2017). Kein Meetup-Format reicht an geteilte Mahlzeiten heran.</div>
+    </div>
+    <div class="stake-card direct">
+      <div class="stake-name">Lokale Verwurzelung</div>
+      <div class="stake-body">"Man sieht sich beim nächsten Donnerstag" -- der soziale Vertrag einer Offline-Community. Wer nicht kommt, fällt auf. Das ist kein Druck, sondern Accountability.</div>
+    </div>
+  </div>
+
+  <h2>Retention-Playbook</h2>
+  <div class="phases">
+    <div class="phase active">
+      <div class="phase-label">Sofort</div>
+      <div class="phase-title">Pausen statt Kündigen</div>
+      <div class="phase-body">Wenn ein Regular oder KINN:PATE aufhört zu kommen: Aktiv eine Pause anbieten. 80% der Patreon-Kündigenden wären offen für eine Pause. Keine Guilt-Trips.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Monatlich</div>
+      <div class="phase-title">Retention messen</div>
+      <div class="phase-body">Attendance Consistency Index: Wie viele der gleichen Leute kommen Woche für Woche? Gesund: 50-70% Overlap. Unter 40%: Alarm.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Quartalsweise</div>
+      <div class="phase-title">"Reunion"-Format</div>
+      <div class="phase-body">Ein Event pro Quartal, das explizit für Rückkehrer designed ist. Niedrige Schwelle, hohe Energie. Social Debt abbauen.</div>
+    </div>
+  </div>
+
+  <div class="warn"><strong>Spinks' wichtigste Warnung:</strong> Soziale Normen nie durch Markt-Normen ersetzen. KINNs strikte Trennung von Community (gratis, offen) und Business (Libra FlexCo) ist genau richtig. Wer anfängt, Teilnehmer für das zu bezahlen, was sie freiwillig tun, zerstört die Magie.</div>
+
+  <details class="src"><summary>Quellen: Churn & Retention</summary><div class="src-body"><ul>
+    <li>ASAE (2019): #1 Churn-Ursache = Life Events, nicht Unzufriedenheit</li>
+    <li>Wenger, E. (1998) <em>Communities of Practice</em> -- Core-Periphery-Tension</li>
+    <li>Meetup.com (2019): Format-Müdigkeit = 15-20% Attendance-Rückgang/Quartal</li>
+    <li>Putnam, R. (2000) <em>Bowling Alone</em> -- Cliquen-Dynamik</li>
+    <li>Spinks, D. (2021) Kap. 5: Validation, Rewards, and Incentives</li>
+  </ul></div></details>
+</div></div>
+
+<!-- 04 KANÄLE -->
+<div class="page pg-fund" id="kanaele"><div class="pi">
+  <div class="sn">04</div><div class="sl">Kanalstrategie</div>
+  <h1>Wo KINN lebt -- und wo nicht</h1>
+  <div class="sub">Jeder Kanal hat einen Job. Kein Kanal hat alle Jobs.</div>
+
+  <quote class="quote">
+    <p>"Use your authentic voice. People can smell fake from a mile away."</p>
+    <cite>David Spinks, The Business of Belonging, Kap. 7</cite>
+  </quote>
+
+  <p>Das Strategie-Dokument gibt zu: Discord "wird kaum genutzt." Für eine Offline-First-Community ist das kein Problem -- es ist ein Zeichen, dass die Community dort lebt, wo sie soll: beim Donnerstags-Frühstück.</p>
+
+  <h2>Die KINN-Kanal-Matrix</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>Kanal</th><th>Job</th><th>Frequenz</th><th>Priorität</th></tr>
+    <tr><td><strong>Donnerstags-Treffen</strong></td><td>Beziehungen, Vertrauen, Serendipität. 90% des Werts.</td><td>Wöchentlich</td><td style="color:var(--mintgreen);font-weight:700">Primary</td></tr>
+    <tr><td><strong>KINN:LADE Newsletter</strong></td><td>Reichweite, Re-Engagement, Ankündigungen. 40%+ Open Rate.</td><td>1x/Monat</td><td style="color:var(--teal);font-weight:700">Secondary</td></tr>
+    <tr><td><strong>LinkedIn</strong></td><td>Discovery, Social Proof, neue Teilnehmer anziehen.</td><td>2-3x/Woche</td><td style="color:var(--teal);font-weight:700">Secondary</td></tr>
+    <tr><td><strong>KINN:RAUS Podcast</strong></td><td>Tiefe, Thought Leadership, Reichweite über Tirol hinaus.</td><td>Wöchentlich</td><td style="color:var(--teal);font-weight:700">Secondary</td></tr>
+    <tr><td><strong>Discord</strong></td><td>Quick Questions, Link-Sharing, Async zwischen Treffen.</td><td>Always-on</td><td style="color:var(--kangaroo)">Passiv OK</td></tr>
+    <tr><td><strong>kinn.at</strong></td><td>Hub: Events, /fund, /stimmen, Use Cases.</td><td>Ongoing</td><td style="color:var(--teal);font-weight:700">Infrastruktur</td></tr>
+  </table></div>
+
+  <div class="note"><strong>Die 90%-Regel für Offline-First:</strong> 90% des bedeutsamen Werts muss persönlich geliefert werden. Digitale Kanäle ergänzen, ersetzen nie. Wenn Discord sich wie die "echte" Community anfühlt, sinkt die Donnerstags-Teilnahme -- weil FOMO verschwindet.</div>
+
+  <h2>Kanal-Eskalation entlang der Commitment Curve</h2>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-label">Discovery</div>
+      <div class="flow-text">LinkedIn, Mundpropaganda, Medien</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Interesse</div>
+      <div class="flow-text">Newsletter, kinn.at, Luma</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Erster Besuch</div>
+      <div class="flow-text">Donnerstag, persönlich</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Verbindung</div>
+      <div class="flow-text">Discord, Follow-up DM</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Vertiefung</div>
+      <div class="flow-text">TechTalk, Podcast, FUND</div>
+    </div>
+  </div>
+
+  <details class="src"><summary>Quellen: Kanalstrategie</summary><div class="src-body"><ul>
+    <li>Spinks, D. (2021) Kap. 6: Designing Community Spaces and Experiences</li>
+    <li>Bailey & Burch (2022): "Campfire Model" für hybride Communities</li>
+    <li>Feverbee (2021): WhatsApp Group Trap -- Chat-Overload → Disengagement</li>
+    <li>Harvard Business School (2021): Hybride Formate underperformen pure Formate</li>
+  </ul></div></details>
+</div></div>
+
+<!-- 05 RESILIENZ -->
+<div class="page pg-mix" id="resilienz"><div class="pi">
+  <div class="sn">05</div><div class="sl">Resilienz & Skalierung</div>
+  <h1>Wenn Thomas mal nicht da ist</h1>
+  <div class="sub">Bus Factor > 1, Dunbar's Schwellen, und warum 150 alles ändert</div>
+
+  <p>Das Strategie-Dokument nennt "Thomas-Abhängigkeit" als Risiko mit <strong>hoher Wahrscheinlichkeit und hohem Impact</strong>. Die Forschung bestätigt: Volunteer-led Organizations mit einem dominanten Leader haben eine <strong>60% Failure Rate innerhalb von 5 Jahren</strong> nach dessen Abgang (ASAE, 2020). Mit verteiltem Leadership: 15%.</p>
+
+  <h2>Ringe der Verantwortung</h2>
+  <p>Jono Bacons Modell: Der Founder delegiert nicht Aufgaben, sondern <strong>Domains</strong>. Jede Domain hat einen Owner mit Entscheidungsbefugnis.</p>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Domain</th><th>Aktueller Owner</th><th>Backup</th><th>Status</th></tr>
+    <tr><td>KI-Frühstück (KINN-DO)</td><td>Thomas</td><td>Stefan, Martin</td><td style="color:var(--teal)">Teilweise</td></tr>
+    <tr><td>TechTalks (Bibergruppe)</td><td>Martin</td><td>--</td><td style="color:var(--mintgreen)">Eigenständig</td></tr>
+    <tr><td>Podcast (MENSCH:MASCHINE)</td><td>Thomas + Steven</td><td>Steven allein</td><td style="color:var(--mintgreen)">Alle 2-3 Monate</td></tr>
+    <tr><td>Podcast (KINN:RAUS)</td><td>Thomas</td><td>Stefan</td><td style="color:var(--warn)">Wöchentlich, weiter aufbauen</td></tr>
+    <tr><td>KINN:FUND Administration</td><td>Thomas</td><td>Stefan</td><td style="color:var(--teal)">Teilweise</td></tr>
+    <tr><td>Partnerschaften (WKO etc.)</td><td>Thomas</td><td>Stefan</td><td style="color:var(--teal)">Teilweise</td></tr>
+    <tr><td>Content & LinkedIn</td><td>Thomas</td><td>Martin</td><td style="color:var(--teal)">Teilweise</td></tr>
+  </table></div>
+
+  <div class="warn"><strong>Der Sabbatical-Test:</strong> Gesunde Organisationen überleben 4 Wochen ohne den Founder. KINN sollte innerhalb der nächsten 6 Monate einen bewussten 2-Wochen-Test machen: Thomas ist nicht da -- was bricht?</div>
+
+  <h2>Dunbar's Schwellen -- was bei 150 passiert</h2>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>Schwelle</th><th>Beziehungsqualität</th><th>KINN heute</th><th>Was sich ändert</th></tr>
+    <tr><td><strong>~5</strong></td><td>Intimkreis (Core Team)</td><td style="color:var(--mintgreen)">Thomas, Stefan, Steven, Martin</td><td>Passt</td></tr>
+    <tr><td><strong>~15</strong></td><td>Enge Freunde (Extended Core)</td><td style="color:var(--teal)">Im Aufbau</td><td>Hier 3-5 weitere Leader identifizieren</td></tr>
+    <tr><td><strong>~50</strong></td><td>Gute Bekannte (Regulars)</td><td style="color:var(--mintgreen)">Aktueller Sweet Spot</td><td>Jeder kennt jeden beim Namen</td></tr>
+    <tr><td><strong>~150</strong></td><td>Sinnvolle Beziehungen</td><td style="color:var(--kangaroo)">Ziel 2027</td><td>Subgruppen nötig, formales Onboarding Pflicht</td></tr>
+    <tr><td><strong>~500</strong></td><td>Bekanntschaft</td><td style="color:var(--kangaroo)">Ferne Zukunft</td><td>Community of Communities, Chapters</td></tr>
+  </table></div>
+
+  <div class="note"><strong>KINNs Position (Feb 2026):</strong> Ihr seid genau an der 50er-Schwelle -- dem Sweet Spot für Intimität, aber dem Beginn von Founder-Burnout. Die nächsten 6-12 Monate entscheiden: Wird Ring 2 (Extended Core, 8-15 Personen) aufgebaut, bevor ihr 100+ erreicht? Das ist die wichtigste strukturelle Aufgabe.</div>
+
+  <h2>Skalierungsparadox</h2>
+  <quote class="quote">
+    <p>"Die Dinge, die eine kleine Community großartig machen -- Intimität, Informalität, Founder-Persönlichkeit -- sind genau die Dinge, die bei Scale brechen."</p>
+    <cite>Etienne Wenger, Communities of Practice</cite>
+  </quote>
+
+  <p><strong>Die Lösung:</strong> Ihr skaliert nicht eine Community. Ihr baut eine <strong>Community of Communities</strong>. Die Meta-Community (KINN) liefert Identität, Brand und Cross-Pollination. Die Sub-Communities (KINN-DO, Bibergruppe, Chapters) liefern Belonging.</p>
+
+  <details class="src"><summary>Quellen: Burnout & Skalierung</summary><div class="src-body"><ul>
+    <li>ASAE (2020): 60% Failure Rate bei Single-Leader Organizations</li>
+    <li>Bacon, J. (2012) <em>The Art of Community</em> -- Rings of Responsibility</li>
+    <li>Dunbar, R. (1992, 2010, 2021): Social Brain Hypothesis, Gruppengröße-Schwellen</li>
+    <li>Wenger, E. (1998) <em>Communities of Practice</em> -- Scaling Paradox</li>
+    <li>CMX (2022-2023): 71% Community Manager Burnout</li>
+    <li>Meetup.com Analyse (Evans, 2019): Communities mit 8+ Organizer überleben 3x länger</li>
+  </ul></div></details>
+</div></div>
+
+<!-- 06 DASHBOARD -->
+<div class="page pg-fund" id="dashboard"><div class="pi">
+  <div class="sn">06</div><div class="sl">Community Health</div>
+  <h1>Das KINN-Scorecard</h1>
+  <div class="sub">5 KPIs die jeden Monat gemessen werden</div>
+
+  <quote class="quote">
+    <p>"If you can't measure the impact, the budget will always be at risk."</p>
+    <cite>David Spinks, The Business of Belonging, Kap. 2</cite>
+  </quote>
+
+  <p>Die BoB-Checklist zeigt: KINN hat kein systematisches Measurement Framework. Diese 5 KPIs ändern das -- einfach zu messen, aussagekräftig, wöchentlich trackbar.</p>
+
+  <div class="dash">
+    <div class="dash-badge">KINN Scorecard - Feb 2026 (Echtdaten)</div>
+    <div class="dash-title">Community Health Dashboard</div>
+    <div class="dash-sub">KINN#7-#12 / Jan-Feb 2026 -- Luma, Testimonials, Leads, Team-Daten</div>
+
+    <!-- Overall Health Score -->
+    <div style="text-align:center;margin:0.5rem 0 1rem">
+      <svg viewBox="0 0 120 70" width="140" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15,60 A45,45 0 0,1 105,60" fill="none" stroke="#e8e4dc" stroke-width="8" stroke-linecap="round"/>
+        <path d="M15,60 A45,45 0 0,1 97,32" fill="none" stroke="url(#gauge)" stroke-width="8" stroke-linecap="round"/>
+        <defs><linearGradient id="gauge" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#D4956A"/><stop offset="50%" stop-color="#5ED9A6"/><stop offset="100%" stop-color="#4A9B8C"/></linearGradient></defs>
+        <text x="60" y="55" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="900" font-size="18" fill="#2B3228">B+</text>
+        <text x="60" y="67" text-anchor="middle" font-family="Futura,sans-serif" font-size="7" fill="#6B7068">Community Health</text>
+      </svg>
+    </div>
+
+    <!-- ENGAGEMENT -->
+    <div class="dash-cat cat-engage">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="1,14 4,10 7,12 10,6 13,9 16,4 19,7" stroke="#4A9B8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="dash-cat-label">Engagement</div>
+      <div class="dash-cat-hint">Quantitativ / Luma-Daten</div>
+    </div>
+    <div class="metrics">
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">74%</div><div class="metric-unit">Kontinuität</div><div class="metric-label">Returning-Rate (KINN#12)</div></div>
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">26%</div><div class="metric-unit">Neue Gesichter</div><div class="metric-label">Neue bei KINN#12</div></div>
+      <div class="metric" style="border-top:3px solid var(--spring-rain)"><div class="metric-val">37%</div><div class="metric-unit">Stammgäste</div><div class="metric-label">52 von 141 bei 2+ Events</div></div>
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">87%</div><div class="metric-unit">Anwesenheit</div><div class="metric-label">Angemeldet → tatsächlich da</div></div>
+    </div>
+
+    <!-- SENTIMENT -->
+    <div class="dash-cat cat-sentiment">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10,17 C10,17 2,12 2,7 A4,4 0 0,1 10,5 A4,4 0 0,1 18,7 C18,12 10,17 10,17Z" fill="#5ED9A6" opacity="0.7"/></svg>
+      <div class="dash-cat-label">Stimmung</div>
+      <div class="dash-cat-hint">Qualitativ / Testimonials & Feedback</div>
+    </div>
+    <div class="metrics">
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">4.8</div><div class="metric-unit">★ Rating</div><div class="metric-label">77 Luma-Bewertungen</div></div>
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">97%</div><div class="metric-unit">Positiv</div><div class="metric-label">Nur 2 von 77 unter 4★</div></div>
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">45</div><div class="metric-unit">Stimmen</div><div class="metric-label">Testimonials auf kinn.at</div></div>
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">78%</div><div class="metric-unit">Weiterempfehlung</div><div class="metric-label">7/9 Top-Regulars = Testimonial</div></div>
+    </div>
+    <div class="dash-2col" style="margin:0.5rem 0 0">
+      <div class="quote" style="margin:0;font-size:0.82rem;padding:0.65rem 0.85rem"><p style="font-size:0.82rem;margin-bottom:0.15rem">"Unbezahlbar."</p><cite style="font-size:0.68rem">Desiree Schier</cite></div>
+      <div class="quote" style="margin:0;font-size:0.82rem;padding:0.65rem 0.85rem"><p style="font-size:0.82rem;margin-bottom:0.15rem">"Hin und weg."</p><cite style="font-size:0.68rem">Nelson Scalet</cite></div>
+    </div>
+
+    <!-- COMMUNITY DEPTH -->
+    <div class="dash-cat cat-team">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="6" r="3" fill="#BDB2A1"/><circle cx="4" cy="8" r="2.5" fill="#BDB2A1" opacity="0.6"/><circle cx="16" cy="8" r="2.5" fill="#BDB2A1" opacity="0.6"/><path d="M3,18 C3,14 6,12 10,12 C14,12 17,14 17,18" fill="#BDB2A1" opacity="0.4"/></svg>
+      <div class="dash-cat-label">Community-Tiefe & Team</div>
+      <div class="dash-cat-hint">Struktur / Nachhaltigkeit</div>
+    </div>
+    <div class="metrics">
+      <div class="metric" style="border-top:3px solid var(--warn)"><div class="metric-val">4</div><div class="metric-unit">Core Team</div><div class="metric-label">Thomas, Stefan, Steven, Martin</div></div>
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">140+</div><div class="metric-unit">Org-Domains</div><div class="metric-label">Firmen, Institutionen, Startups</div></div>
+      <div class="metric" style="border-top:3px solid var(--warn)"><div class="metric-val">3/9</div><div class="metric-unit">Cluster aktiv</div><div class="metric-label">Org-Aktivierung nur 33%</div></div>
+      <div class="metric" style="border-top:3px solid var(--mintgreen)"><div class="metric-val">15</div><div class="metric-unit">Venues</div><div class="metric-label">Kostenlos, 6 Regionen</div></div>
+    </div>
+
+    <!-- HEALTH BAROMETER -->
+    <div class="dash-cat cat-health">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="14" width="3" height="4" rx="1" fill="#5ED9A6"/><rect x="7" y="10" width="3" height="8" rx="1" fill="#4A9B8C"/><rect x="12" y="5" width="3" height="13" rx="1" fill="#2D6B60"/><rect x="17" y="2" width="3" height="16" rx="1" fill="#2B3228" opacity="0.3"/></svg>
+      <div class="dash-cat-label">Health-Barometer</div>
+    </div>
+    <div class="prog" style="margin-top:0.25rem">
+      <div class="prog-row">
+        <div class="prog-label">Stimmung</div>
+        <div class="prog-bar"><div class="prog-fill mint" style="width:97%">97% positiv</div></div>
+        <span class="bar-dot green"></span>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">Anwesenheit</div>
+        <div class="prog-bar"><div class="prog-fill mint" style="width:87%">87%</div></div>
+        <span class="bar-dot green"></span>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">Weiterempfehlung</div>
+        <div class="prog-bar"><div class="prog-fill mint" style="width:78%">78%</div></div>
+        <span class="bar-dot green"></span>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">Lead-Aktivierung</div>
+        <div class="prog-bar"><div class="prog-fill spring" style="width:57%">57% (175/308)</div></div>
+        <span class="bar-dot orange"></span>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">Stammgäste</div>
+        <div class="prog-bar"><div class="prog-fill spring" style="width:37%">37%</div></div>
+        <span class="bar-dot orange"></span>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">Org-Aktivierung</div>
+        <div class="prog-bar"><div class="prog-fill warm" style="width:33%">3/9 Cluster</div></div>
+        <span class="bar-dot orange"></span>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">Mithilfe</div>
+        <div class="prog-bar"><div class="prog-fill warm" style="width:7%;min-width:4rem;font-size:0.6rem">~7%</div></div>
+        <span class="bar-dot red"></span>
+      </div>
+    </div>
+
+    <!-- Key themes & weaknesses -->
+    <div class="dash-2col" style="margin-top:1rem">
+      <div class="note" style="margin:0"><strong>Stärken:</strong><br>(1) Stimmung fast perfekt (97%)<br>(2) Hohe Weiterempfehlung (78%)<br>(3) Branchenvielfalt (140+ Orgs)<br>(4) Alle Venues kostenlos</div>
+      <div class="warn" style="margin:0"><strong>Schwachstellen:</strong><br>(1) Mithilfe bei 7%<br>(2) Org-Cluster-Aktivierung 33%<br>(3) 133 Leads nie aktiviert<br>(4) Kein systematisches Feedback</div>
+    </div>
+  </div>
+
+  <h2>Die 5+1 KINN-KPIs</h2>
+  <div class="st-wrap"><table class="st">
+    <tr><th>KPI</th><th>Was es misst</th><th>Gesund</th><th>Alarm</th><th>Quelle</th></tr>
+    <tr><td><strong>Attendance Consistency</strong></td><td>% gleiche Personen Woche zu Woche</td><td>50-70%</td><td>&lt;40%</td><td>Luma Check-ins</td></tr>
+    <tr><td><strong>New-to-Returning Ratio</strong></td><td>% Erstbesucher pro Event</td><td>15-30%</td><td>&lt;10% oder &gt;40%</td><td>Luma</td></tr>
+    <tr><td><strong>First-Visit Return Rate</strong></td><td>% Erstbesucher die wiederkommen</td><td>&gt;40%</td><td>&lt;25%</td><td>Luma + manuell</td></tr>
+    <tr><td><strong>"Would You Miss It?"</strong></td><td>Vierteljährliche Umfrage (1-10)</td><td>&gt;7</td><td>&lt;5</td><td>Quick Poll</td></tr>
+    <tr><td><strong>Regulars-Ratio</strong></td><td>% mit 3+ Besuchen im Quartal</td><td>40-60%</td><td>&lt;30%</td><td>Luma History</td></tr>
+    <tr><td><strong>+1: FUND Health</strong></td><td>Monatliche KINN:PATEN-Retention</td><td>&gt;90%</td><td>&lt;85%</td><td>Zahlungs-Daten</td></tr>
+  </table></div>
+
+  <div class="st-wrap"><table class="st">
+    <tr><th>KPI</th><th>Was es misst</th><th>Gesund</th><th>Aktuell</th><th>Status</th></tr>
+    <tr><td><strong>Stimmungs-Score</strong></td><td>Ø Luma-Rating + Testimonial-Rate</td><td>&gt;4.5★ / &gt;50%</td><td style="color:var(--mintgreen);font-weight:700">4.8★ / 78%</td><td style="color:var(--mintgreen)">✓</td></tr>
+    <tr><td><strong>Weiterempfehlung</strong></td><td>% Regulars die aktiv empfehlen (Testimonial, LinkedIn, +1 mitbringen)</td><td>&gt;50%</td><td style="color:var(--mintgreen);font-weight:700">78%</td><td style="color:var(--mintgreen)">✓</td></tr>
+    <tr><td><strong>Org-Durchdringung</strong></td><td>Aktive Org-Cluster / Gesamte Cluster</td><td>&gt;50%</td><td style="color:var(--warn);font-weight:700">33% (3/9)</td><td style="color:var(--warn)">!</td></tr>
+    <tr><td><strong>Kernteam-Anteil</strong></td><td>Aktive Contributors / Regulars</td><td>&gt;15%</td><td style="color:var(--warn);font-weight:700">~7% (4/52)</td><td style="color:var(--warn)">!</td></tr>
+    <tr><td><strong>Lead-Aktivierung</strong></td><td>% Leads mit mind. 1 Event-Besuch</td><td>&gt;70%</td><td style="color:var(--warn);font-weight:700">57% (175/308)</td><td style="color:var(--warn)">!</td></tr>
+  </table></div>
+
+  <div class="note"><strong>SPACES-Einordnung (Spinks):</strong> Das erweiterte Dashboard deckt alle 6 Dimensionen ab: <strong>Support</strong> (Venues, Infrastruktur), <strong>Product</strong> (Stimmung, Rating), <strong>Acquisition</strong> (Neue Gesichter, Lead-Aktivierung), <strong>Contribution</strong> (Mithilfe, Kernteam), <strong>Engagement</strong> (Kontinuität, Stammgäste), <strong>Success</strong> (Weiterempfehlung, Org-Durchdringung).</div>
+
+  <h2>Nächste Schritte</h2>
+  <ul class="actions">
+    <li><s>Luma-Daten exportieren und Baseline für alle KPIs erstellen</s> <strong style="color:var(--mintgreen)">✓ Done</strong> -- dieses Dokument ist die Baseline (Feb 2026)</li>
+    <li>Monatliches Scorecard-Template in Notion/Google Sheets aufsetzen</li>
+    <li>Erste "Would You Miss It?"-Umfrage beim Donnerstags-Treffen (QR-Code)</li>
+    <li>ARRIVE-Onboarding Checklist an EVENT SUPPORT Team verteilen</li>
+    <li>Dormante Org-Cluster aktivieren (DataLab Hell, BTV, Fraunhofer, MCI -- gezielte persönliche Einladung)</li>
+    <li>133 inaktive Leads re-aktivieren (personalisierte Event-Einladung per Luma)</li>
+    <li>3-5 weitere Community Leaders identifizieren (Ring 2 aufbauen, Core Team Ratio von 7% auf 15%)</li>
+    <li>Sabbatical-Test planen: 2 Wochen ohne Thomas in Q3 2026</li>
+    <li>Manifest & Kodex auf kinn.at veröffentlichen</li>
+  </ul>
+
+  <details class="src"><summary>Quellen: Community Metriken</summary><div class="src-body"><ul>
+    <li>Spinks, D. (2021) SPACES Model -- Support, Product, Acquisition, Contribution, Engagement, Success</li>
+    <li>Feverbee / Millington, R.: Engagement Depth Framework (Breadth vs. Depth)</li>
+    <li>CMX State of Community Management Reports (2018-2023)</li>
+    <li><a href="https://orbit.love" target="_blank" rel="noopener">Orbit Model</a> -- Alternative Community-Metriken</li>
+    <li><a href="https://nityesh.com/book-review-business-of-belonging/" target="_blank" rel="noopener">15 key takeaways from Business of Belonging</a></li>
+  </ul></div></details>
+
+  <div style="margin-top:3rem;text-align:center;padding-top:2rem;border-top:2px solid var(--spring-rain)">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg" style="width:100px;fill:var(--heavy-metal);margin-bottom:0.5rem"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+    <div style="font-size:0.85rem;color:var(--text-muted)">Tirols KI-Community</div>
+    <div style="font-size:0.8rem;color:var(--teal);margin-top:0.5rem"><a class="ext" href="https://kinn.at" target="_blank" rel="noopener">kinn.at</a></div>
+    <div style="font-size:0.7rem;color:var(--kangaroo);margin-top:1rem;font-style:italic">KINN Community Building & Retention v1.0 - Februar 2026 - Libra Innovation FlexCo</div>
+    <div style="font-size:0.65rem;color:var(--kangaroo);margin-top:0.5rem">Basierend auf: David Spinks "The Business of Belonging" (2021), KINN-Community Manifest & Kodex, KINN × BoB Checklist v2, Zentrales Strategie-Dokument 2026 v2.0</div>
+  </div>
+</div></div>
+
+</body>
+</html>

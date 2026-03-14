@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KINN:START — Tirols KI-Community</title>
+<meta name="description" content="Alles was du über KINN wissen willst, ehrlich beantwortet. Format, Kosten, Community, FUND und mehr.">
+<link rel="canonical" href="https://kinn.at/start">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --mint: #5ED9A6;
+    --mint-light: #F0FBF5;
+    --mint-dim: rgba(94,217,166,0.08);
+    --dark: #2C3E50;
+    --gray: #6B7280;
+    --gray-light: #9CA3AF;
+    --border: #E8EEEB;
+    --bg: #FAFCFB;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250,252,251,0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-back {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mint);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 14px 0;
+    flex-shrink: 0;
+  }
+
+  .nav-sep {
+    color: var(--border);
+    margin: 0 10px;
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2px;
+    flex: 1;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gray-light);
+    text-decoration: none;
+    padding: 14px 10px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+
+  .nav-links a:hover { color: var(--dark); }
+
+  .nav-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--mint);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--mint-light);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mint);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.015em;
+    line-height: 1.18;
+    margin-bottom: 14px;
+  }
+
+  .hero h1 span { color: var(--mint); }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--gray);
+    line-height: 1.6;
+    max-width: 500px;
+  }
+
+  .hero-meta {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--gray-light);
+    letter-spacing: 0.04em;
+  }
+
+  /* STATS */
+  .stats-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+
+  .stat {
+    background: var(--white);
+    padding: 18px 12px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.01em;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--gray-light);
+    font-weight: 500;
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 48px;
+    scroll-margin-top: 52px;
+  }
+
+  .section-num {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mint);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+
+  .section-sub {
+    font-size: 14px;
+    color: var(--gray);
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  /* FORMAT SUBSECTION */
+  .format-block {
+    margin-bottom: 24px;
+  }
+
+  .format-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .format-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .format-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .format-desc {
+    font-size: 12px;
+    color: var(--gray-light);
+  }
+
+  /* FLOW */
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background: var(--border);
+    gap: 1px;
+  }
+
+  .flow-3 { grid-template-columns: repeat(3, 1fr); }
+
+  .flow-item {
+    background: var(--white);
+    padding: 14px 12px;
+    text-align: center;
+  }
+
+  .flow-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  .flow-text {
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.45;
+  }
+
+  /* NOTE */
+  .note {
+    background: var(--mint-dim);
+    border-left: 3px solid var(--mint);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  .note strong { color: var(--dark); }
+
+  /* ACCORDION */
+  .acc-group {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  details {
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+  }
+
+  details:last-child { border-bottom: none; }
+
+  details summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    padding-right: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    line-height: 1.4;
+    position: relative;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  details summary::-webkit-details-marker { display: none; }
+
+  details summary:hover { background: var(--mint-dim); }
+
+  details summary::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid var(--gray-light);
+    border-bottom: 1.5px solid var(--gray-light);
+    transform: translateY(-65%) rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  details[open] summary::after {
+    transform: translateY(-35%) rotate(-135deg);
+  }
+
+  .q-dot {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--mint);
+    margin-top: 1px;
+  }
+
+  .acc-body {
+    padding: 0 16px 16px 32px;
+    font-size: 13.5px;
+    color: var(--gray);
+    line-height: 1.7;
+    animation: openAcc 0.2s ease;
+  }
+
+  .acc-body p { margin-bottom: 10px; }
+  .acc-body p:last-child { margin-bottom: 0; }
+  .acc-body strong { color: var(--dark); font-weight: 600; }
+
+  .acc-body a {
+    color: var(--mint);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .acc-body a:hover { text-decoration: underline; }
+
+  @keyframes openAcc {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 13px;
+    color: var(--gray-light);
+    line-height: 1.7;
+  }
+
+  .footer strong { color: var(--gray); font-weight: 500; }
+  .footer a { color: var(--mint); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 580px) {
+    .hero h1 { font-size: 26px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .flow { grid-template-columns: repeat(2, 1fr); }
+    .flow-3 { grid-template-columns: repeat(1, 1fr); }
+    .nav-links { display: none; }
+  }
+
+  /* SEARCH */
+  .faq-search-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .faq-search {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--dark);
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .faq-search::placeholder { color: var(--gray-light); }
+  .faq-search:focus { border-color: var(--mint); }
+
+  .faq-search-clear {
+    display: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: var(--gray-light);
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  .faq-search-clear:hover { color: var(--dark); }
+
+  .faq-no-results {
+    display: none;
+    font-size: 13.5px;
+    color: var(--gray);
+    margin-bottom: 20px;
+  }
+
+  .faq-no-results a { color: var(--mint); text-decoration: none; font-weight: 500; }
+  .faq-no-results a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-back">kinn.at</a>
+  <span class="nav-sep">/</span>
+  <div class="nav-links">
+    <a href="#wasist">KINN</a>
+    <a href="#fuerwen">Für wen</a>
+    <a href="#formate">Formate</a>
+    <a href="#anmeldung">Anmeldung</a>
+    <a href="#geld">Geld</a>
+    <a href="#mitmachen">Mitmachen</a>
+  </div>
+  <span class="nav-tag">START</span>
+</nav>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-tag">KINN:START</div>
+    <h1>Alles über KINN.<br><span>Ehrlich beantwortet.</span></h1>
+    <p class="hero-desc">Was KINN ist, wie es funktioniert, warum es kostenlos bleibt, und alles was du sonst noch wissen willst, bevor du zum ersten Mal kommst.</p>
+    <div class="hero-meta">28 Fragen · Stand Februar 2026</div>
+  </div>
+
+  <div class="faq-search-wrap">
+    <input class="faq-search" type="search" id="faq-search" placeholder="Frage suchen, z.B. Kosten, TechTalk ..." autocomplete="off" spellcheck="false">
+    <button class="faq-search-clear" id="faq-search-clear" aria-label="Suche leeren" tabindex="-1">✕</button>
+  </div>
+  <p class="faq-no-results" id="faq-no-results">Keine Treffer? Schreib uns: <a href="mailto:kontakt@kinn.at">kontakt@kinn.at</a></p>
+
+  <div class="stats-label">Aktuelle Zahlen</div>
+  <div class="stats" id="stats">
+    <div class="stat"><div class="stat-value" id="stat-members">429</div><div class="stat-label">Mitglieder</div></div>
+    <div class="stat"><div class="stat-value" id="stat-events">20</div><div class="stat-label">Treffs</div></div>
+    <div class="stat"><div class="stat-value" id="stat-testimonials">45</div><div class="stat-label">Stimmen</div></div>
+    <div class="stat"><div class="stat-value" id="stat-venues">14</div><div class="stat-label">Spielorte</div></div>
+  </div>
+
+
+  <!-- 01 WAS IST KINN -->
+  <div class="section" id="wasist">
+    <div class="section-num">01 · Was ist KINN?</div>
+    <h2 class="section-title">KI Netzwerk Tirol</h2>
+    <p class="section-sub">Eine offene Community für alle, die sich für Künstliche Intelligenz in Tirol interessieren — egal ob Anfänger oder Profi, Gründer oder Angestellter, 20 oder 60. Es gibt keine Aufnahmeprüfung und keinen Mitgliedsbeitrag.</p>
+    <p class="section-sub" style="margin-top:-10px;">KINN lebt von zwei Formaten: <strong style="color:var(--dark);">KINN Morgen</strong> als wöchentliches Fundament und <strong style="color:var(--dark);">KINN:TechTalk</strong> als Vertiefung. Weitere Formate wachsen organisch aus der Community heraus.</p>
+  </div>
+
+
+  <!-- 02 FÜR WEN -->
+  <div class="section" id="fuerwen">
+    <div class="section-num">02 · Für wen ist KINN?</div>
+    <h2 class="section-title">Für alle.</h2>
+    <p class="section-sub">Kurze Antwort: Für alle. Lange Antwort: Lies weiter.</p>
+
+    <div class="acc-group">
+      <details>
+        <summary><span class="q-dot"></span>Ich bin kein Techniker — bin ich trotzdem willkommen?</summary>
+        <div class="acc-body">
+          <p>Absolut. KI betrifft nicht nur Developer. Am Tisch sitzen Hoteliers, Lehrerinnen, Handwerker, Berater, Studierende neben CTOs und Data Scientists. Gerade die Mischung macht den Unterschied.</p>
+          <p>Du musst nicht coden können um mitzureden.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Ich bin nicht aus Innsbruck — gibt es KINN auch woanders?</summary>
+        <div class="acc-body">
+          <p>Ja, und es werden mehr. Neben Innsbruck gibt es bereits weitere Chapters in Tirol, das Netz wächst.</p>
+          <p><strong>Ziel:</strong> Egal wo du in Tirol bist, du bist nie mehr als 30 Minuten von einem KINN entfernt.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Kann ich jemanden mitbringen?</summary>
+        <div class="acc-body">
+          <p>Klar - über Luma anmelden, fertig. Plätze sind begrenzt, also besser früh dran sein als "komm einfach mit." Jeder der kommt soll sich bewusst angemeldet haben.</p>
+          <p>Walk-ins sind bei vollen Events leider nicht möglich, wäre unfair gegenüber der Warteliste.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+
+  <!-- 03 FORMATE -->
+  <div class="section" id="formate">
+    <div class="section-num">03 · Unsere Formate</div>
+    <h2 class="section-title">Wie KINN funktioniert</h2>
+
+    <!-- KINN Morgen -->
+    <div class="format-block">
+      <div class="format-header">
+        <span class="format-name">KINN Morgen</span>
+        <span class="format-desc">Jeden Donnerstag, 8–9 Uhr, rotierende Co-Working Spaces in ganz Tirol.</span>
+      </div>
+
+      <div class="flow">
+        <div class="flow-item"><div class="flow-label">08:00</div><div class="flow-text">Ankommen, Kaffee, Platz suchen</div></div>
+        <div class="flow-item"><div class="flow-label">08:10</div><div class="flow-text">Thementische, peer learning</div></div>
+        <div class="flow-item"><div class="flow-label">08:55</div><div class="flow-text">Wrap-up, Kontakte tauschen</div></div>
+        <div class="flow-item"><div class="flow-label">09:00+</div><div class="flow-text">Kaffee danach (optional)</div></div>
+      </div>
+
+      <div class="acc-group">
+        <details>
+          <summary><span class="q-dot"></span>Warum um 8 Uhr morgens? Geht das nicht auch um 10?</summary>
+          <div class="acc-body">
+            <p>Bewusste Entscheidung. Wer Donnerstag um 8 aufsteht und in einen Co-Working Space kommt, meint es ernst. Das ist kein Happy-Hour-Networking wo man nebenbei reinschaut - das ist ein Commitment-Filter.</p>
+            <p>Genau deshalb ist die Qualität der Gespräche am Tisch so hoch: Jeder der da sitzt, hat sich aktiv dafür entschieden. Um 10 Uhr kommen auch die Halbinteressierten. Um 8 kommen die Richtigen.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q-dot"></span>Warum nur eine Stunde? Das ist doch viel zu kurz.</summary>
+          <div class="acc-body">
+            <p>Genau richtig. Eine Stunde zwingt dich, schnell in die Tiefe zu gehen statt 20 Minuten Smalltalk zu machen. Und wer danach noch weitermachen will - die besten Gespräche passieren beim Kaffee danach.</p>
+            <p>Die Stunde ist der Rahmen, nicht die Grenze.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q-dot"></span>Ist nach 9 Uhr noch Zeit für Austausch?</summary>
+          <div class="acc-body">
+            <p>Ja, auf jeden Fall. Um 9 Uhr ist das offizielle Programm vorbei, aber wir haben den Raum immer mindestens bis 10 Uhr. So ist genug Zeit um noch das ein oder andere vertiefende Gespräch zu führen.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q-dot"></span>Warum keine Speaker oder Keynotes?</summary>
+          <div class="acc-body">
+            <p>KINN ist peer learning, kein Frontalunterricht. Jeder am Tisch bringt Erfahrung mit, ob Gründer, Developer, Geschäftsführer oder KI-Neuling. Der Wert entsteht im Austausch, nicht im Zuhören.</p>
+            <p>Wir glauben nicht daran, dass eine Person vorne steht und alle anderen belehrt. Wir lernen voneinander.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q-dot"></span>Warum rotierende Locations statt einer fixen?</summary>
+          <div class="acc-body">
+            <p>Drei Gründe: Erstens wollen wir ganz Tirol erreichen, nicht nur die Innenstadt. Zweitens lernt man bei jedem Venue neue Leute kennen - die raum13-Crowd ist eine andere als die InnCubator-Crowd. Drittens bauen wir damit Beziehungen zu Co-Working Spaces in ganz Tirol auf.</p>
+            <p>Jede Location bekommt Sichtbarkeit, wir bekommen einen Raum. Win-Win ohne Budget.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- KINN:TechTalk -->
+    <div class="format-block" style="margin-top:28px;">
+      <div class="format-header">
+        <span class="format-name">KINN:TechTalk</span>
+        <span class="format-desc">Deep-Dive-Format. Abends, kleiner, intensiver.</span>
+      </div>
+
+      <div class="flow flow-3">
+        <div class="flow-item"><div class="flow-label">Einstieg</div><div class="flow-text">KINN Morgen: Community kennenlernen</div></div>
+        <div class="flow-item"><div class="flow-label">Verbindung</div><div class="flow-text">Regelmäßig dabei: Vertrauen aufbauen</div></div>
+        <div class="flow-item"><div class="flow-label">Vertiefung</div><div class="flow-text">TechTalk, Podcast, neue Formate</div></div>
+      </div>
+
+      <div class="acc-group">
+        <details>
+          <summary><span class="q-dot"></span>Warum muss ich erst beim KINN Morgen dabei gewesen sein, bevor ich zu einem TechTalk kann?</summary>
+          <div class="acc-body">
+            <p><strong>Commitment-Filter.</strong> Wer sich nicht die Zeit nimmt, einmal früh aufzustehen, wird bei einem intensiven Abendformat auch nicht die richtige Energie mitbringen. Das KINN Morgen ist quasi der Handschlag.</p>
+            <p><strong>KINN muss man erleben.</strong> Wir funktionieren anders als klassische Meetups: kein Speaker, kein Pitch, peer learning am Tisch. Das versteht man erst wenn man's einmal mitgemacht hat. Und dann bringt man diesen Spirit auch in den TechTalk mit.</p>
+            <p><strong>Eine Community, nicht getrennte Formate.</strong> Alle Formate bauen aufeinander auf. Das KINN Morgen ist das Fundament, TechTalk die Vertiefung. Für Neulinge heißt das: Einmal beim KINN Morgen dabei sein, Community kennenlernen - danach steht alles offen.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span class="q-dot"></span>Mein Kollege ist aber ein totaler Experte — kann der nicht direkt zum TechTalk?</summary>
+          <div class="acc-body">
+            <p>Verstehen wir, und genau deshalb ist die Regel so wichtig. Expertise ist super, aber der TechTalk lebt davon, dass alle am Tisch den KINN-Spirit kennen.</p>
+            <p>Und das KINN Morgen ist ja keine Hürde: eine Stunde, kein Eintritt, kein Commitment außer einmal aufzutauchen. Das KINN Morgen ist kein Hindernis - es ist der Einstieg. Wer das überspringen will, überspringt das Wichtigste.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="note"><strong>Die Regel ist unumstößlich.</strong> Nicht weil wir Gatekeeping mögen, sondern weil sie funktioniert. Die TechTalks sind so gut weil alle Teilnehmer das Fundament teilen.</div>
+    </div>
+
+    <!-- Weitere Formate -->
+    <div class="format-block" style="margin-top:28px;">
+      <div class="format-header">
+        <span class="format-name">Weitere Formate</span>
+      </div>
+      <p class="section-sub" style="margin-bottom:0;">Neue Formate wachsen aus der Community heraus. Wenn du eine Idee hast — meld dich direkt über <a href="/" style="color:var(--mint);text-decoration:none;font-weight:500;">kinn.at</a> oder persönlich am Donnerstag. Die besten Ideen kamen bisher von Leuten aus der Community. Wichtig: Neue Formate bauen auf dem KINN-Fundament auf, sie existieren nicht daneben.</p>
+    </div>
+  </div>
+
+
+  <!-- 04 ANMELDUNG -->
+  <div class="section" id="anmeldung">
+    <div class="section-num">04 · Anmeldung & Plätze</div>
+    <h2 class="section-title">Reinkommen</h2>
+    <p class="section-sub">Plätze gehen manchmal schnell weg. So funktioniert die Anmeldung.</p>
+
+    <div class="acc-group">
+      <details>
+        <summary><span class="q-dot"></span>Wo melde ich mich an und wo finde ich alle KINN Events?</summary>
+        <div class="acc-body">
+          <p>Alle Events findest du auf <a href="/">kinn.at</a> — dort wirst du direkt zur Anmeldung weitergeleitet. Am besten den Luma-Kalender unter <a href="https://luma.com/kinns" target="_blank" rel="noopener">luma.com/kinns</a> abonnieren, dann bekommst du sofort Bescheid wenn ein neues Event online geht.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Wie funktioniert die Anmeldung wenn mal ausgebucht ist?</summary>
+        <div class="acc-body">
+          <p>Bei großen Events reservieren wir immer Plätze explizit für Erstbesucher, damit nicht nur die Stammcrew reinkommt.</p>
+          <p>Es ist ausgebucht? Trotzdem anmelden. Die Warteliste rückt oft nach - besonders wenn Leute rechtzeitig absagen.</p>
+          <p><strong>Tipp:</strong> Luma-Kalender abonnieren (<a href="https://luma.com/kinns" target="_blank" rel="noopener">luma.com/kinns</a>), dann bekommst du sofort Bescheid wenn ein neues Event online geht. Early-Bird-Plätze gehen schnell, manchmal innerhalb einer Stunde.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Was passiert wenn ich angemeldet bin aber nicht komme?</summary>
+        <div class="acc-body">
+          <p>Bitte absagen sobald du weißt dass es nicht klappt, nicht erst am Vortag. Auf deinem Platz sitzt sonst niemand, und Leute auf der Warteliste hätten ihn gerne gehabt.</p>
+          <p>Luma trackt No-Shows, und das fließt in die Wartelisten-Priorisierung ein. Ist kein Strafregister - aber Fairness gegenüber der Community.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+
+  <!-- 05 GELD -->
+  <div class="section" id="geld">
+    <div class="section-num">05 · Geld & Transparenz</div>
+    <h2 class="section-title">Wie KINN finanziert ist</h2>
+    <p class="section-sub">KINN ist kostenlos. Aber Frühstück, Räume, Infrastruktur und Fotografie kosten Geld. Über <a href="/fund" style="color:var(--mint);text-decoration:none;font-weight:500;">kinn.at/fund</a> kann jeder freiwillig beitragen, und über <a href="https://opencollective.com/kinn" target="_blank" rel="noopener" style="color:var(--mint);text-decoration:none;font-weight:500;">OpenCollective</a> auf den Cent genau nachvollziehen, wo jeder Euro hinfließt.</p>
+
+    <div class="note"><strong>Das Prinzip:</strong> Wie bei einem Lieblings-Podcast, dem man etwas in den Hut wirft. Nicht weil man muss, sondern weil man will.</div>
+
+    <div class="flow flow-3" style="margin-top:16px;">
+      <div class="flow-item"><div class="flow-label">Beitrag</div><div class="flow-text">Kreditkarte, PayPal oder SEPA</div></div>
+      <div class="flow-item"><div class="flow-label">Dashboard</div><div class="flow-text">Jede Ein- und Ausgabe öffentlich</div></div>
+      <div class="flow-item"><div class="flow-label">Community</div><div class="flow-text">Frühstück, Räume, Fotos</div></div>
+    </div>
+
+    <div class="acc-group" style="margin-top:20px;">
+      <details>
+        <summary><span class="q-dot"></span>Wie finanziert sich KINN?</summary>
+        <div class="acc-body">
+          <p>KINN trägt sich über den KINN:FUND auf OpenCollective. Community-Beiträge finanzieren Community-Kosten — transparent und öffentlich nachvollziehbar. Zusätzlich sind Firmen als KINN:PARTNER willkommen.</p>
+          <p><strong>Was nicht finanziert wird:</strong> Keine Gehälter, kein Overhead, kein Profit. Community-Geld finanziert Community. Punkt.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Kostenlos, kein Pitch — wo ist der Haken?</summary>
+        <div class="acc-body">
+          <p>Kein Haken. KINN-Events sind kostenlos, für alle, ohne Anmeldung zu einem Verteiler.</p>
+          <p>Bei Events wird nichts verkauft, nichts gepitcht, nichts verteilt. Die Zeit am Tisch gehört dem Austausch, nicht dem Vertrieb.</p>
+          <p>Ob es in Zukunft kostenpflichtige Angebote für Firmen geben wird, z.B. Partner-Mitgliedschaften, ist möglich. Aber der Zugang zur Community bleibt frei. Immer.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Warum OpenCollective und nicht einfach ein PayPal-Link?</summary>
+        <div class="acc-body">
+          <p>Weil Vertrauen alles ist. Bei einem PayPal-Link weißt du nicht, was mit dem Geld passiert. Bei OpenCollective sieht jeder, öffentlich und jederzeit, welche Einnahmen reinkommen und wofür sie ausgegeben werden. Jede Transaktion. Jeder Beleg.</p>
+          <p>Über 15.000 Communities weltweit nutzen OpenCollective. Das Modell ist darauf gebaut, dass <strong>Transparenz Vertrauen schafft</strong>, ohne Bürokratie, ohne Jahresbericht an irgendwen.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Was wird mit dem Geld finanziert?</summary>
+        <div class="acc-body">
+          <p>Ausschließlich Community-Kosten: Kaffee und Frühstück bei Events, professionelle Fotos, Infrastruktur wie Namensschilder oder Badges, und eventuelle Raumkosten wenn eine Location nicht kostenlos ist.</p>
+          <p><strong>Was nicht finanziert wird:</strong> Keine Gehälter, kein Overhead, kein Profit. Community-Geld finanziert Community. Punkt.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Wie kann KINN sonst noch Geld oder Leistungen bekommen — neben Spenden?</summary>
+        <div class="acc-body">
+          <p>Alles, was nicht gegen den Grundsatz der Gleichbehandlung verstößt. Konkret:</p>
+          <p><strong>Sachleistungen von Firmen:</strong> Räume, Verpflegung, Equipment — im Tausch gegen Sichtbarkeit (Logo im Newsletter, Erwähnung beim Event). Das läuft bereits über KINN:PARTNER.</p>
+          <p><strong>Logo-Sponsoring:</strong> Firmen können Events oder Formate co-finanzieren. Was wir nicht annehmen: Sponsoring, das an exklusive Zugänge oder inhaltlichen Einfluss geknüpft ist.</p>
+          <p><strong>Zugang zu Community-Ressourcen (zukünftig denkbar):</strong> Firmenmitgliedschaften die Zugang zu einer Use-Case Datenbank, gesammelten Insights oder strukturierten Community-Daten geben — für Firmen die aktiv in der Community investieren wollen. Noch nicht umgesetzt, aber prinzipiell möglich solange der Zugang zur Community selbst offen bleibt.</p>
+          <p>Die Grenze ist klar: Was zahlenden Firmen offensteht, darf der Community nicht verschlossen bleiben. Alles transparent auf dem OpenCollective Dashboard.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Bekomme ich für meinen Beitrag irgendwelche Vorteile?</summary>
+        <div class="acc-body">
+          <p>Nein - das ist Absicht. Dein Beitrag kauft dir keinen Platz, keinen Vorrang auf der Warteliste und keinen exklusiven Zugang. KINN bleibt für alle gleich, egal ob jemand 5 Euro spendet oder nichts.</p>
+          <p>Was du bekommst: Das Wissen, dass du etwas unterstützt das dir und anderen jede Woche Wert liefert. Und optional deinen Namen auf kinn.at/fund als Danke.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Können auch Firmen beitragen?</summary>
+        <div class="acc-body">
+          <p>Ja. Firmenbeiträge sind willkommen, als KINN:PARTNER, mit Logo-Sichtbarkeit im Newsletter und bei Events. Was wir nicht annehmen: Beiträge die an Gegenleistungen geknüpft sind, die anderen KINN-Teilnehmern nicht offenstehen.</p>
+          <p>Auch hier gilt: Alles transparent auf dem Dashboard. Keine Sonderdeals, keine versteckten Sponsoren.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Warum steht "Libra Innovation FlexCo" auf meinem Zahlungsbeleg?</summary>
+        <div class="acc-body">
+          <p>Weil KINN unter dem rechtlichen Dach der Libra Innovation FlexCo läuft. Das ist die Firma hinter KINN, kein externer Dritter, sondern die Trägerorganisation.</p>
+          <p>Community-Budget und Firmen-Budget sind dabei strikt getrennt: was über KINN:FUND reinkommt, fließt ausschließlich in die Community.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Wem gehört KINN, und warum kein Verein?</summary>
+        <div class="acc-body">
+          <p>KINN ist ein Projekt unter dem Dach der Libra Innovation FlexCo. Kein Verein, keine Institution, keine Förderorganisation.</p>
+          <p>Ein Verein bedeutet Vorstand, Generalversammlungen, Statuten und Bürokratie. Wir wollen unsere Energie in die Community stecken, nicht ins Vereinsrecht. Die FlexCo gibt uns Rechtsform und Struktur ohne den Overhead.</p>
+          <p>Supporter und Partner sind willkommen, aber niemand bestimmt mit wo KINN hingeht. Wer über den Fund spendet, sieht auf dem Beleg Libra Innovation FlexCo — das ist die Trägerorganisation, kein externer Dritter.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+
+  <!-- 06 MITMACHEN -->
+  <div class="section" id="mitmachen">
+    <div class="section-num">06 · Mitmachen & Beitragen</div>
+    <h2 class="section-title">Aktiv werden</h2>
+    <p class="section-sub">KINN lebt von Menschen die anpacken statt abzuwarten.</p>
+
+    <div class="acc-group">
+      <details>
+        <summary><span class="q-dot"></span>Ich will aktiv beitragen — wie geht das?</summary>
+        <div class="acc-body">
+          <p>Komm regelmäßig, bring dich ein, zeig Eigeninitiative. Unser Team ist organisch gewachsen, aus Leuten die einfach angefangen haben, Dinge zu tun statt zu fragen ob sie dürfen.</p>
+          <p>Tisch moderieren, Fotos machen, jemandem helfen der sich nicht auskennt. Das fällt auf.</p>
+          <p>Wir freuen uns über jeden Helfer und sind auch darauf angewiesen, um unsere Formate laufend und in guter Qualität anbieten zu können.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Kann ich für KINN arbeiten?</summary>
+        <div class="acc-body">
+          <p>KINN wird aktuell komplett ehrenamtlich betrieben — vom Core Team bis zu den Chapter Leads. Es gibt derzeit keine bezahlten Stellen. Was es gibt: Die Möglichkeit, aktiv mitzugestalten und Teil von etwas zu sein, das gerade richtig Momentum hat.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Kann ich bei mir in der Firma ein KINN hosten?</summary>
+        <div class="acc-body">
+          <p>Grundsätzlich ja, wir sind immer auf der Suche nach spannenden Locations. Meld dich bei uns über <a href="/">kinn.at</a>.</p>
+          <p><strong>Einzige Bedingung:</strong> Es bleibt ein KINN-Event, kein Firmen-Event mit KINN-Branding. Kein Sales-Pitch, keine Firmen-Präsentation. Dafür bekommt dein Team Sichtbarkeit in der Community.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Bei mir in der Stadt gibt es noch kein KINN — kann ich selbst Events veranstalten?</summary>
+        <div class="acc-body">
+          <p>Grundsätzlich ja — genau so wächst KINN. Meld dich bei uns über <a href="/">kinn.at</a> und wir schauen gemeinsam, ob und wie ein neues Chapter bei dir Sinn macht. Wir unterstützen mit dem Playbook, den Kontakten und der Erfahrung aus den bestehenden Chapters.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Ich hab eine Idee für ein neues Format — an wen wende ich mich?</summary>
+        <div class="acc-body">
+          <p>An uns - direkt. Über <a href="/">kinn.at</a> oder persönlich am Donnerstag. Die besten Ideen kamen bisher von Leuten aus der Community.</p>
+          <p><strong>Wichtig:</strong> Neue Formate müssen auf dem KINN-Fundament aufbauen, nicht daneben existieren.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="q-dot"></span>Gibt es einen Newsletter oder muss ich jede Woche auf Luma schauen?</summary>
+        <div class="acc-body">
+          <p>Ja, die <strong>KINN:LADE</strong> kommt einmal im Monat per Mail mit allem was passiert ist und was kommt. Eintragen über <a href="/">kinn.at</a>.</p>
+          <p>Für Event-Updates: Luma-Kalender abonnieren unter <a href="https://luma.com/kinns" target="_blank" rel="noopener">luma.com/kinns</a>, dann verpasst du nichts.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+
+  <div class="footer">
+    Noch eine Frage die hier fehlt? <a href="mailto:kontakt@kinn.at">kontakt@kinn.at</a><br>
+    KINN ist ein Projekt der Libra Innovation FlexCo.<br>
+    <a href="/">Zurück zu kinn.at</a>
+  </div>
+
+</div>
+<script>
+// Cached values sofort anzeigen (kein Flackern)
+const _cached = JSON.parse(localStorage.getItem('kinn_stats') || 'null');
+if (_cached) {
+  ['members','events','testimonials','venues'].forEach(k => {
+    const el = document.getElementById('stat-' + k);
+    if (el && _cached[k]) el.textContent = _cached[k];
+  });
+}
+// Live-Werte nachladen + Cache aktualisieren
+fetch('/api/stats')
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById('stat-members').textContent = d.members ?? '—';
+    document.getElementById('stat-events').textContent = d.events ?? '—';
+    document.getElementById('stat-testimonials').textContent = d.testimonials ?? '—';
+    document.getElementById('stat-venues').textContent = d.venues ?? '—';
+    const cache = {};
+    ['members','events','testimonials','venues'].forEach(k => { if (d[k]) cache[k] = d[k]; });
+    if (Object.keys(cache).length) localStorage.setItem('kinn_stats', JSON.stringify(cache));
+  })
+  .catch(() => {});
+
+(function() {
+  const input    = document.getElementById('faq-search');
+  const clearBtn = document.getElementById('faq-search-clear');
+  const noRes    = document.getElementById('faq-no-results');
+
+  function fuzzy(str, q) {
+    str = str.toLowerCase();
+    q   = q.toLowerCase();
+    let i = 0;
+    for (let c of q) {
+      i = str.indexOf(c, i);
+      if (i === -1) return false;
+      i++;
+    }
+    return true;
+  }
+
+  function filter(q) {
+    let total = 0;
+    document.querySelectorAll('.section').forEach(sec => {
+      const items = sec.querySelectorAll('details');
+      let vis = 0;
+      items.forEach(d => {
+        const match = !q || fuzzy(d.querySelector('summary').textContent, q);
+        d.style.display = match ? '' : 'none';
+        if (match) vis++;
+      });
+      if (items.length) sec.style.display = vis ? '' : 'none';
+      total += vis;
+    });
+    noRes.style.display    = total === 0 && q ? 'block' : 'none';
+    clearBtn.style.display = q ? 'inline-block' : 'none';
+  }
+
+  input.addEventListener('input', () => filter(input.value.trim()));
+  clearBtn.addEventListener('click', () => { input.value = ''; filter(''); input.focus(); });
+})();
+</script>
+</body>
+</html>

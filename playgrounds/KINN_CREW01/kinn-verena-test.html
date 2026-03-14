@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KINN · Der Verena-Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --warn:        #E8A84A;
+      --warn-deep:   #A06010;
+      --heavy-metal: #2B3228;
+      --ecru-white:  #F5F0E6;
+      --spring-rain: #A8C8B0;
+      --mintgreen:   #5ED9A6;
+      --teal:        #4A9B8C;
+      --dark-teal:   #2D6B60;
+      --malta:       #BDB2A1;
+    }
+    @font-face { font-family: 'Futura'; src: local('Futura'), local('Futura-Medium'), local('FuturaPT-Book'); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Futura', 'Work Sans', system-ui, sans-serif;
+      background: #C8C4BC;
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh; padding: 2rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .card {
+      width: 148mm; height: 210mm;
+      background: var(--ecru-white);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.22);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    /* HEADER */
+    .hdr {
+      background: var(--heavy-metal); padding: 4mm 7mm;
+      display: flex; align-items: center; gap: 4mm; flex-shrink: 0;
+    }
+    .hdr svg { width: 21mm; fill: var(--ecru-white); display: block; flex-shrink: 0; }
+    .hdr-div { width: 1px; height: 6.5mm; background: rgba(255,255,255,0.15); flex-shrink: 0; }
+    .hdr-ey  { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 5pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--warn); margin-bottom: 0.8mm; }
+    .hdr-t   { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 14pt; color: var(--ecru-white); letter-spacing: -0.01em; line-height: 1; }
+    .hdr-tag { margin-left: auto; flex-shrink: 0; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 6.5pt; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
+    .warn-bar { height: 2px; background: linear-gradient(90deg, var(--warn) 0%, transparent 100%); flex-shrink: 0; }
+
+    /* BODY */
+    .body {
+      padding: 4mm 7mm 3.5mm;
+      flex: 1; display: flex; flex-direction: column; justify-content: space-between;
+    }
+
+    /* section label */
+    .sl {
+      font-family: 'Montserrat', sans-serif; font-weight: 900;
+      font-size: 4.8pt; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 1.8mm;
+      display: flex; align-items: center; gap: 2mm;
+    }
+    .sl::after { content: ''; flex: 1; height: 1px; background: rgba(43,50,40,0.1); }
+    .sl.warn-label { color: var(--warn-deep); }
+    .sl.warn-label::after { background: rgba(232,168,74,0.2); }
+
+    /* THE QUESTION — light card with strong accent */
+    .question-card {
+      background: #fff; border-radius: 3mm;
+      border: 1px solid rgba(43,50,40,0.08);
+      border-left: 4px solid var(--warn);
+      padding: 4mm 5mm;
+    }
+    .q-label { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 5pt; letter-spacing: 0.22em; text-transform: uppercase; color: var(--warn-deep); margin-bottom: 2mm; }
+    .q-text  { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 15pt; color: var(--heavy-metal); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 2mm; }
+    .q-sub   { font-family: 'Futura', sans-serif; font-size: 7pt; color: #6B7068; line-height: 1.55; }
+
+    /* VERENA */
+    .verena-box {
+      background: #fff; border: 1px solid rgba(43,50,40,0.08);
+      border-left: 3px solid var(--warn); border-radius: 0 2.5mm 2.5mm 0;
+      padding: 2.5mm 3.5mm;
+    }
+    .verena-name { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 8pt; color: var(--heavy-metal); margin-bottom: 1mm; }
+    .verena-desc { font-family: 'Futura', sans-serif; font-size: 6.5pt; color: #484D44; line-height: 1.55; }
+
+    /* NICHT VERHANDELBAR */
+    .nv-list { display: flex; flex-direction: column; gap: 0; }
+    .nv {
+      font-family: 'Futura', sans-serif; font-size: 7pt; color: #484D44; line-height: 1.45;
+      padding: 1.5mm 0; border-bottom: 1px solid rgba(43,50,40,0.06);
+      display: flex; gap: 2mm; align-items: baseline;
+    }
+    .nv:last-child { border-bottom: none; }
+    .nv::before { content: '○'; color: var(--mintgreen); font-size: 6pt; flex-shrink: 0; }
+
+    /* ERLAUBT vs BRICHT */
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+    .col-box {
+      border: 1px solid rgba(43,50,40,0.09); border-radius: 2.5mm; overflow: hidden;
+    }
+    .col-head {
+      font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 7pt;
+      padding: 2mm 3mm; border-bottom: 1px solid rgba(43,50,40,0.08);
+    }
+    .col-box.green .col-head { background: rgba(94,217,166,0.08); color: var(--dark-teal); }
+    .col-box.red   .col-head { background: rgba(212,104,74,0.07); color: #B03828; }
+    .col-items { padding: 1.5mm 3mm; }
+    .ci {
+      font-family: 'Futura', sans-serif; font-size: 6pt; color: #484D44; line-height: 1.45;
+      padding: 1.2mm 0; border-bottom: 1px solid rgba(43,50,40,0.05);
+      display: flex; gap: 1.5mm; align-items: flex-start;
+    }
+    .ci:last-child { border-bottom: none; }
+    .col-box.green .ci::before { content: '✓'; color: var(--mintgreen); font-weight: bold; flex-shrink: 0; font-size: 5.5pt; }
+    .col-box.red   .ci::before { content: '✗'; color: #D4684A; font-weight: bold; flex-shrink: 0; font-size: 5.5pt; }
+
+    /* PASS / FAIL */
+    .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm; }
+    .ans {
+      border-radius: 2.5mm; padding: 2.5mm 3mm;
+      display: flex; gap: 2mm; align-items: flex-start;
+    }
+    .ans.pass { background: rgba(94,217,166,0.1); border: 1px solid rgba(94,217,166,0.2); }
+    .ans.fail { background: rgba(212,104,74,0.08); border: 1px solid rgba(212,104,74,0.15); }
+    .ans-icon { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 7pt; flex-shrink: 0; margin-top: 0.2mm; white-space: nowrap; }
+    .ans.pass .ans-icon { color: var(--mintgreen); }
+    .ans.fail .ans-icon { color: #D4684A; }
+    .ans-text { font-family: 'Futura', sans-serif; font-size: 6.5pt; color: #484D44; line-height: 1.5; }
+
+    /* FOOTER */
+    .ftr {
+      background: var(--heavy-metal); padding: 2.2mm 7mm; flex-shrink: 0;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .fl { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 5pt; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+    .fr { font-family: 'Futura', sans-serif; font-size: 5pt; color: rgba(255,255,255,0.14); }
+
+    @media print {
+      @page { size: A5 portrait; margin: 0; }
+      body { background: none; padding: 0; }
+      .card { box-shadow: none; width: 100%; height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <header class="hdr">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/>
+      <path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/>
+      <polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/>
+      <path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/>
+    </svg>
+    <div class="hdr-div"></div>
+    <div>
+      <div class="hdr-ey">Interne Prinzipien · Kommerz &amp; Spirit</div>
+      <div class="hdr-t">Der Verena-Test</div>
+    </div>
+    <div class="hdr-tag">KINN:GRAT</div>
+  </header>
+  <div class="warn-bar"></div>
+
+  <div class="body">
+
+    <!-- Die Frage -->
+    <div class="question-card">
+      <div class="q-label">Der Test · Eine Frage</div>
+      <div class="q-text">Hat auch Verena was davon?</div>
+      <div class="q-sub">Vor jeder kommerziellen Entscheidung. Nicht als Ritual — ehrlich.</div>
+    </div>
+
+    <!-- Wer ist Verena -->
+    <div>
+      <div class="sl warn-label">Wer ist Verena?</div>
+      <div class="verena-box">
+        <div class="verena-name">Verena — leidenschaftliches Community-Mitglied</div>
+        <div class="verena-desc">Kommt jeden Donnerstag. Bringt sich ein. Empfiehlt KINN weiter. Verdient kein Geld damit — sie ist einfach dabei, weil sie es gut findet. Wenn eine Entscheidung nur Libra, Partnern oder dem GRAT nützt, aber nicht auch Verena — stimmt etwas nicht.</div>
+      </div>
+    </div>
+
+    <!-- Nicht verhandelbar -->
+    <div>
+      <div class="sl">Nicht verhandelbar — niemals</div>
+      <div class="nv-list">
+        <div class="nv">KINN Donnerstag bleibt kostenlos — keine Ausnahmen, kein Sponsor ändert das</div>
+        <div class="nv">Keine Pitches — KINN ist kein Vertriebskanal, nicht donnerstags, nicht hintenrum</div>
+        <div class="nv">Community-Geld bleibt Community-Geld — kein Cent fließt in Libra-Kassen</div>
+        <div class="nv">Radikale Transparenz — jeder Geldfluss muss öffentlich erklärbar sein</div>
+      </div>
+    </div>
+
+    <!-- Erlaubt vs. Bricht den Spirit -->
+    <div>
+      <div class="sl">Kommerz bei KINN</div>
+      <div class="two">
+        <div class="col-box green">
+          <div class="col-head">Erlaubt ✓</div>
+          <div class="col-items">
+            <div class="ci">Experten-Vermittlung mit transparentem Split</div>
+            <div class="ci">Format-Sponsoring ohne inhaltlichen Einfluss</div>
+            <div class="ci">Chapter-Revenue für lokale Leads</div>
+            <div class="ci">Vergütung für GRAT ab echtem Umsatz</div>
+          </div>
+        </div>
+        <div class="col-box red">
+          <div class="col-head">Bricht den Spirit ✗</div>
+          <div class="col-items">
+            <div class="ci">Donnerstag als Bühne für Sponsoren</div>
+            <div class="ci">Teilnehmerdaten ohne Opt-in nutzen</div>
+            <div class="ci">Exklusive Vorteile gegen Bezahlung</div>
+            <div class="ci">Intransparente Geldflüsse</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pass / Fail -->
+    <div>
+      <div class="sl">Ergebnis</div>
+      <div class="answers">
+        <div class="ans pass">
+          <div class="ans-icon">JA →</div>
+          <div class="ans-text">KINN-Spirit intakt. Die Community profitiert — nicht nur die Strukturen. Proceed.</div>
+        </div>
+        <div class="ans fail">
+          <div class="ans-icon">NEIN →</div>
+          <div class="ans-text">Stopp. Anpassen bis Verena auch was davon hat — oder nicht tun.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="ftr">
+    <div class="fl">KINN · kinn.at · März 2026</div>
+    <div class="fr">Der KINN-Spirit ist nicht käuflich.</div>
+  </footer>
+
+</div>
+</body>
+</html>
