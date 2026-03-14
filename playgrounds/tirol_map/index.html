@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tirol Map — KINN</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/public/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/public/favicon.ico" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --mintgreen: #5ED9A6;
+      --heavy-metal: #2B3228;
+      --ecru-white: #F5F0E6;
+      --spring-rain: #A8C8B0;
+      --teal: #4A9B8C;
+      --dark-teal: #2D6B60;
+      --malta: #BDB2A1;
+      --kangaroo: #C6C3B5;
+    }
+
+    body {
+      font-family: 'Work Sans', sans-serif;
+      background: var(--ecru-white);
+      color: var(--heavy-metal);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.5rem;
+      background: var(--ecru-white);
+      border-bottom: 2px solid var(--mintgreen);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-left img { height: 28px; }
+
+    .header-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 900;
+      color: var(--heavy-metal);
+      letter-spacing: 0.02em;
+    }
+
+    .header-title span {
+      color: var(--teal);
+      font-weight: 300;
+      margin: 0 0.35rem;
+    }
+
+    .back-link {
+      font-size: 0.8125rem;
+      color: var(--teal);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--dark-teal); }
+
+    #map { flex: 1; min-height: 0; }
+
+    /* Legend */
+    .legend {
+      position: absolute;
+      bottom: 2rem;
+      left: 1rem;
+      z-index: 1000;
+      background: var(--ecru-white);
+      border: 1px solid rgba(43, 50, 40, 0.1);
+      border-radius: 0.625rem;
+      padding: 0.85rem 1.1rem;
+      font-size: 0.75rem;
+      color: var(--heavy-metal);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      box-shadow: 0 2px 12px rgba(43, 50, 40, 0.08);
+    }
+
+    .legend-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.15rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #6B7068;
+    }
+
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-line {
+      width: 18px;
+      height: 0;
+      flex-shrink: 0;
+    }
+
+    /* Leaflet popup overrides */
+    .leaflet-popup-content-wrapper {
+      background: var(--ecru-white);
+      color: var(--heavy-metal);
+      border-radius: 0.625rem;
+      border: 1px solid rgba(43, 50, 40, 0.1);
+      box-shadow: 0 4px 20px rgba(43, 50, 40, 0.12);
+    }
+
+    .leaflet-popup-tip { background: var(--ecru-white); }
+
+    .leaflet-popup-content {
+      margin: 0.75rem 1rem;
+      font-family: 'Work Sans', sans-serif;
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+
+    .leaflet-popup-close-button { color: var(--malta) !important; }
+
+    .popup-badge {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      margin-bottom: 0.3rem;
+    }
+
+    .popup-name {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--heavy-metal);
+      margin-bottom: 0.1rem;
+    }
+
+    .popup-address {
+      font-size: 0.78rem;
+      color: #6B7068;
+    }
+
+    .popup-events {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--teal);
+      margin-top: 0.4rem;
+    }
+
+    /* Zoom controls */
+    .leaflet-control-zoom a {
+      background: var(--ecru-white) !important;
+      color: var(--heavy-metal) !important;
+      border-color: rgba(43, 50, 40, 0.12) !important;
+    }
+
+    .leaflet-control-zoom a:hover {
+      background: var(--heavy-metal) !important;
+      color: var(--mintgreen) !important;
+    }
+
+    .leaflet-control-attribution {
+      background: rgba(245, 240, 230, 0.9) !important;
+      color: #6B7068 !important;
+      font-size: 0.625rem !important;
+    }
+
+    .leaflet-control-attribution a { color: var(--teal) !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <a href="/"><img src="/public/kinn-logo.png" alt="KINN"></a>
+      <div class="header-title">Tirol<span>/</span>Map</div>
+    </div>
+    <a href="/" class="back-link">Zurück zum Lab</a>
+  </header>
+
+  <div id="map"></div>
+
+  <div class="legend">
+    <div class="legend-title">Standorte</div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#2B3228;border:2px solid #5ED9A6;width:14px;height:14px;"></div>
+      Hub
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:rgba(43,50,40,0.35);border:2px solid #A8C8B0;width:14px;height:14px;"></div>
+      Hub Next
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#5ED9A6;"></div>
+      Chapter Live
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#A8C8B0;"></div>
+      Chapter Next
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#4A9B8C;"></div>
+      KINN:MOBIL
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="border:1.5px dashed #BDB2A1;background:transparent;"></div>
+      Scouting
+    </div>
+    <div class="legend-title" style="margin-top:0.3rem;">Grenzen</div>
+    <div class="legend-item">
+      <div class="legend-line" style="border-top:2px solid #A8C8B0;"></div>
+      Landesgrenze
+    </div>
+    <div class="legend-item">
+      <div class="legend-line" style="border-top:1px solid #BDB2A1;opacity:0.5;"></div>
+      Gemeindegrenzen
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    /* ── Venue Data ── */
+    const venues = [
+      // Hub — Innsbruck (Bestätigt)
+      { name: 'InnCubator', address: 'Egger-Lienz-Straße 116, Innsbruck', lat: 47.2555833, lng: 11.3809403, cat: 'hub', events: 5 },
+      { name: 'Impact Hub Tirol', address: 'Dreiheiligenstraße 21a, Innsbruck', lat: 47.2688441, lng: 11.4047938, cat: 'hub', events: 2 },
+      { name: 'Lernbar / WIFI Campus', address: 'WIFI Innsbruck', lat: 47.2572766, lng: 11.3786939, cat: 'hub', events: 3 },
+      { name: 'Das Wundervoll', address: 'Pembaurstraße 14, Innsbruck', lat: 47.2704116, lng: 11.4107418, cat: 'hub', events: 3 },
+      { name: 'raum13', address: 'Maria-Theresien-Straße 42a, Innsbruck', lat: 47.2631342, lng: 11.3946131, cat: 'hub', events: 2 },
+      { name: 'FILMBASE', address: 'Hallerstraße 119a, Innsbruck', lat: 47.2783351, lng: 11.4241357, cat: 'hub', events: 1 },
+      { name: 'SOHO 2', address: 'Grabenweg 68, Innsbruck', lat: 47.264598, lng: 11.439862, cat: 'hub', events: 2 },
+      { name: 'Weekender', address: 'Tschamlerstraße 3, Innsbruck', lat: 47.2631, lng: 11.3880, cat: 'hub', events: 2 },
+      { name: 'Press the Button', address: 'Grabenweg 71, Innsbruck', lat: 47.2651446, lng: 11.4396927, cat: 'hub', events: 3 },
+      { name: 'Cloudflight Innsbruck', address: 'Rennweg 1, Innsbruck', lat: 47.2691811, lng: 11.3947089, cat: 'hub', events: 1 },
+      { name: 'WKO Gebäude Innsbruck', address: 'Wilhelm-Greil-Straße 7, Innsbruck', lat: 47.2659186, lng: 11.3975666, cat: 'hub', events: 2 },
+      { name: 'Mission Solar', address: 'Franz-Fischer-Straße 7a, Innsbruck', lat: 47.2585, lng: 11.3931, cat: 'hub', events: 3 },
+      { name: 'WEISSRAUM', address: 'Andreas-Hofer-Straße 27, Innsbruck', lat: 47.2594497, lng: 11.3920127, cat: 'hub-next', events: 0 },
+      { name: 'CCI', address: 'Grabenweg 3, Innsbruck', lat: 47.2656775, lng: 11.4301218, cat: 'hub-next', events: 0 },
+
+      // Chapter Live — Kufstein
+      { name: 'Innovationsraum Kufstein', address: 'Unterer Stadtplatz 11, Kufstein', lat: 47.5831925, lng: 12.1687245, cat: 'chapter', events: 2 },
+
+      // Chapter Next — Reutte/Außerfern
+      { name: 'Plansee Group', address: 'Reutte', lat: 47.4946631, lng: 10.7368592, cat: 'chapter-next', events: 0 },
+      { name: 'Lienz', address: 'Lienz, Osttirol', lat: 46.8298, lng: 12.7693, cat: 'chapter-next', events: 0 },
+      { name: 'Landeck', address: 'Landeck, Oberland', lat: 47.1397, lng: 10.5628, cat: 'chapter-next', events: 0 },
+
+      // KINN:MOBIL — Einzel-Events außerhalb
+      { name: 'START.N', address: 'Schlossbergstraße 1, Kitzbühel', lat: 47.4419605, lng: 12.3995593, cat: 'chapter-next', events: 1 },
+      { name: 'Werkstätte Wattens', address: 'Weisstraße 9, Wattens', lat: 47.2872646, lng: 11.5929236, cat: 'mobil', events: 1 },
+      { name: 'Campus Casablanca', address: 'Öde 32, Schönwies', lat: 47.1991637, lng: 10.6650397, cat: 'mobil', events: 1 },
+      { name: 'Museen Tirol Bauernhöfe', address: 'Angerberg 10, Kramsach', lat: 47.4638797, lng: 11.9185334, cat: 'mobil', events: 1 },
+      { name: 'Bäcker Ruetz Backhaus', address: 'Sportplatzweg 2, Kematen', lat: 47.2607885, lng: 11.2698419, cat: 'mobil', events: 0 },
+
+      // Scouting — Offen
+      { name: 'EGGER Group', address: 'St. Johann in Tirol', lat: 47.4981426, lng: 12.4201561, cat: 'scouting', events: 0 },
+      { name: 'Adler-Lacke', address: 'Schwaz', lat: 47.3603794, lng: 11.7245581, cat: 'scouting', events: 0 },
+      { name: 'Hotel Gappen', address: 'Achenrain 58, Kramsach', lat: 47.4490467, lng: 11.8755506, cat: 'scouting', events: 0 },
+      { name: 'aeoon Technologies', address: 'Amerling 133, Kramsach', lat: 47.4403721, lng: 11.8766551, cat: 'scouting', events: 0 },
+      { name: 'SoftDeCC Kramsach', address: 'Kramsach', lat: 47.4439, lng: 11.8769, cat: 'scouting', events: 0 },
+      { name: 'Villa Blanka', address: 'Weiherburggasse 8, Innsbruck', lat: 47.2790952, lng: 11.3976352, cat: 'scouting', events: 0 },
+      { name: 'PumpTrack Innsbruck', address: 'Amraser-See-Straße 56a, Innsbruck', lat: 47.2625643, lng: 11.4309327, cat: 'scouting', events: 0 },
+      { name: 'CANCOM', address: 'Valiergasse 56, Innsbruck', lat: 47.2660937, lng: 11.4385226, cat: 'scouting', events: 0 },
+      { name: 'Campus V', address: 'Hintere Achmühlerstraße 1, Dornbirn', lat: 47.4046707, lng: 9.7435242, cat: 'scouting', events: 0 },
+      { name: 'FH Vorarlberg', address: 'Hochschulstraße 1, Dornbirn', lat: 47.4068361, lng: 9.7443998, cat: 'scouting', events: 0 },
+      { name: 'TechnoAlpin', address: 'Bozen', lat: 46.4823351, lng: 11.32692, cat: 'scouting', events: 0 },
+    ];
+
+    /* ── Category config ── */
+    const catConfig = {
+      hub:          { label: 'Hub',           color: '#2B3228', border: '#5ED9A6', size: 16, badgeBg: 'rgba(94,217,166,0.2)', badgeColor: '#2B3228' },
+      'hub-next':   { label: 'Hub Next',      color: 'rgba(43,50,40,0.35)', border: '#A8C8B0', size: 14, badgeBg: 'rgba(168,200,176,0.2)', badgeColor: '#2B3228' },
+      chapter:      { label: 'Chapter Live',  color: '#5ED9A6', border: null,      size: 14, badgeBg: 'rgba(94,217,166,0.25)', badgeColor: '#2D6B60' },
+      'chapter-next': { label: 'Chapter Next', color: '#A8C8B0', border: null,     size: 13, badgeBg: 'rgba(168,200,176,0.25)', badgeColor: '#4A9B8C' },
+      mobil:        { label: 'KINN:MOBIL',    color: '#4A9B8C', border: null,      size: 12, badgeBg: 'rgba(74,155,140,0.2)', badgeColor: '#2D6B60' },
+      scouting:     { label: 'Scouting',      color: 'transparent', border: '#BDB2A1', size: 10, badgeBg: 'rgba(189,178,161,0.15)', badgeColor: '#6B7068' },
+    };
+
+    /* ── Map ── */
+    const map = L.map('map', {
+      center: [47.2692124, 11.4041024],
+      zoom: 9,
+      minZoom: 7,
+      maxZoom: 18,
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20,
+    }).addTo(map);
+
+    /* ── GeoJSON styles ── */
+    const municipalStyle = {
+      color: '#BDB2A1',
+      weight: 0.6,
+      opacity: 0.4,
+      fillColor: 'transparent',
+      fillOpacity: 0,
+    };
+
+    const stateStyle = {
+      color: '#A8C8B0',
+      weight: 2.5,
+      fillColor: 'rgba(94, 217, 166, 0.04)',
+      fillOpacity: 1,
+    };
+
+    /* ── Marker factory ── */
+    function createMarkerIcon(cat) {
+      const cfg = catConfig[cat];
+      const s = cfg.size;
+      const borderStyle = cfg.border
+        ? `border:2px solid ${cfg.border};`
+        : '';
+      const dashStyle = cat === 'scouting'
+        ? `border:2px dashed ${cfg.border};`
+        : borderStyle;
+
+      return L.divIcon({
+        className: '',
+        html: `<div style="width:${s}px;height:${s}px;background:${cfg.color};border-radius:50%;${dashStyle}box-shadow:0 2px 6px rgba(43,50,40,0.2);"></div>`,
+        iconSize: [s, s],
+        iconAnchor: [s / 2, s / 2],
+        popupAnchor: [0, -(s / 2 + 4)],
+      });
+    }
+
+    /* ── Popup factory ── */
+    function createPopup(venue) {
+      const cfg = catConfig[venue.cat];
+      const eventsLine = venue.events > 0
+        ? `<div class="popup-events">${venue.events} Event${venue.events > 1 ? 's' : ''}</div>`
+        : '';
+      return `
+        <div class="popup-badge" style="background:${cfg.badgeBg};color:${cfg.badgeColor};">${cfg.label}</div>
+        <div class="popup-name">${venue.name}</div>
+        <div class="popup-address">${venue.address}</div>
+        ${eventsLine}
+      `;
+    }
+
+    /* ── Load layers, then markers ── */
+    Promise.all([
+      fetch('./data/tyrol_municipal.json').then(r => r.json()),
+      fetch('./data/tyrol_state.json').then(r => r.json()),
+    ]).then(([municipal, state]) => {
+      L.geoJSON(municipal, { style: municipalStyle }).addTo(map);
+      L.geoJSON(state, { style: stateStyle }).addTo(map);
+
+      // Render order: scouting first (back), hub last (front)
+      const order = ['scouting', 'chapter-next', 'mobil', 'chapter', 'hub-next', 'hub'];
+      order.forEach(cat => {
+        venues
+          .filter(v => v.cat === cat)
+          .forEach(v => {
+            L.marker([v.lat, v.lng], { icon: createMarkerIcon(v.cat) })
+              .bindPopup(createPopup(v))
+              .addTo(map);
+          });
+      });
+    });
+  </script>
+</body>
+</html>

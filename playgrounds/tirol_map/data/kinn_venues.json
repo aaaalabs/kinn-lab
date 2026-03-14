@@ -1,0 +1,231 @@
+[
+  {
+    "id": "inncubator",
+    "name": "InnCubator",
+    "address": "Egger-Lienz-Straße 116",
+    "city": "Innsbruck",
+    "eventCount": 5,
+    "events": [
+      { "title": "KINN#1", "date": "2025-11-06", "time": "08:00" },
+      { "title": "KINN#7 - Neujahrs-Kickoff", "date": "2026-01-08", "time": "08:00" },
+      { "title": "KINN#11", "date": "2026-02-05", "time": "08:00" },
+      { "title": "KINN TechTalk - Lokale KI", "date": "2026-03-02", "time": "18:00" },
+      { "title": "KINN#15", "date": "2026-03-05", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "das-wundervoll",
+    "name": "Das Wundervoll",
+    "address": "Pembaurstraße 14",
+    "city": "Innsbruck",
+    "eventCount": 3,
+    "events": [
+      { "title": "KINN#2", "date": "2025-11-13", "time": "08:00" },
+      { "title": "KINN#4", "date": "2025-11-27", "time": "08:00" },
+      { "title": "KINN#10", "date": "2026-01-29", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "mission-solar",
+    "name": "Mission Solar",
+    "address": "Franz-Fischer-Straße 7a",
+    "city": "Innsbruck",
+    "eventCount": 3,
+    "events": [
+      { "title": "KINN TechTalk - Vibe Coding", "date": "2026-02-04", "time": "19:30" },
+      { "title": "KINN TechTalk - KI im Business", "date": "2026-02-05", "time": "18:00" },
+      { "title": "KINN TechTalk - Plattform", "date": "2026-03-12", "time": "19:00" }
+    ]
+  },
+  {
+    "id": "press-the-button",
+    "name": "Press the Button",
+    "address": "Grabenweg 71",
+    "city": "Innsbruck",
+    "eventCount": 3,
+    "events": [
+      { "title": "KINN TechTalk - KI im Marketing", "date": "2026-02-19", "time": "18:00" },
+      { "title": "KINN TechTalk - KI im Marketing", "date": "2026-03-05", "time": "18:00" },
+      { "title": "KINN TechTalk - KI im Marketing", "date": "2026-03-19", "time": "18:00" }
+    ]
+  },
+  {
+    "id": "impact-hub-tirol",
+    "name": "Impact Hub Tirol",
+    "address": "Dreiheiligenstraße 21a",
+    "city": "Innsbruck",
+    "eventCount": 2,
+    "events": [
+      { "title": "KINN#3", "date": "2025-11-20", "time": "08:00" },
+      { "title": "KINN#8", "date": "2026-01-15", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "innovationsraum-kufstein",
+    "name": "Innovationsraum Kufstein",
+    "address": "Unterer Stadtplatz 11",
+    "city": "Kufstein",
+    "eventCount": 2,
+    "events": [
+      { "title": "KINN#15 Kufstein", "date": "2026-03-05", "time": "08:00" },
+      { "title": "KINN#17 Kufstein", "date": "2026-03-19", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "raum13",
+    "name": "raum13",
+    "address": "Maria-Theresien-Straße 42a",
+    "city": "Innsbruck",
+    "eventCount": 2,
+    "events": [
+      { "title": "KINN#5", "date": "2025-12-04", "time": "08:00" },
+      { "title": "KINN#14", "date": "2026-02-26", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "soho-2",
+    "name": "SOHO 2",
+    "address": "Grabenweg 68",
+    "city": "Innsbruck",
+    "eventCount": 2,
+    "events": [
+      { "title": "KINN#6", "date": "2025-12-11", "time": "08:00" },
+      { "title": "KINN#17", "date": "2026-03-19", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "weekender",
+    "name": "Weekender",
+    "address": "Tschamlerstraße 3",
+    "city": "Innsbruck",
+    "eventCount": 2,
+    "events": [
+      { "title": "TechTalk - Voice AI", "date": "2026-01-07", "time": "18:00" },
+      { "title": "KINN TechTalk - VOICE AI", "date": "2026-03-10", "time": "18:00" }
+    ]
+  },
+  {
+    "id": "campus-casablanca",
+    "name": "Campus Casablanca",
+    "address": "Schönwies",
+    "city": "Schönwies",
+    "eventCount": 1,
+    "events": [
+      { "title": "KINN#13", "date": "2026-02-19", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "cloudflight",
+    "name": "Cloudflight Innsbruck",
+    "address": "Rennweg 1",
+    "city": "Innsbruck",
+    "eventCount": 1,
+    "events": [
+      { "title": "KINN TechTalk - VOICE AI", "date": "2026-02-06", "time": "18:00" }
+    ]
+  },
+  {
+    "id": "filmbase",
+    "name": "FILMBASE",
+    "address": "Hallerstraße 119a",
+    "city": "Innsbruck",
+    "eventCount": 1,
+    "events": [
+      { "title": "KINN#12", "date": "2026-02-12", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "start-n-kitzbuehel",
+    "name": "START.N",
+    "address": "Kitzbühel",
+    "city": "Kitzbühel",
+    "eventCount": 1,
+    "events": [
+      { "title": "KINN#16", "date": "2026-03-12", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "werkstaette-wattens-coworking",
+    "name": "CoWorking - Werkstätte Wattens",
+    "address": "Weisstraße 9",
+    "city": "Wattens",
+    "eventCount": 1,
+    "events": [
+      { "title": "KINN#9", "date": "2026-01-22", "time": "08:00" }
+    ]
+  },
+  {
+    "id": "werkstaette-wattens-schleifhalle",
+    "name": "Schleifhalle - Werkstätte Wattens",
+    "address": "Weisstraße 9",
+    "city": "Wattens",
+    "eventCount": 0,
+    "events": []
+  },
+  {
+    "id": "wko-innsbruck",
+    "name": "WKO Gebäude Innsbruck",
+    "address": "Wilhelm-Greil-Straße 7",
+    "city": "Innsbruck",
+    "eventCount": 1,
+    "events": [
+      { "title": "AI TECHTALK", "date": "2026-01-22", "time": "18:00" }
+    ]
+  },
+  {
+    "id": "casablanca",
+    "name": "CASABLANCA",
+    "address": "Leopoldstraße 4",
+    "city": "Innsbruck",
+    "eventCount": 0,
+    "events": []
+  },
+  {
+    "id": "coworking-kufstein",
+    "name": "Coworking Kufstein",
+    "address": "Oberer Stadtplatz 4",
+    "city": "Kufstein",
+    "eventCount": 0,
+    "events": []
+  },
+  {
+    "id": "lernbar-wifi",
+    "name": "Lernbar / WIFI Campus",
+    "address": "WIFI Innsbruck",
+    "city": "Innsbruck",
+    "eventCount": 0,
+    "events": []
+  },
+  {
+    "id": "museen-tirol-bauernhoefe",
+    "name": "Museen Tirol Bauernhöfe",
+    "address": "Angerberg 10, 6233 Kramsach",
+    "city": "Kramsach",
+    "eventCount": 0,
+    "events": []
+  },
+  {
+    "id": "start-n-kitzbuhel",
+    "name": "START.N Kitzbühel",
+    "address": "Hinterstadt 26",
+    "city": "Kitzbühel",
+    "eventCount": 0,
+    "events": []
+  },
+  {
+    "id": "weissraum",
+    "name": "WEISSRAUM",
+    "address": "Andreas-Hofer-Straße 27",
+    "city": "Innsbruck",
+    "eventCount": 0,
+    "events": []
+  },
+  {
+    "id": "wk-tirol",
+    "name": "WK Tirol",
+    "address": "Wilhelm-Greil-Straße 7",
+    "city": "Innsbruck",
+    "eventCount": 0,
+    "events": []
+  }
+]
