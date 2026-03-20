@@ -969,31 +969,41 @@ function renderCrm() {
   document.getElementById('past-stat-checkin').textContent = checkedIn.length;
   document.getElementById('past-stat-showup').textContent = going > 0 ? Math.round(checkedIn.length / going * 100) + '%' : '-';
 
-  // CRM counts
+  // CRM counts (based on all guests, not just approved)
   const counts = { offen: 0, kontaktiert: 0, erledigt: 0 };
-  approved.forEach(g => {
+  pastLeads.forEach(g => {
+    if (g.status !== 'approved' && g.status !== 'declined') return;
     const st = g.followUp?.status || 'offen';
     if (counts[st] !== undefined) counts[st]++;
   });
-  document.getElementById('past-cnt-alle').textContent = going;
+  const total = counts.offen + counts.kontaktiert + counts.erledigt;
+  document.getElementById('past-cnt-alle').textContent = total;
   document.getElementById('past-cnt-offen').textContent = counts.offen;
   document.getElementById('past-cnt-kontaktiert').textContent = counts.kontaktiert;
   document.getElementById('past-cnt-erledigt').textContent = counts.erledigt;
 
   // Progress bar
   const prog = document.getElementById('past-progress');
-  if (going > 0) {
-    const pctE = (counts.erledigt / going * 100).toFixed(1);
-    const pctK = (counts.kontaktiert / going * 100).toFixed(1);
+  if (total > 0) {
+    const pctE = (counts.erledigt / total * 100).toFixed(1);
+    const pctK = (counts.kontaktiert / total * 100).toFixed(1);
     prog.innerHTML = `<div class="crm-seg-erledigt" style="width:${pctE}%"></div><div class="crm-seg-kontaktiert" style="width:${pctK}%"></div>`;
   } else {
     prog.innerHTML = '';
   }
 
+  // Classify guests into groups
+  const allGuests = pastLeads.map(g => {
+    if (g.status === 'declined') return { ...g, gruppe: 'abgesagt' };
+    if (g.status === 'approved' && g.checkedIn) return { ...g, gruppe: 'erschienen' };
+    if (g.status === 'approved') return { ...g, gruppe: 'no-show' };
+    return null;
+  }).filter(Boolean);
+
   // Filter
   const filtered = pastFilter === 'alle'
-    ? approved
-    : approved.filter(g => (g.followUp?.status || 'offen') === pastFilter);
+    ? allGuests
+    : allGuests.filter(g => (g.followUp?.status || 'offen') === pastFilter);
 
   // Lead cards
   const list = document.getElementById('past-lead-list');
@@ -1006,7 +1016,11 @@ function renderCrm() {
   filtered.forEach(g => {
     const st = g.followUp?.status || 'offen';
     const notizen = g.followUp?.notizen || '';
-    const ci = g.checkedIn ? '<span class="checkin-dot yes"></span>' : '<span class="checkin-dot no"></span>';
+    const gruppeBadge = g.gruppe === 'erschienen'
+      ? '<span class="gruppe-badge gruppe-erschienen">Erschienen</span>'
+      : g.gruppe === 'no-show'
+        ? '<span class="gruppe-badge gruppe-noshow">No-show</span>'
+        : '<span class="gruppe-badge gruppe-abgesagt">Abgesagt</span>';
     const motiv = g.motiv ? escapeHtml(String(g.motiv)) : '';
     const doneCls = st === 'erledigt' ? ' crm-done' : '';
     const noteCls = notizen ? ' crm-has-note' : '';
@@ -1023,7 +1037,7 @@ function renderCrm() {
     card.dataset.guestId = g.id;
     card.innerHTML = `
       <div class="crm-card-header" onclick="toggleCrmCard(this.parentElement)">
-        ${ci}
+        ${gruppeBadge}
         <span class="crm-card-name"><strong>${escapeHtml(g.firstName || g.name)}</strong> ${escapeHtml(g.lastName || '')}</span>
         ${visitBadge}
         <span class="crm-card-motiv">${motiv || '—'}</span>
