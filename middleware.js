@@ -3,8 +3,9 @@ const PASSWORD = process.env.LAB_PASSWORD || '';
 export default function middleware(req) {
   const url = new URL(req.url);
 
-  // Only protect /playgrounds/*
-  if (!url.pathname.startsWith('/playgrounds')) return;
+  // Protect /playgrounds/*, /manual/*, /toolkit/*
+  const protectedPaths = ['/playgrounds', '/manual', '/toolkit'];
+  if (!protectedPaths.some(p => url.pathname.startsWith(p))) return;
 
   // No password configured — skip
   if (!PASSWORD) return;
@@ -20,5 +21,5 @@ export default function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/playgrounds/:path*'],
+  matcher: ['/playgrounds/:path*', '/manual/:path*', '/toolkit/:path*'],
 };
