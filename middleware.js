@@ -21,5 +21,5 @@ export default function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/playgrounds/:path*', '/manual/:path*', '/toolkit/:path*'],
+  matcher: ['/playgrounds/:path*', '/manual', '/manual/:path*', '/toolkit', '/toolkit/:path*'],
 };
