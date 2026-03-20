@@ -86,10 +86,21 @@ async function handleGet(req, res) {
       return { ...g, followUp: { status: 'offen', notizen: '' } };
     });
 
-    // Load event feedback from lab:events:*
-    const eventFeedback = await loadEventFeedback(req.query.kinn_nr);
+    // Load event feedback from lab:events:* and merge by email
+    const eventFeedbackMap = await loadEventFeedback(req.query.kinn_nr);
+    leads.forEach(l => {
+      const email = (l.email || '').toLowerCase().trim();
+      if (email && eventFeedbackMap.has(email)) {
+        const fb = eventFeedbackMap.get(email);
+        l.lumaRating = fb.rating;
+        l.lumaFeedback = fb.text;
+      }
+    });
 
-    return res.status(200).json({ leads, total: leads.length, eventFeedback });
+    // Also return unmatched feedback as event-level list
+    const allFeedback = [...eventFeedbackMap.values()];
+
+    return res.status(200).json({ leads, total: leads.length, eventFeedback: allFeedback });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -146,32 +157,38 @@ async function loadKinnCrmLeads(kinnNr) {
   return map;
 }
 
-// Load event feedback from lab:events:{id} (stored by /api/events/feedback)
+// Load event feedback from lab:events:{id}, return Map<email, feedback>
 async function loadEventFeedback(kinnNr) {
-  if (!kinnNr) return [];
+  const map = new Map();
+  if (!kinnNr) return map;
   try {
     const index = await kv.get('events:index');
-    if (!index) return [];
-    // Find matching event by name (e.g. "KINN#17" in event name)
+    if (!index) return map;
     const nr = kinnNr.replace('#', '').replace(/^KINN/i, '');
     for (const entry of index) {
       const event = await kv.get(`events:${entry.id}`);
       if (!event?.name) continue;
       if (event.name.includes(`#${nr}`) || event.name.includes(`KINN${nr}`)) {
-        return (event.feedback || [])
-          .filter(f => f.approved !== false && f.text)
-          .map(f => ({
-            firstName: f.firstName || '',
-            lastInitial: f.lastInitial || '',
-            text: f.text,
-            rating: f.rating ?? null,
-          }));
+        (event.feedback || [])
+          .filter(f => f.approved !== false)
+          .forEach(f => {
+            const email = (f.email || '').toLowerCase().trim();
+            const item = {
+              firstName: f.firstName || '',
+              lastInitial: f.lastInitial || '',
+              email,
+              text: f.text || '',
+              rating: f.rating ?? null,
+            };
+            if (email) map.set(email, item);
+          });
+        break;
       }
     }
   } catch (e) {
     // Silently fail
   }
-  return [];
+  return map;
 }
 
 function findAnswer(answers, keyword) {
