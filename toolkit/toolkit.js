@@ -54,10 +54,13 @@ function showVoteStatus(elementId, type, message) {
 }
 
 // ====== CHAPTER HELPER ======
-function parseChapter(eventName) {
-  // KINN#18 Kufstein → "Kufstein", KINN#17 (no suffix) → "Innsbruck"
+function parseChapter(eventName, locationCity) {
+  // KINN#18 Kufstein → "Kufstein"
   const m = eventName.match(/KINN#\d+\s+(.*)/i);
-  return m ? m[1].trim() : 'Innsbruck';
+  if (m) return m[1].trim();
+  // No suffix → use location city from Luma, fallback Innsbruck
+  if (locationCity) return locationCity;
+  return 'Innsbruck';
 }
 
 // ====== EVENTS API (Luma) ======
@@ -91,7 +94,7 @@ function populateChapters() {
   upcoming.forEach(ev => {
     const nrMatch = ev.name.match(/(KINN#?\d+)/i);
     const nr = nrMatch ? nrMatch[1].replace('KINN', '') : '';
-    const chapter = parseChapter(ev.name);
+    const chapter = parseChapter(ev.name, ev.location?.city);
     const pill = document.createElement('button');
     pill.className = 'event-pill';
     pill.dataset.eventId = ev.id;
@@ -111,7 +114,7 @@ function selectEvent(eventId) {
 
   const nrMatch = ev.name.match(/(KINN#\d+)/i);
   const nr = nrMatch ? nrMatch[1] : ev.name;
-  const chapter = parseChapter(ev.name);
+  const chapter = parseChapter(ev.name, ev.location?.city);
   const shortLocation = ev.location?.name || '';
 
   document.getElementById('event-nr').value = nr;
@@ -134,7 +137,7 @@ function handleChapterChange() {
   const chapter = document.getElementById('chapter-select').value;
   const now = new Date();
   const ev = kinnEvents.find(e =>
-    parseChapter(e.name) === chapter && new Date(e.startAt) > now
+    parseChapter(e.name, e.location?.city) === chapter && new Date(e.startAt) > now
   );
   if (ev) selectEvent(ev.id);
 }
@@ -142,7 +145,7 @@ function handleChapterChange() {
 // ====== GUESTS API (Luma) ======
 async function loadGuests(eventId) {
   const tbody = document.getElementById('guest-tbody');
-  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-meta);padding:32px">Lade Gästeliste...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-meta);padding:32px">Lade Gästeliste...</td></tr>';
 
   try {
     const res = await fetch('/api/luma/guests?event_id=' + encodeURIComponent(eventId));
@@ -152,7 +155,7 @@ async function loadGuests(eventId) {
     updateDashboard();
   } catch (e) {
     console.warn('[Toolkit] Gästeliste konnte nicht geladen werden:', e.message);
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-meta);padding:32px">Gästeliste konnte nicht geladen werden</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-meta);padding:32px">Gästeliste konnte nicht geladen werden</td></tr>';
   }
 }
 
@@ -219,15 +222,13 @@ function updateDashboard() {
       <tr>
         <td>${ci}</td>
         <td><strong>${escapeHtml(g.firstName || g.name)}</strong> ${escapeHtml(g.lastName || '')}</td>
-        <td style="font-size:11px;color:var(--text-meta)">${escapeHtml(g.email)}</td>
         <td>${g.motiv ? '<span class="tag tag-blue">' + escapeHtml(String(g.motiv).replace(/🤝\s?/,'').substring(0,20)) + '</span>' : '-'}</td>
         <td>${tag}</td>
-        <td style="font-size:11px">${g.isFirstTimer ? '<span class="tag tag-mint">Erst</span>' : ''}</td>
       </tr>`;
   });
 
   if (declined.length > 0) {
-    tbody.innerHTML += `<tr><td colspan="6" style="font-size:11px;color:var(--text-meta);padding-top:12px">${declined.length} abgesagt: ${escapeHtml(declined.map(g => g.firstName || g.name).join(', '))}</td></tr>`;
+    tbody.innerHTML += `<tr><td colspan="4" style="font-size:11px;color:var(--text-meta);padding-top:12px">${declined.length} abgesagt: ${escapeHtml(declined.map(g => g.firstName || g.name).join(', '))}</td></tr>`;
   }
 
   // Auto-fill event notiz
@@ -901,7 +902,7 @@ function populatePastEventSelect() {
   past.forEach(ev => {
     const nrMatch = ev.name.match(/(KINN#?\d+)/i);
     const nr = nrMatch ? nrMatch[1].replace('KINN', '') : '';
-    const chapter = parseChapter(ev.name);
+    const chapter = parseChapter(ev.name, ev.location?.city);
     const pill = document.createElement('button');
     pill.className = 'event-pill';
     pill.dataset.eventId = ev.id;
@@ -973,14 +974,21 @@ function handlePastFilter(filter, btn) {
 }
 
 function renderCrm() {
+  // Classify guests into groups first
+  const allGuests = pastLeads.map(g => {
+    if (g.status === 'declined') return { ...g, gruppe: 'abgesagt' };
+    if (g.status === 'approved' && g.checkedIn) return { ...g, gruppe: 'erschienen' };
+    if (g.status === 'approved') return { ...g, gruppe: 'no-show' };
+    return null;
+  }).filter(Boolean);
+
   const approved = pastLeads.filter(g => g.status === 'approved');
   const checkedIn = approved.filter(g => g.checkedIn);
-  const going = approved.length;
 
   // Stats
-  document.getElementById('past-stat-going').textContent = going;
+  document.getElementById('past-stat-going').textContent = approved.length;
   document.getElementById('past-stat-checkin').textContent = checkedIn.length;
-  document.getElementById('past-stat-showup').textContent = going > 0 ? Math.round(checkedIn.length / going * 100) + '%' : '-';
+  document.getElementById('past-stat-showup').textContent = approved.length > 0 ? Math.round(checkedIn.length / approved.length * 100) + '%' : '-';
 
   // Counts
   const statusCounts = { offen: 0, kontaktiert: 0, erledigt: 0 };
@@ -1008,14 +1016,6 @@ function renderCrm() {
   } else {
     prog.innerHTML = '';
   }
-
-  // Classify guests into groups
-  const allGuests = pastLeads.map(g => {
-    if (g.status === 'declined') return { ...g, gruppe: 'abgesagt' };
-    if (g.status === 'approved' && g.checkedIn) return { ...g, gruppe: 'erschienen' };
-    if (g.status === 'approved') return { ...g, gruppe: 'no-show' };
-    return null;
-  }).filter(Boolean);
 
   // Filter — gruppe or status
   const gruppeFilters = ['erschienen', 'no-show', 'abgesagt'];
