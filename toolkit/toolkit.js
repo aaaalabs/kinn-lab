@@ -877,97 +877,157 @@ function updateBadgeButtons() {
   document.getElementById('btn-badge-print').disabled = !hasNames;
 }
 
-// ====== NACHBEREITUNG ======
+// ====== NACHBEREITUNG / CRM ======
 let pastLeads = [];
+let pastFilter = 'alle';
 
 function populatePastEventSelect() {
-  const sel = document.getElementById('past-event-select');
-  if (!sel) return;
-  sel.innerHTML = '';
+  const container = document.getElementById('past-event-pills');
+  if (!container) return;
   const now = new Date();
-  const pastEvents = kinnEvents
-    .filter(ev => new Date(ev.startAt) < now)
+  const past = kinnEvents
+    .filter(ev => new Date(ev.startAt) < now && /KINN#\d+/i.test(ev.name))
     .reverse()
     .slice(0, 3);
 
-  if (!pastEvents.length) {
-    sel.innerHTML = '<option value="">Keine vergangenen Events</option>';
+  container.innerHTML = '';
+  if (!past.length) {
+    container.textContent = 'Keine vergangenen Events';
     return;
   }
-  pastEvents.forEach(ev => {
-    const opt = document.createElement('option');
-    opt.value = ev.id;
-    opt.textContent = `${ev.name} — ${formatDate(ev.startAt)}`;
-    sel.appendChild(opt);
+
+  past.forEach(ev => {
+    const nrMatch = ev.name.match(/(KINN#?\d+)/i);
+    const nr = nrMatch ? nrMatch[1].replace('KINN', '') : '';
+    const chapter = parseChapter(ev.name);
+    const pill = document.createElement('button');
+    pill.className = 'event-pill';
+    pill.dataset.eventId = ev.id;
+    pill.innerHTML = `<span class="pill-nr">${escapeHtml(nr)}</span><span class="pill-chapter">${escapeHtml(chapter)}</span>`;
+    pill.onclick = () => selectPastEvent(ev.id);
+    container.appendChild(pill);
   });
-  handlePastEventSelect();
+
+  selectPastEvent(past[0].id);
 }
 
-async function handlePastEventSelect() {
-  const sel = document.getElementById('past-event-select');
-  if (!sel || !sel.value) return;
+async function selectPastEvent(eventId) {
+  document.getElementById('past-event-select').value = eventId;
+  document.querySelectorAll('#past-event-pills .event-pill').forEach(p => p.classList.remove('active'));
+  const pill = document.querySelector(`#past-event-pills .event-pill[data-event-id="${eventId}"]`);
+  if (pill) pill.classList.add('active');
 
-  const tbody = document.getElementById('past-guest-tbody');
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-meta);padding:32px">Lade...</td></tr>';
+  const list = document.getElementById('past-lead-list');
+  list.innerHTML = '<div class="crm-empty">Lade...</div>';
 
   try {
-    const res = await fetch('/api/crm/leads?event_id=' + encodeURIComponent(sel.value));
+    const res = await fetch('/api/crm/leads?event_id=' + encodeURIComponent(eventId));
     if (!res.ok) throw new Error('API Fehler: ' + res.status);
     const data = await res.json();
     pastLeads = data.leads || [];
-    renderPastDashboard();
+    pastFilter = 'alle';
+    renderCrm();
   } catch (e) {
-    console.warn('[Toolkit] Nachbereitung laden fehlgeschlagen:', e.message);
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-meta);padding:32px">Konnte nicht geladen werden</td></tr>';
+    console.warn('[Toolkit] CRM laden fehlgeschlagen:', e.message);
+    list.innerHTML = '<div class="crm-empty">Konnte nicht geladen werden</div>';
   }
 }
 
-function renderPastDashboard() {
+function handlePastEventSelect() {
+  const val = document.getElementById('past-event-select').value;
+  if (val) selectPastEvent(val);
+}
+
+function handlePastFilter(filter, btn) {
+  pastFilter = filter;
+  document.querySelectorAll('.crm-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCrm();
+}
+
+function renderCrm() {
   const approved = pastLeads.filter(g => g.status === 'approved');
   const checkedIn = approved.filter(g => g.checkedIn);
   const going = approved.length;
 
+  // Stats
   document.getElementById('past-stat-going').textContent = going;
   document.getElementById('past-stat-checkin').textContent = checkedIn.length;
   document.getElementById('past-stat-showup').textContent = going > 0 ? Math.round(checkedIn.length / going * 100) + '%' : '-';
 
-  // CRM stats
-  const offen = approved.filter(g => g.followUp?.status === 'offen').length;
-  const kontaktiert = approved.filter(g => g.followUp?.status === 'kontaktiert').length;
-  const erledigt = approved.filter(g => g.followUp?.status === 'erledigt').length;
-  document.getElementById('past-stat-offen').textContent = offen;
-  document.getElementById('past-stat-kontaktiert').textContent = kontaktiert;
-  document.getElementById('past-stat-erledigt').textContent = erledigt;
-
-  // Guest table with CRM status
-  const tbody = document.getElementById('past-guest-tbody');
-  tbody.innerHTML = '';
+  // CRM counts
+  const counts = { offen: 0, kontaktiert: 0, erledigt: 0 };
   approved.forEach(g => {
-    const ci = g.checkedIn ? '<span class="checkin-dot yes"></span>' : '<span class="checkin-dot no"></span>';
     const st = g.followUp?.status || 'offen';
-    const statusCls = st === 'erledigt' ? 'tag-mint' : st === 'kontaktiert' ? 'tag-blue' : 'tag-orange';
-    tbody.innerHTML += `
-      <tr>
-        <td>${ci}</td>
-        <td><strong>${escapeHtml(g.firstName || g.name)}</strong> ${escapeHtml(g.lastName || '')}</td>
-        <td>${g.motiv ? '<span class="tag tag-blue">' + escapeHtml(String(g.motiv).substring(0, 20)) + '</span>' : '-'}</td>
-        <td>
-          <select class="crm-status-select" data-guest-id="${g.id}" onchange="handleCrmStatusChange(this)">
-            <option value="offen"${st === 'offen' ? ' selected' : ''}>Offen</option>
-            <option value="kontaktiert"${st === 'kontaktiert' ? ' selected' : ''}>Kontaktiert</option>
-            <option value="erledigt"${st === 'erledigt' ? ' selected' : ''}>Erledigt</option>
-          </select>
-        </td>
-        <td><span class="tag ${statusCls}">${st}</span></td>
-      </tr>`;
+    if (counts[st] !== undefined) counts[st]++;
+  });
+  document.getElementById('past-cnt-alle').textContent = going;
+  document.getElementById('past-cnt-offen').textContent = counts.offen;
+  document.getElementById('past-cnt-kontaktiert').textContent = counts.kontaktiert;
+  document.getElementById('past-cnt-erledigt').textContent = counts.erledigt;
+
+  // Progress bar
+  const prog = document.getElementById('past-progress');
+  if (going > 0) {
+    const pctE = (counts.erledigt / going * 100).toFixed(1);
+    const pctK = (counts.kontaktiert / going * 100).toFixed(1);
+    prog.innerHTML = `<div class="crm-seg-erledigt" style="width:${pctE}%"></div><div class="crm-seg-kontaktiert" style="width:${pctK}%"></div>`;
+  } else {
+    prog.innerHTML = '';
+  }
+
+  // Filter
+  const filtered = pastFilter === 'alle'
+    ? approved
+    : approved.filter(g => (g.followUp?.status || 'offen') === pastFilter);
+
+  // Lead cards
+  const list = document.getElementById('past-lead-list');
+  list.innerHTML = '';
+  if (!filtered.length) {
+    list.innerHTML = '<div class="crm-empty">Keine Leads</div>';
+    return;
+  }
+
+  filtered.forEach(g => {
+    const st = g.followUp?.status || 'offen';
+    const notizen = g.followUp?.notizen || '';
+    const ci = g.checkedIn ? '<span class="checkin-dot yes"></span>' : '<span class="checkin-dot no"></span>';
+    const motiv = g.motiv ? escapeHtml(String(g.motiv)) : '';
+    const doneCls = st === 'erledigt' ? ' crm-done' : '';
+    const noteCls = notizen ? ' crm-has-note' : '';
+
+    const card = document.createElement('div');
+    card.className = 'crm-card' + doneCls + noteCls;
+    card.dataset.guestId = g.id;
+    card.innerHTML = `
+      <div class="crm-card-header" onclick="toggleCrmCard(this.parentElement)">
+        ${ci}
+        <span class="crm-card-name"><strong>${escapeHtml(g.firstName || g.name)}</strong> ${escapeHtml(g.lastName || '')}</span>
+        <span class="crm-card-motiv">${motiv || '—'}</span>
+        <span class="crm-status-chip crm-st-${st}">${st}</span>
+        <span class="crm-card-chevron">▼</span>
+      </div>
+      <div class="crm-card-panel">
+        ${g.mitbringsel ? '<div style="font-size:12px;color:var(--text-meta);margin-bottom:10px">Mitbringsel: <strong style="color:var(--text-heading)">' + escapeHtml(String(g.mitbringsel)) + '</strong></div>' : ''}
+        <div class="crm-status-btns">
+          <button class="crm-status-btn${st === 'offen' ? ' active-st' : ''}" onclick="updateCrmStatus('${g.id}','offen')">Offen</button>
+          <button class="crm-status-btn${st === 'kontaktiert' ? ' active-st' : ''}" onclick="updateCrmStatus('${g.id}','kontaktiert')">Kontaktiert</button>
+          <button class="crm-status-btn${st === 'erledigt' ? ' active-st' : ''}" onclick="updateCrmStatus('${g.id}','erledigt')">Erledigt</button>
+        </div>
+        <label class="crm-notes-label">Notizen</label>
+        <textarea class="crm-notes" data-guest-id="${g.id}" onblur="saveCrmNotes(this)" placeholder="Notizen...">${escapeHtml(notizen)}</textarea>
+      </div>`;
+    list.appendChild(card);
   });
 }
 
-async function handleCrmStatusChange(selectEl) {
-  const guestId = selectEl.dataset.guestId;
-  const status = selectEl.value;
-  const eventId = document.getElementById('past-event-select').value;
+function toggleCrmCard(card) {
+  card.classList.toggle('expanded');
+}
 
+async function updateCrmStatus(guestId, status) {
+  const eventId = document.getElementById('past-event-select').value;
   try {
     const res = await fetch('/api/crm/leads', {
       method: 'POST',
@@ -975,12 +1035,28 @@ async function handleCrmStatusChange(selectEl) {
       body: JSON.stringify({ event_id: eventId, guest_id: guestId, status }),
     });
     if (!res.ok) throw new Error('Update fehlgeschlagen');
-    // Update local state and re-render stats
     const lead = pastLeads.find(g => g.id === guestId);
     if (lead) lead.followUp = { ...lead.followUp, status };
-    renderPastDashboard();
+    renderCrm();
   } catch (e) {
-    console.warn('[Toolkit] CRM update fehlgeschlagen:', e.message);
+    console.warn('[Toolkit] CRM Status-Update fehlgeschlagen:', e.message);
+  }
+}
+
+async function saveCrmNotes(textarea) {
+  const guestId = textarea.dataset.guestId;
+  const notizen = textarea.value;
+  const eventId = document.getElementById('past-event-select').value;
+  try {
+    await fetch('/api/crm/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event_id: eventId, guest_id: guestId, notizen }),
+    });
+    const lead = pastLeads.find(g => g.id === guestId);
+    if (lead) lead.followUp = { ...lead.followUp, notizen };
+  } catch (e) {
+    console.warn('[Toolkit] Notizen speichern fehlgeschlagen:', e.message);
   }
 }
 

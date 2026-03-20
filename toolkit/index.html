@@ -525,13 +525,75 @@ input:focus, select:focus, textarea:focus {
 .event-pill .pill-chapter { font-weight: 400; color: var(--text-meta); margin-left: 4px; }
 .event-pill.active .pill-chapter { color: var(--text-subtitle); }
 
-/* ====== CRM STATUS ====== */
-.crm-status-select {
-  width: auto;
-  padding: 4px 8px;
-  font-size: 11px;
-  border-radius: 4px;
+/* ====== CRM ====== */
+.crm-progress-wrap {
+  height: 6px; border-radius: 999px; overflow: hidden;
+  background: var(--border-solid); margin-bottom: 16px;
 }
+.crm-progress-bar {
+  height: 100%; display: flex; transition: width 0.4s;
+}
+.crm-seg-erledigt { background: #065F46; }
+.crm-seg-kontaktiert { background: #F59E0B; }
+
+.crm-filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.crm-filter {
+  font-family: 'Work Sans', sans-serif; font-size: 12px; padding: 5px 12px;
+  border-radius: 999px; border: 1px solid var(--border-solid); background: var(--bg-white);
+  color: var(--text-meta); cursor: pointer; transition: all 0.15s;
+}
+.crm-filter strong { font-weight: 600; }
+.crm-filter.active { border-color: var(--mint); background: var(--mint-bg); color: var(--text-heading); }
+.crm-f-offen.active { background: #FEF2F2; border-color: #DC2626; color: #DC2626; }
+.crm-f-kontaktiert.active { background: #FEF3C7; border-color: #D97706; color: #D97706; }
+.crm-f-erledigt.active { background: #F0FDF4; border-color: #065F46; color: #065F46; }
+
+.crm-lead-list { display: flex; flex-direction: column; gap: 8px; }
+.crm-empty { text-align: center; color: var(--text-meta); padding: 40px; font-size: 13px; }
+
+.crm-card {
+  background: var(--bg-white); border: 1px solid var(--border-solid);
+  border-radius: 10px; overflow: hidden; transition: border-color 0.15s;
+}
+.crm-card:hover { border-color: var(--mint-border); }
+.crm-card.expanded { border-color: var(--mint); }
+.crm-card.crm-done { opacity: 0.55; }
+.crm-card.crm-done:hover { opacity: 0.75; }
+.crm-card.crm-has-note { border-left: 3px solid #F59E0B; }
+
+.crm-card-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; cursor: pointer; user-select: none;
+}
+.crm-card-name { font-weight: 500; font-size: 14px; min-width: 80px; }
+.crm-card-motiv { font-size: 12px; color: var(--text-meta); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crm-status-chip {
+  font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.crm-st-offen { background: #FEF2F2; color: #DC2626; }
+.crm-st-kontaktiert { background: #FEF3C7; color: #D97706; }
+.crm-st-erledigt { background: #F0FDF4; color: #16A34A; }
+.crm-card-chevron { font-size: 12px; color: var(--text-meta); transition: transform 0.2s; }
+.crm-card.expanded .crm-card-chevron { transform: rotate(180deg); }
+
+.crm-card-panel { display: none; border-top: 1px solid var(--border-solid); padding: 14px; }
+.crm-card.expanded .crm-card-panel { display: block; }
+
+.crm-status-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.crm-status-btn {
+  font-family: 'Work Sans', sans-serif; font-size: 11px; padding: 5px 12px;
+  border-radius: 6px; border: 1px solid var(--border-solid); background: var(--bg-white);
+  color: var(--text-meta); cursor: pointer; font-weight: 500; transition: all 0.15s;
+}
+.crm-status-btn.active-st { border-color: var(--mint); color: var(--mint); background: var(--mint-bg); }
+
+.crm-notes-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-meta); margin-bottom: 4px; display: block; }
+.crm-notes {
+  width: 100%; font-family: 'Work Sans', sans-serif; font-size: 13px;
+  padding: 8px 10px; border: 1px solid var(--border-solid); border-radius: 6px;
+  resize: vertical; min-height: 60px; color: var(--text-heading);
+}
+.crm-notes:focus { outline: none; border-color: var(--mint); }
 
 /* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
@@ -1328,42 +1390,31 @@ input:focus, select:focus, textarea:focus {
 <div class="panel" id="panel-nachbereitung">
   <div class="card">
     <h2>Nachbereitung</h2>
-    <p>Letzte 1-3 Events. Gästelisten und Follow-up Status live von Luma.</p>
-    <div class="form-group" style="margin-top:12px">
-      <label>Event</label>
-      <select id="past-event-select" onchange="handlePastEventSelect()">
-        <option value="">Lade Events...</option>
-      </select>
-    </div>
+    <div id="past-event-pills" class="event-pills" style="margin-top:12px">Lade...</div>
+    <input type="hidden" id="past-event-select">
   </div>
 
+  <!-- Stats -->
   <div class="stats-row">
     <div class="stat-card"><div class="stat-val" id="past-stat-going">-</div><div class="stat-label">Registriert</div></div>
     <div class="stat-card"><div class="stat-val" id="past-stat-checkin">-</div><div class="stat-label">Checked-in</div></div>
     <div class="stat-card"><div class="stat-val" id="past-stat-showup">-</div><div class="stat-label">Show-up %</div></div>
-    <div class="stat-card"><div class="stat-val" id="past-stat-offen">-</div><div class="stat-label">Offen</div></div>
-    <div class="stat-card"><div class="stat-val" id="past-stat-kontaktiert">-</div><div class="stat-label">Kontaktiert</div></div>
-    <div class="stat-card"><div class="stat-val" id="past-stat-erledigt">-</div><div class="stat-label">Erledigt</div></div>
   </div>
 
-  <div class="card">
-    <h2>Follow-up</h2>
-    <div style="overflow-x:auto">
-      <table class="guest-table">
-        <thead>
-          <tr>
-            <th>Check-in</th>
-            <th>Name</th>
-            <th>Motiv</th>
-            <th>Status</th>
-            <th>Aktuell</th>
-          </tr>
-        </thead>
-        <tbody id="past-guest-tbody">
-          <tr><td colspan="5" style="text-align:center;color:var(--text-meta);padding:32px">Event auswählen</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Progress bar -->
+  <div class="crm-progress-wrap"><div class="crm-progress-bar" id="past-progress"></div></div>
+
+  <!-- Filter chips -->
+  <div class="crm-filter-bar" id="past-filters">
+    <button class="crm-filter active" data-filter="alle" onclick="handlePastFilter('alle',this)">Alle <strong id="past-cnt-alle">0</strong></button>
+    <button class="crm-filter crm-f-offen" data-filter="offen" onclick="handlePastFilter('offen',this)">Offen <strong id="past-cnt-offen">0</strong></button>
+    <button class="crm-filter crm-f-kontaktiert" data-filter="kontaktiert" onclick="handlePastFilter('kontaktiert',this)">Kontaktiert <strong id="past-cnt-kontaktiert">0</strong></button>
+    <button class="crm-filter crm-f-erledigt" data-filter="erledigt" onclick="handlePastFilter('erledigt',this)">Erledigt <strong id="past-cnt-erledigt">0</strong></button>
+  </div>
+
+  <!-- Lead list -->
+  <div class="crm-lead-list" id="past-lead-list">
+    <div class="crm-empty">Event auswählen</div>
   </div>
 </div>
 
