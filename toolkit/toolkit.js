@@ -1048,6 +1048,9 @@ function renderCrm() {
     const donationBadge = donation > 0 ? `<span class="ctx-badge ctx-spende">${donation}\u202F\u20AC</span>` : '';
     const fb = email ? (enrichData.feedback?.[email] || null) : null;
     const npsBadge = fb && fb.nps != null ? `<span class="ctx-badge ctx-nps">NPS ${fb.nps}</span>` : '';
+    const lumaRating = g.lumaRating;
+    const lumaFeedback = g.lumaFeedback || '';
+    const lumaRatingBadge = lumaRating != null ? `<span class="ctx-badge ctx-luma-rating">${lumaRating}/5</span>` : '';
 
     const card = document.createElement('div');
     card.className = 'crm-card' + doneCls + noteCls;
@@ -1056,13 +1059,14 @@ function renderCrm() {
       <div class="crm-card-header" onclick="toggleCrmCard(this.parentElement)">
         ${gruppeBadge}
         <span class="crm-card-name"><strong>${escapeHtml(g.firstName || g.name)}</strong> ${escapeHtml(g.lastName || '')}</span>
-        ${visitBadge}${donationBadge}${npsBadge}
+        ${visitBadge}${donationBadge}${lumaRatingBadge}${npsBadge}
         <span class="crm-card-motiv">${motiv || '—'}</span>
         <span class="crm-status-chip crm-st-${st}">${st}</span>
         <span class="crm-card-chevron">▼</span>
       </div>
       <div class="crm-card-panel">
         ${g.mitbringsel ? '<div style="font-size:12px;color:var(--text-meta);margin-bottom:10px">Mitbringsel: <strong style="color:var(--text-heading)">' + escapeHtml(String(g.mitbringsel)) + '</strong></div>' : ''}
+        ${lumaFeedback || lumaRating != null ? renderLumaFeedback(lumaRating, lumaFeedback) : ''}
         ${donation > 0 ? '<div class="crm-enrich-block crm-enrich-spende">Spende: <strong>' + donation + '\u202F\u20AC</strong></div>' : ''}
         ${fb ? renderFeedbackBlock(fb) : ''}
         <div class="crm-status-btns">
@@ -1075,6 +1079,15 @@ function renderCrm() {
       </div>`;
     list.appendChild(card);
   });
+}
+
+function renderLumaFeedback(rating, feedback) {
+  let html = '<div class="crm-enrich-block crm-enrich-luma">';
+  html += '<div class="crm-enrich-label">Luma Feedback</div>';
+  if (rating != null) html += '<div style="font-size:12px;margin-bottom:4px">Bewertung: <strong>' + rating + '/5</strong></div>';
+  if (feedback) html += '<div style="font-size:12px;color:var(--text-subtitle);font-style:italic">' + escapeHtml(String(feedback)) + '</div>';
+  html += '</div>';
+  return html;
 }
 
 function renderFeedbackBlock(fb) {

@@ -49,6 +49,8 @@ export default async function handler(req, res) {
         motiv: findAnswer(answers, 'suche'),
         mitbringsel: findAnswer(answers, 'mitbringsel'),
         createdAt: g.created_at || '',
+        lumaRating: g.survey_response_rating ?? g.event_survey_response?.rating ?? null,
+        lumaFeedback: g.survey_response_feedback ?? g.event_survey_response?.feedback ?? '',
       };
     });
 
