@@ -880,6 +880,7 @@ function updateBadgeButtons() {
 // ====== NACHBEREITUNG / CRM ======
 let pastLeads = [];
 let pastFilter = 'alle';
+let attendanceCounts = {};
 
 function populatePastEventSelect() {
   const container = document.getElementById('past-event-pills');
@@ -909,6 +910,19 @@ function populatePastEventSelect() {
   });
 
   selectPastEvent(past[0].id);
+  loadAttendance();
+}
+
+async function loadAttendance() {
+  try {
+    const res = await fetch('/api/luma/attendance');
+    if (!res.ok) return;
+    const data = await res.json();
+    attendanceCounts = data.counts || {};
+    if (pastLeads.length) renderCrm();
+  } catch (e) {
+    console.warn('[Toolkit] Attendance laden fehlgeschlagen:', e.message);
+  }
 }
 
 async function selectPastEvent(eventId) {
@@ -997,6 +1011,13 @@ function renderCrm() {
     const doneCls = st === 'erledigt' ? ' crm-done' : '';
     const noteCls = notizen ? ' crm-has-note' : '';
 
+    // Attendance count
+    const email = (g.email || '').toLowerCase().trim();
+    const visits = email ? (attendanceCounts[email] || 0) : 0;
+    const visitBadge = visits <= 1
+      ? '<span class="typ-badge typ-erstbesucher">Neu</span>'
+      : `<span class="typ-badge typ-stammgast">${visits}x</span>`;
+
     const card = document.createElement('div');
     card.className = 'crm-card' + doneCls + noteCls;
     card.dataset.guestId = g.id;
@@ -1004,6 +1025,7 @@ function renderCrm() {
       <div class="crm-card-header" onclick="toggleCrmCard(this.parentElement)">
         ${ci}
         <span class="crm-card-name"><strong>${escapeHtml(g.firstName || g.name)}</strong> ${escapeHtml(g.lastName || '')}</span>
+        ${visitBadge}
         <span class="crm-card-motiv">${motiv || '—'}</span>
         <span class="crm-status-chip crm-st-${st}">${st}</span>
         <span class="crm-card-chevron">▼</span>
