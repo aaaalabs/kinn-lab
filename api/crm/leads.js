@@ -86,7 +86,10 @@ async function handleGet(req, res) {
       return { ...g, followUp: { status: 'offen', notizen: '' } };
     });
 
-    return res.status(200).json({ leads, total: leads.length });
+    // Load event feedback from lab:events:*
+    const eventFeedback = await loadEventFeedback(req.query.kinn_nr);
+
+    return res.status(200).json({ leads, total: leads.length, eventFeedback });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -141,6 +144,34 @@ async function loadKinnCrmLeads(kinnNr) {
     // Silently fail — KINN CRM data is optional enrichment
   }
   return map;
+}
+
+// Load event feedback from lab:events:{id} (stored by /api/events/feedback)
+async function loadEventFeedback(kinnNr) {
+  if (!kinnNr) return [];
+  try {
+    const index = await kv.get('events:index');
+    if (!index) return [];
+    // Find matching event by name (e.g. "KINN#17" in event name)
+    const nr = kinnNr.replace('#', '').replace(/^KINN/i, '');
+    for (const entry of index) {
+      const event = await kv.get(`events:${entry.id}`);
+      if (!event?.name) continue;
+      if (event.name.includes(`#${nr}`) || event.name.includes(`KINN${nr}`)) {
+        return (event.feedback || [])
+          .filter(f => f.approved !== false && f.text)
+          .map(f => ({
+            firstName: f.firstName || '',
+            lastInitial: f.lastInitial || '',
+            text: f.text,
+            rating: f.rating ?? null,
+          }));
+      }
+    }
+  } catch (e) {
+    // Silently fail
+  }
+  return [];
 }
 
 function findAnswer(answers, keyword) {

@@ -618,6 +618,13 @@ input:focus, select:focus, textarea:focus {
 .crm-enrich-spende { background: var(--mint-bg); color: #065F46; }
 .crm-enrich-feedback { background: #FAFAFA; border: 1px solid #E5E7EB; }
 .crm-enrich-luma { background: #FFFBEB; border: 1px solid #FDE68A; }
+
+.event-feedback-item {
+  padding: 10px 0; border-bottom: 1px solid var(--border-solid);
+  font-size: 13px; line-height: 1.6;
+}
+.event-feedback-item:last-child { border-bottom: none; }
+.event-feedback-item p { color: var(--text-subtitle); margin-top: 4px; font-style: italic; }
 .crm-enrich-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-meta); margin-bottom: 4px; }
 
 /* ====== RESPONSIVE ====== */
@@ -1426,6 +1433,9 @@ input:focus, select:focus, textarea:focus {
 
   <!-- Progress bar -->
   <div class="crm-progress-wrap"><div class="crm-progress-bar" id="past-progress"></div></div>
+
+  <!-- Event Feedback -->
+  <div class="card" id="past-event-feedback" style="display:none"></div>
 
   <!-- Filter chips -->
   <div class="crm-filter-bar" id="past-filters">
