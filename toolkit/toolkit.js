@@ -75,7 +75,9 @@ async function loadEvents() {
 
 function populateChapters() {
   const now = new Date();
-  const upcoming = kinnEvents.filter(ev => new Date(ev.startAt) > now);
+  const upcoming = kinnEvents.filter(ev =>
+    new Date(ev.startAt) > now && /KINN#\d+/i.test(ev.name)
+  );
 
   // Render pills
   const container = document.getElementById('event-pills');
