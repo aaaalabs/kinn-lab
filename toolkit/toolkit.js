@@ -75,51 +75,66 @@ async function loadEvents() {
 
 function populateChapters() {
   const now = new Date();
+  const upcoming = kinnEvents.filter(ev => new Date(ev.startAt) > now);
 
-  // Build chapter dropdown from upcoming events only
-  const upcomingChapters = [];
-  kinnEvents.forEach(ev => {
-    if (new Date(ev.startAt) <= now) return;
-    const ch = parseChapter(ev.name);
-    if (!upcomingChapters.includes(ch)) upcomingChapters.push(ch);
-  });
-  const chapterSel = document.getElementById('chapter-select');
-  chapterSel.innerHTML = '';
-  upcomingChapters.forEach(ch => {
-    const opt = document.createElement('option');
-    opt.value = ch;
-    opt.textContent = ch;
-    chapterSel.appendChild(opt);
+  // Render pills
+  const container = document.getElementById('event-pills');
+  container.innerHTML = '';
+  if (!upcoming.length) {
+    container.textContent = 'Keine kommenden Events';
+    populatePastEventSelect();
+    return;
+  }
+
+  upcoming.forEach(ev => {
+    const nrMatch = ev.name.match(/(KINN#?\d+)/i);
+    const nr = nrMatch ? nrMatch[1].replace('KINN', '') : '';
+    const chapter = parseChapter(ev.name);
+    const pill = document.createElement('button');
+    pill.className = 'event-pill';
+    pill.dataset.eventId = ev.id;
+    pill.innerHTML = `<span class="pill-nr">${escapeHtml(nr)}</span><span class="pill-chapter">${escapeHtml(chapter)}</span>`;
+    pill.onclick = () => selectEvent(ev.id);
+    container.appendChild(pill);
   });
 
-  // Auto-select first chapter and load its event
-  if (upcomingChapters.length) selectEventForChapter(upcomingChapters[0]);
+  // Auto-select first
+  selectEvent(upcoming[0].id);
   populatePastEventSelect();
 }
 
-function selectEventForChapter(chapter) {
-  const now = new Date();
-  const ev = kinnEvents.find(e =>
-    parseChapter(e.name) === chapter && new Date(e.startAt) > now
-  );
+function selectEvent(eventId) {
+  const ev = kinnEvents.find(e => e.id === eventId);
   if (!ev) return;
 
   const nrMatch = ev.name.match(/(KINN#\d+)/i);
   const nr = nrMatch ? nrMatch[1] : ev.name;
+  const chapter = parseChapter(ev.name);
   const shortLocation = ev.location?.name || '';
 
   document.getElementById('event-nr').value = nr;
   document.getElementById('event-select').value = ev.id;
-  document.getElementById('event-title').textContent = nr + ' ' + chapter;
+  document.getElementById('chapter-select').value = chapter;
   document.getElementById('event-date').textContent = formatDate(ev.startAt);
   document.getElementById('event-location').textContent = shortLocation;
+
+  // Update active pill
+  document.querySelectorAll('.event-pill').forEach(p => p.classList.remove('active'));
+  const activePill = document.querySelector(`.event-pill[data-event-id="${eventId}"]`);
+  if (activePill) activePill.classList.add('active');
 
   updateLabels();
   loadGuests(ev.id);
 }
 
-function handleEventSelect() {
-  // Legacy — chapter-driven now
+function handleEventSelect() {}
+function handleChapterChange() {
+  const chapter = document.getElementById('chapter-select').value;
+  const now = new Date();
+  const ev = kinnEvents.find(e =>
+    parseChapter(e.name) === chapter && new Date(e.startAt) > now
+  );
+  if (ev) selectEvent(ev.id);
 }
 
 // ====== GUESTS API (Luma) ======

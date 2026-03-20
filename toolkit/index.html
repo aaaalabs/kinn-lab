@@ -497,6 +497,34 @@ input:focus, select:focus, textarea:focus {
   color: var(--text-heading);
 }
 
+/* ====== EVENT PILLS ====== */
+.event-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.event-pill {
+  padding: 8px 16px;
+  border: 1.5px solid var(--border-solid);
+  border-radius: 8px;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-subtitle);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--bg-white);
+}
+.event-pill:hover { border-color: var(--mint); color: var(--text-heading); }
+.event-pill.active {
+  border-color: var(--mint);
+  background: var(--mint-bg);
+  color: var(--text-heading);
+}
+.event-pill .pill-nr { font-weight: 700; }
+.event-pill .pill-chapter { font-weight: 400; color: var(--text-meta); margin-left: 4px; }
+.event-pill.active .pill-chapter { color: var(--text-subtitle); }
+
 /* ====== CRM STATUS ====== */
 .crm-status-select {
   width: auto;
@@ -743,17 +771,15 @@ input:focus, select:focus, textarea:focus {
 <div style="font-size:12px;margin-bottom:16px"><a href="/manual#ablauf" style="color:var(--text-meta);text-decoration:none">← Ablauf im Manual</a></div>
 
   <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-      <h2 id="event-title" style="margin:0">Lade...</h2>
-      <select id="chapter-select" onchange="handleChapterChange()" style="width:auto"></select>
-    </div>
-    <div style="display:flex;gap:16px;margin-top:8px;font-size:13px;color:var(--text-subtitle)">
+    <div id="event-pills" class="event-pills">Lade Events...</div>
+    <div style="display:flex;gap:16px;margin-top:10px;font-size:13px;color:var(--text-subtitle)">
       <span id="event-date"></span>
       <span id="event-location"></span>
     </div>
     <input type="hidden" id="event-nr">
     <input type="hidden" id="event-select">
-    <p class="hint" style="margin-top:8px">Live von Luma. Nächstes Event pro Chapter.</p>
+    <select id="chapter-select" style="display:none"></select>
+    <p class="hint" style="margin-top:8px">Live von Luma.</p>
   </div>
 
   <!-- Stats -->
