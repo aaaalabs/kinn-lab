@@ -1,7 +1,14 @@
 import { kv } from '../../lib/redis-typed.js';
+import { Redis } from '@upstash/redis';
 
 const LUMA_API_KEY = process.env.LUMA_API_KEY;
 const LUMA_BASE = 'https://public-api.luma.com/v1';
+
+// Direct Redis for reading KINN CRM data (no lab: prefix)
+const redis = new Redis({
+  url: process.env.KINNST_KV_REST_API_URL,
+  token: process.env.KINNST_KV_REST_API_TOKEN,
+});
 
 export default async function handler(req, res) {
   if (req.method === 'GET') return handleGet(req, res);
@@ -58,12 +65,27 @@ async function handleGet(req, res) {
       };
     });
 
-    // Merge with CRM state from Redis
+    // Merge with CRM state: check lab: state first, then KINN CRM data
     const crmState = (await kv.get(`crm:${eventId}:state`)) || {};
-    const leads = guests.map(g => ({
-      ...g,
-      followUp: crmState[g.id] || { status: 'offen', notizen: '' },
-    }));
+
+    // Try to load existing KINN CRM leads (e.g. crm:event:KINN15:leads)
+    // Match event name from Luma events to find the KINN event ID
+    const kinnCrmLeads = await loadKinnCrmLeads(eventId, guests);
+
+    const leads = guests.map(g => {
+      // Priority: lab CRM state > KINN CRM state > default
+      if (crmState[g.id]) return { ...g, followUp: crmState[g.id] };
+
+      const kinnLead = kinnCrmLeads.get((g.email || '').toLowerCase());
+      if (kinnLead?.follow_up) {
+        return { ...g, followUp: {
+          status: kinnLead.follow_up.follow_up_status || 'offen',
+          notizen: kinnLead.follow_up.notizen || '',
+        }};
+      }
+
+      return { ...g, followUp: { status: 'offen', notizen: '' } };
+    });
 
     return res.status(200).json({ leads, total: leads.length });
   } catch (err) {
@@ -98,6 +120,29 @@ async function handlePost(req, res) {
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
+}
+
+// Load KINN CRM leads by trying common event ID patterns
+async function loadKinnCrmLeads(eventId, guests) {
+  const map = new Map();
+  try {
+    // Get all KINN CRM event IDs
+    const events = await redis.smembers('crm:events');
+    if (!events || !events.length) return map;
+
+    // Try each event — load leads and index by email
+    for (const evId of events) {
+      const leads = await redis.get(`crm:event:${evId}:leads`);
+      if (!Array.isArray(leads)) continue;
+      leads.forEach(l => {
+        const email = (l._email || '').toLowerCase().trim();
+        if (email && l.follow_up) map.set(email, l);
+      });
+    }
+  } catch (e) {
+    // Silently fail — KINN CRM data is optional enrichment
+  }
+  return map;
 }
 
 function findAnswer(answers, keyword) {

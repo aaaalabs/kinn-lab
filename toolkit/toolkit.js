@@ -890,7 +890,7 @@ function populatePastEventSelect() {
   const past = kinnEvents
     .filter(ev => new Date(ev.startAt) < now && /KINN#\d+/i.test(ev.name))
     .reverse()
-    .slice(0, 3);
+    .slice(0, 5);
 
   container.innerHTML = '';
   if (!past.length) {
