@@ -881,6 +881,7 @@ function updateBadgeButtons() {
 let pastLeads = [];
 let pastFilter = 'alle';
 let attendanceCounts = {};
+let enrichData = { donations: {}, feedback: {} };
 
 function populatePastEventSelect() {
   const container = document.getElementById('past-event-pills');
@@ -911,6 +912,18 @@ function populatePastEventSelect() {
 
   selectPastEvent(past[0].id);
   loadAttendance();
+  loadEnrichData();
+}
+
+async function loadEnrichData() {
+  try {
+    const res = await fetch('/api/crm/enrich');
+    if (!res.ok) return;
+    enrichData = await res.json();
+    if (pastLeads.length) renderCrm();
+  } catch (e) {
+    console.warn('[Toolkit] Enrich-Daten laden fehlgeschlagen:', e.message);
+  }
 }
 
 async function loadAttendance() {
@@ -1025,12 +1038,16 @@ function renderCrm() {
     const doneCls = st === 'erledigt' ? ' crm-done' : '';
     const noteCls = notizen ? ' crm-has-note' : '';
 
-    // Attendance count
+    // Attendance + enrich data
     const email = (g.email || '').toLowerCase().trim();
     const visits = email ? (attendanceCounts[email] || 0) : 0;
     const visitBadge = visits <= 1
       ? '<span class="typ-badge typ-erstbesucher">Neu</span>'
       : `<span class="typ-badge typ-stammgast">${visits}x</span>`;
+    const donation = email ? (enrichData.donations?.[email] || 0) : 0;
+    const donationBadge = donation > 0 ? `<span class="ctx-badge ctx-spende">${donation}\u202F\u20AC</span>` : '';
+    const fb = email ? (enrichData.feedback?.[email] || null) : null;
+    const npsBadge = fb && fb.nps != null ? `<span class="ctx-badge ctx-nps">NPS ${fb.nps}</span>` : '';
 
     const card = document.createElement('div');
     card.className = 'crm-card' + doneCls + noteCls;
@@ -1039,13 +1056,15 @@ function renderCrm() {
       <div class="crm-card-header" onclick="toggleCrmCard(this.parentElement)">
         ${gruppeBadge}
         <span class="crm-card-name"><strong>${escapeHtml(g.firstName || g.name)}</strong> ${escapeHtml(g.lastName || '')}</span>
-        ${visitBadge}
+        ${visitBadge}${donationBadge}${npsBadge}
         <span class="crm-card-motiv">${motiv || '—'}</span>
         <span class="crm-status-chip crm-st-${st}">${st}</span>
         <span class="crm-card-chevron">▼</span>
       </div>
       <div class="crm-card-panel">
         ${g.mitbringsel ? '<div style="font-size:12px;color:var(--text-meta);margin-bottom:10px">Mitbringsel: <strong style="color:var(--text-heading)">' + escapeHtml(String(g.mitbringsel)) + '</strong></div>' : ''}
+        ${donation > 0 ? '<div class="crm-enrich-block crm-enrich-spende">Spende: <strong>' + donation + '\u202F\u20AC</strong></div>' : ''}
+        ${fb ? renderFeedbackBlock(fb) : ''}
         <div class="crm-status-btns">
           <button class="crm-status-btn${st === 'offen' ? ' active-st' : ''}" onclick="updateCrmStatus('${g.id}','offen')">Offen</button>
           <button class="crm-status-btn${st === 'kontaktiert' ? ' active-st' : ''}" onclick="updateCrmStatus('${g.id}','kontaktiert')">Kontaktiert</button>
@@ -1056,6 +1075,17 @@ function renderCrm() {
       </div>`;
     list.appendChild(card);
   });
+}
+
+function renderFeedbackBlock(fb) {
+  let html = '<div class="crm-enrich-block crm-enrich-feedback">';
+  html += '<div class="crm-enrich-label">Feedback</div>';
+  if (fb.nps != null) html += '<div style="font-size:12px;margin-bottom:4px">NPS: <strong>' + fb.nps + '/10</strong></div>';
+  if (fb.summary) html += '<div style="font-size:12px;color:var(--text-subtitle);font-style:italic;margin-bottom:4px">' + escapeHtml(fb.summary) + '</div>';
+  if (fb.bestMoment) html += '<div style="font-size:11px;color:var(--text-meta)">Bester Moment: ' + escapeHtml(fb.bestMoment) + '</div>';
+  if (fb.valueMissing) html += '<div style="font-size:11px;color:var(--text-meta)">Fehlt: ' + escapeHtml(fb.valueMissing) + '</div>';
+  html += '</div>';
+  return html;
 }
 
 function toggleCrmCard(card) {
