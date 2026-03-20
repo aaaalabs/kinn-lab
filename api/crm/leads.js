@@ -1,30 +1,65 @@
 import { kv } from '../../lib/redis-typed.js';
 
+const LUMA_API_KEY = process.env.LUMA_API_KEY;
+const LUMA_BASE = 'https://public-api.luma.com/v1';
+
 export default async function handler(req, res) {
   if (req.method === 'GET') return handleGet(req, res);
   if (req.method === 'POST') return handlePost(req, res);
   return res.status(405).json({ error: 'Method not allowed' });
 }
 
-// GET /api/crm/leads?event_id=xxx — Load guests from Luma + merge CRM state from Redis
+// GET /api/crm/leads?event_id=xxx
 async function handleGet(req, res) {
   const eventId = req.query.event_id;
   if (!eventId) return res.status(400).json({ error: 'event_id required' });
+  if (!LUMA_API_KEY) return res.status(500).json({ error: 'LUMA_API_KEY not configured' });
 
   try {
-    // Load guests from Luma
-    const lumaRes = await fetch(
-      `https://${req.headers.host}/api/luma/guests?event_id=${encodeURIComponent(eventId)}`
-    );
-    if (!lumaRes.ok) {
-      return res.status(lumaRes.status).json({ error: 'Luma guests error' });
+    // Load guests directly from Luma API (no internal fetch)
+    const allEntries = [];
+    let cursor = null;
+    let hasMore = true;
+
+    while (hasMore) {
+      const params = new URLSearchParams({ event_id: eventId, pagination_limit: '100' });
+      if (cursor) params.set('pagination_cursor', cursor);
+
+      const resp = await fetch(`${LUMA_BASE}/event/get-guests?${params}`, {
+        headers: { 'x-luma-api-key': LUMA_API_KEY },
+      });
+      if (!resp.ok) {
+        const body = await resp.text();
+        return res.status(resp.status).json({ error: 'Luma API error', body });
+      }
+
+      const data = await resp.json();
+      allEntries.push(...(data.entries || []));
+      hasMore = data.has_more;
+      cursor = data.next_cursor;
     }
-    const { guests } = await lumaRes.json();
 
-    // Load CRM state from Redis
+    const guests = allEntries.map(entry => {
+      const g = entry.guest || entry;
+      const answers = g.registration_answers || [];
+      return {
+        id: g.api_id || '',
+        name: g.user_name || '',
+        firstName: g.user_first_name || '',
+        lastName: g.user_last_name || '',
+        email: g.user_email || '',
+        status: g.approval_status || '',
+        checkedIn: g.checked_in_at || '',
+        motiv: findAnswer(answers, 'suche'),
+        mitbringsel: findAnswer(answers, 'mitbringsel'),
+        createdAt: g.created_at || '',
+        lumaRating: g.survey_response_rating ?? null,
+        lumaFeedback: g.survey_response_feedback ?? '',
+      };
+    });
+
+    // Merge with CRM state from Redis
     const crmState = (await kv.get(`crm:${eventId}:state`)) || {};
-
-    // Merge: Luma data + CRM follow-up state
     const leads = guests.map(g => ({
       ...g,
       followUp: crmState[g.id] || { status: 'offen', notizen: '' },
@@ -36,7 +71,7 @@ async function handleGet(req, res) {
   }
 }
 
-// POST /api/crm/leads — Update follow-up status for a guest
+// POST /api/crm/leads
 async function handlePost(req, res) {
   const { event_id, guest_id, status, notizen } = req.body || {};
   if (!event_id || !guest_id) {
@@ -63,4 +98,19 @@ async function handlePost(req, res) {
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
+}
+
+function findAnswer(answers, keyword) {
+  if (Array.isArray(answers)) {
+    const match = answers.find(a =>
+      (a.question_label || a.label || '').toLowerCase().includes(keyword)
+    );
+    return match ? (match.answer || match.value || '') : '';
+  }
+  if (answers && typeof answers === 'object') {
+    for (const [key, val] of Object.entries(answers)) {
+      if (key.toLowerCase().includes(keyword)) return val || '';
+    }
+  }
+  return '';
 }
