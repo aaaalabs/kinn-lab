@@ -982,24 +982,28 @@ function renderCrm() {
   document.getElementById('past-stat-checkin').textContent = checkedIn.length;
   document.getElementById('past-stat-showup').textContent = going > 0 ? Math.round(checkedIn.length / going * 100) + '%' : '-';
 
-  // CRM counts (based on all guests, not just approved)
-  const counts = { offen: 0, kontaktiert: 0, erledigt: 0 };
-  pastLeads.forEach(g => {
-    if (g.status !== 'approved' && g.status !== 'declined') return;
+  // Counts
+  const statusCounts = { offen: 0, kontaktiert: 0, erledigt: 0 };
+  const gruppeCounts = { erschienen: 0, 'no-show': 0, abgesagt: 0 };
+  allGuests.forEach(g => {
     const st = g.followUp?.status || 'offen';
-    if (counts[st] !== undefined) counts[st]++;
+    if (statusCounts[st] !== undefined) statusCounts[st]++;
+    if (gruppeCounts[g.gruppe] !== undefined) gruppeCounts[g.gruppe]++;
   });
-  const total = counts.offen + counts.kontaktiert + counts.erledigt;
+  const total = allGuests.length;
   document.getElementById('past-cnt-alle').textContent = total;
-  document.getElementById('past-cnt-offen').textContent = counts.offen;
-  document.getElementById('past-cnt-kontaktiert').textContent = counts.kontaktiert;
-  document.getElementById('past-cnt-erledigt').textContent = counts.erledigt;
+  document.getElementById('past-cnt-erschienen').textContent = gruppeCounts.erschienen;
+  document.getElementById('past-cnt-noshow').textContent = gruppeCounts['no-show'];
+  document.getElementById('past-cnt-abgesagt').textContent = gruppeCounts.abgesagt;
+  document.getElementById('past-cnt-offen').textContent = statusCounts.offen;
+  document.getElementById('past-cnt-kontaktiert').textContent = statusCounts.kontaktiert;
+  document.getElementById('past-cnt-erledigt').textContent = statusCounts.erledigt;
 
   // Progress bar
   const prog = document.getElementById('past-progress');
   if (total > 0) {
-    const pctE = (counts.erledigt / total * 100).toFixed(1);
-    const pctK = (counts.kontaktiert / total * 100).toFixed(1);
+    const pctE = (statusCounts.erledigt / total * 100).toFixed(1);
+    const pctK = (statusCounts.kontaktiert / total * 100).toFixed(1);
     prog.innerHTML = `<div class="crm-seg-erledigt" style="width:${pctE}%"></div><div class="crm-seg-kontaktiert" style="width:${pctK}%"></div>`;
   } else {
     prog.innerHTML = '';
@@ -1013,10 +1017,13 @@ function renderCrm() {
     return null;
   }).filter(Boolean);
 
-  // Filter
+  // Filter — gruppe or status
+  const gruppeFilters = ['erschienen', 'no-show', 'abgesagt'];
   const filtered = pastFilter === 'alle'
     ? allGuests
-    : allGuests.filter(g => (g.followUp?.status || 'offen') === pastFilter);
+    : gruppeFilters.includes(pastFilter)
+      ? allGuests.filter(g => g.gruppe === pastFilter)
+      : allGuests.filter(g => (g.followUp?.status || 'offen') === pastFilter);
 
   // Lead cards
   const list = document.getElementById('past-lead-list');
