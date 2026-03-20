@@ -949,7 +949,11 @@ async function selectPastEvent(eventId) {
   list.innerHTML = '<div class="crm-empty">Lade...</div>';
 
   try {
-    const res = await fetch('/api/crm/leads?event_id=' + encodeURIComponent(eventId));
+    // Find KINN number for this event
+    const ev = kinnEvents.find(e => e.id === eventId);
+    const nrMatch = ev?.name.match(/(KINN#?\d+)/i);
+    const kinnNr = nrMatch ? nrMatch[1] : '';
+    const res = await fetch('/api/crm/leads?event_id=' + encodeURIComponent(eventId) + '&kinn_nr=' + encodeURIComponent(kinnNr));
     if (!res.ok) throw new Error('API Fehler: ' + res.status);
     const data = await res.json();
     pastLeads = data.leads || [];

@@ -68,9 +68,8 @@ async function handleGet(req, res) {
     // Merge with CRM state: check lab: state first, then KINN CRM data
     const crmState = (await kv.get(`crm:${eventId}:state`)) || {};
 
-    // Try to load existing KINN CRM leads (e.g. crm:event:KINN15:leads)
-    // Match event name from Luma events to find the KINN event ID
-    const kinnCrmLeads = await loadKinnCrmLeads(eventId, guests);
+    // Try to load existing KINN CRM leads for this specific event
+    const kinnCrmLeads = await loadKinnCrmLeads(req.query.kinn_nr);
 
     const leads = guests.map(g => {
       // Priority: lab CRM state > KINN CRM state > default
@@ -122,22 +121,21 @@ async function handlePost(req, res) {
   }
 }
 
-// Load KINN CRM leads by trying common event ID patterns
-async function loadKinnCrmLeads(eventId, guests) {
+// Load KINN CRM leads for a specific event (e.g. kinnNr = "KINN17")
+async function loadKinnCrmLeads(kinnNr) {
   const map = new Map();
+  if (!kinnNr) return map;
   try {
-    // Get all KINN CRM event IDs
-    const events = await redis.smembers('crm:events');
-    if (!events || !events.length) return map;
-
-    // Try each event — load leads and index by email
-    for (const evId of events) {
-      const leads = await redis.get(`crm:event:${evId}:leads`);
+    // Try common key formats: KINN17, KINN#17
+    const keys = [kinnNr, kinnNr.replace('#', '')];
+    for (const key of keys) {
+      const leads = await redis.get(`crm:event:${key}:leads`);
       if (!Array.isArray(leads)) continue;
       leads.forEach(l => {
         const email = (l._email || '').toLowerCase().trim();
         if (email && l.follow_up) map.set(email, l);
       });
+      break; // Found data, stop trying
     }
   } catch (e) {
     // Silently fail — KINN CRM data is optional enrichment
