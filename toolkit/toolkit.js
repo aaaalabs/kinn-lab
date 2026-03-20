@@ -958,7 +958,6 @@ async function selectPastEvent(eventId) {
     const data = await res.json();
     pastLeads = data.leads || [];
     pastFilter = 'alle';
-    renderEventFeedback(data.eventFeedback || []);
     renderCrm();
   } catch (e) {
     console.warn('[Toolkit] CRM laden fehlgeschlagen:', e.message);
@@ -1091,23 +1090,6 @@ function renderCrm() {
       </div>`;
     list.appendChild(card);
   });
-}
-
-function renderEventFeedback(feedbacks) {
-  const container = document.getElementById('past-event-feedback');
-  if (!container) return;
-  if (!feedbacks.length) {
-    container.style.display = 'none';
-    return;
-  }
-  container.style.display = '';
-  let html = '<h2>Stimmen</h2>';
-  feedbacks.forEach(f => {
-    const name = f.firstName + (f.lastInitial ? ' ' + f.lastInitial + '.' : '');
-    const rating = f.rating != null ? `<span class="ctx-badge ctx-luma-rating">${f.rating}/5</span> ` : '';
-    html += `<div class="event-feedback-item">${rating}<strong>${escapeHtml(name)}</strong><p>${escapeHtml(f.text)}</p></div>`;
-  });
-  container.innerHTML = html;
 }
 
 function renderLumaFeedback(rating, feedback) {
