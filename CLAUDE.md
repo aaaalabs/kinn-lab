@@ -6,9 +6,10 @@ Sandbox-Umgebung fuer KINN-Unterseiten-Prototypen. Source-of-Truth fuer Design u
 
 Gleich wie KINN: Vanilla HTML/CSS/JS, Vercel Serverless Functions, Upstash Redis, ES Modules.
 
-## Redis Prefix-Regel
+## Redis-Regeln
 
-**Alle Redis-Keys MUESSEN mit `lab:` prefixed werden.** Das passiert automatisch ueber `lib/redis-typed.js`. Gleiche Upstash-DB wie KINN, aber isolierter Namespace.
+- **KINN-Events:** `kinn:event:*` Keys (Hashes). Zugriff ueber `kv.raw()` ohne Prefix. Spec: `docs/superpowers/specs/2026-03-21-kinn-event-unified-data-model.md`
+- **Alles andere:** `lab:` Prefix (automatisch ueber `lib/redis-typed.js`). Gleiche Upstash-DB wie KINN.
 
 ## Umlaute im Frontend
 

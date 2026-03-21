@@ -157,34 +157,31 @@ async function loadKinnCrmLeads(kinnNr) {
   return map;
 }
 
-// Load event feedback from lab:events:{id}, return Map<email, feedback>
+// Load event feedback from kinn:event:{key}:feedback, return Map<email, feedback>
 async function loadEventFeedback(kinnNr) {
   const map = new Map();
   if (!kinnNr) return map;
+  const raw = kv.raw();
   try {
-    const index = await kv.get('events:index');
-    if (!index) return map;
     const nr = kinnNr.replace('#', '').replace(/^KINN/i, '');
-    for (const entry of index) {
-      const event = await kv.get(`events:${entry.id}`);
-      if (!event?.name) continue;
-      if (event.name.includes(`#${nr}`) || event.name.includes(`KINN${nr}`)) {
-        (event.feedback || [])
-          .filter(f => f.approved !== false)
-          .forEach(f => {
-            const email = (f.email || '').toLowerCase().trim();
-            const item = {
-              firstName: f.firstName || '',
-              lastInitial: f.lastInitial || '',
-              email,
-              text: f.text || '',
-              rating: f.rating ?? null,
-            };
-            if (email) map.set(email, item);
-          });
-        break;
-      }
-    }
+    // Try direct key first (e.g. kinn:event:17)
+    const key = `kinn:event:${nr}`;
+    const feedbackRaw = await raw.get(`${key}:feedback`);
+    const feedback = feedbackRaw ? (typeof feedbackRaw === 'string' ? JSON.parse(feedbackRaw) : feedbackRaw) : [];
+    if (feedback.length) {
+      feedback
+        .filter(f => f.approved !== false)
+        .forEach(f => {
+          const email = (f.email || '').toLowerCase().trim();
+          const item = {
+            firstName: f.firstName || '',
+            lastInitial: f.lastInitial || '',
+            email,
+            text: f.valueText || f.text || '',
+            rating: f.valueRating ?? f.rating ?? null,
+          };
+          if (email) map.set(email, item);
+        });
   } catch (e) {
     // Silently fail
   }

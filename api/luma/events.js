@@ -1,8 +1,8 @@
 import kv from '../../lib/redis-typed.js';
 
+const raw = kv.raw();
 const LUMA_API_KEY = process.env.LUMA_API_KEY;
 const LUMA_BASE = 'https://public-api.luma.com/v1';
-const OVERBOOK_RATIO = 0.20;
 
 async function fetchGuests(eventId) {
   const guests = [];
@@ -89,17 +89,35 @@ export default async function handler(req, res) {
 
     const now = new Date();
 
-    // Fetch guest counts + capacity configs for upcoming events (parallel)
+    // Build lumaId → capacity lookup from kinn:event:* hashes
+    const allKinnKeys = await raw.zrange('kinn:events', 0, '+inf', { byScore: true });
+    const capacityByLumaId = {};
+    for (const key of allKinnKeys) {
+      const [lumaId, eb, rest, maxCap, absMax] = await Promise.all([
+        raw.hget(key, 'lumaId'),
+        raw.hget(key, 'earlyBird'),
+        raw.hget(key, 'restplaetze'),
+        raw.hget(key, 'maxCapacity'),
+        raw.hget(key, 'absolutMax'),
+      ]);
+      if (lumaId && eb) {
+        capacityByLumaId[lumaId] = {
+          earlyBird: Number(eb),
+          restplaetze: Number(rest || 0),
+          maxCapacity: Number(maxCap || 0),
+          absolutMax: Number(absMax || 0),
+        };
+      }
+    }
+
+    // Fetch guest counts for upcoming events
     const upcomingEntries = allEvents.filter(entry => new Date(entry.event.start_at) > now);
-    const [guestResults, capacityResults] = await Promise.all([
-      Promise.all(upcomingEntries.map(entry => fetchGuests(entry.event.api_id))),
-      Promise.all(upcomingEntries.map(entry => kv.get(`capacity:${entry.event.api_id}`))),
-    ]);
+    const guestResults = await Promise.all(
+      upcomingEntries.map(entry => fetchGuests(entry.event.api_id))
+    );
     const guestsByEvent = {};
-    const capacityByEvent = {};
     upcomingEntries.forEach((entry, i) => {
       guestsByEvent[entry.event.api_id] = guestResults[i];
-      capacityByEvent[entry.event.api_id] = capacityResults[i];
     });
 
     const events = allEvents.map(entry => {
@@ -132,7 +150,7 @@ export default async function handler(req, res) {
       };
 
       if (isUpcoming && guests) {
-        const capConfig = capacityByEvent[e.api_id];
+        const capConfig = capacityByLumaId[e.api_id];
         event.availability = computeAvailability(guests, capConfig);
       }
 

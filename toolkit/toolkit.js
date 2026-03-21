@@ -142,7 +142,21 @@ function selectEvent(eventId) {
 
   updateLabels();
   loadGuests(ev.id);
-  loadCapacity(ev.id);
+  const kinnKey = eventNameToKey(ev.name) || ev.id;
+  loadCapacity(kinnKey);
+}
+
+// ====== EVENT KEY MAPPING ======
+function eventNameToKey(name) {
+  const chapterMatch = name.match(/^KINN#(\d+)\s+(\w+)/i);
+  if (chapterMatch) return `kinn:event:${chapterMatch[2].toLowerCase()}:${chapterMatch[1]}`;
+  const defaultMatch = name.match(/^KINN#(\d+)$/i);
+  if (defaultMatch) return `kinn:event:${defaultMatch[1]}`;
+  const ttMatch = name.match(/^KINN\s+TechTalk/i);
+  if (ttMatch) return null; // no stable key derivable from name alone
+  const talkMatch = name.match(/^KINN:TALK/i);
+  if (talkMatch) return null;
+  return null;
 }
 
 // ====== CAPACITY CONFIG ======
@@ -180,7 +194,7 @@ function renderCapacity(eventId, config) {
         style="padding:5px 14px;background:var(--mint);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity 0.15s"
         onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Speichern</button>
       <span id="cap-status" style="font-size:11px;color:var(--text-meta)">
-        ${config ? `Max: ${config.maxCapacity} + ${config.overbook} Überb. = ${config.absolutMax}` : 'Nicht konfiguriert'}
+        ${config ? `Max: ${config.maxCapacity} → Max ${config.absolutMax}` : 'Nicht konfiguriert'}
       </span>
     </div>`;
 }
@@ -203,11 +217,11 @@ async function handleSaveCapacity(eventId) {
     });
     const config = await res.json();
     document.getElementById('cap-status').textContent =
-      `Gespeichert — Max: ${config.maxCapacity} + ${config.overbook} Überb. = ${config.absolutMax}`;
+      `Gespeichert — Max: ${config.maxCapacity} → Max ${config.absolutMax}`;
     document.getElementById('cap-status').style.color = 'var(--mint)';
     setTimeout(() => {
       const s = document.getElementById('cap-status');
-      if (s) { s.style.color = 'var(--text-meta)'; s.textContent = `Max: ${config.maxCapacity} + ${config.overbook} Überb. = ${config.absolutMax}`; }
+      if (s) { s.style.color = 'var(--text-meta)'; s.textContent = `Max: ${config.maxCapacity} → Max ${config.absolutMax}`; }
     }, 2000);
   } catch {
     document.getElementById('cap-status').textContent = 'Fehler beim Speichern';
