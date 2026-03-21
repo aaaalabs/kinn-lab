@@ -13,3 +13,4 @@ node_modules/
 
 # Superpowers
 .superpowers/
+data/events/csv/*.csv

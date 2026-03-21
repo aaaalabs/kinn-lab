@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KINN Chapter Cheat Sheet — Kufstein</title>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 14mm 16mm 12mm 16mm;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --mint: #5ED9A6;
+    --dark: #2C3E50;
+    --body: #333;
+    --sub: #666;
+    --border: #ccc;
+    --bg-light: #f5f7f6;
+  }
+
+  body {
+    font-family: 'Work Sans', system-ui, sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.4;
+    color: var(--body);
+    -webkit-font-smoothing: antialiased;
+    background: #fff;
+  }
+
+  /* ===== PAGE STRUCTURE ===== */
+  .page {
+    width: 178mm;
+    height: 269mm;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    break-after: page;
+  }
+  .page:last-child { break-after: avoid; }
+
+  /* ===== HEADER ===== */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 2pt solid var(--dark);
+    padding-bottom: 4pt;
+    margin-bottom: 8pt;
+  }
+  .page-header h1 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--dark);
+    letter-spacing: -0.02em;
+  }
+  .page-header h1 span { color: var(--mint); }
+  .page-header .meta {
+    font-size: 7pt;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    margin-bottom: 7pt;
+  }
+  .section-title {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--dark);
+    padding: 2.5pt 6pt;
+    margin-bottom: 4pt;
+  }
+
+  /* ===== TABLES ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-bottom: 2pt;
+  }
+  th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 6.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sub);
+    border-bottom: 0.5pt solid var(--border);
+    padding: 2pt 4pt;
+  }
+  td {
+    padding: 2.5pt 4pt;
+    border-bottom: 0.25pt solid #e8e8e8;
+    vertical-align: top;
+    line-height: 1.35;
+  }
+  tr:last-child td { border-bottom: none; }
+  td strong { font-weight: 600; color: var(--dark); }
+
+  /* ===== TIMELINE ===== */
+  .timeline { margin-bottom: 2pt; }
+  .timeline td:first-child {
+    font-weight: 700;
+    color: var(--dark);
+    white-space: nowrap;
+    width: 38pt;
+    font-size: 8.5pt;
+  }
+  .timeline .phase-label td {
+    font-weight: 700;
+    font-size: 7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mint);
+    padding-top: 5pt;
+    border-bottom: none;
+  }
+
+  /* ===== SCRIPT BOX ===== */
+  .script {
+    background: var(--bg-light);
+    border-left: 2pt solid var(--dark);
+    padding: 4pt 6pt;
+    margin: 3pt 0;
+    font-size: 8pt;
+    line-height: 1.4;
+    break-inside: avoid;
+  }
+  .script p { margin-bottom: 2pt; }
+  .script p:last-child { margin-bottom: 0; }
+  .script .label {
+    font-size: 6.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sub);
+    margin-bottom: 2pt;
+  }
+
+  /* ===== CHECKLIST ===== */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    columns: 2;
+    column-gap: 12pt;
+  }
+  .checklist li {
+    padding: 1.5pt 0 1.5pt 12pt;
+    position: relative;
+    font-size: 8pt;
+    break-inside: avoid;
+  }
+  .checklist li::before {
+    content: "\2610";
+    position: absolute;
+    left: 0;
+    font-size: 9pt;
+    line-height: 1.2;
+    color: var(--sub);
+  }
+  .checklist-single { columns: 1; }
+
+  /* ===== RULE BOX ===== */
+  .rule-box {
+    border: 1pt solid var(--dark);
+    padding: 4pt 6pt;
+    margin: 3pt 0;
+    font-size: 8pt;
+    break-inside: avoid;
+  }
+  .rule-box strong { color: var(--dark); }
+  .rule-box .rule-label {
+    font-size: 6.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mint);
+    margin-bottom: 1pt;
+  }
+
+  /* ===== TWO COLUMNS ===== */
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6pt;
+  }
+
+  /* ===== ESKALATION ===== */
+  .esk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3pt;
+  }
+  .esk-item {
+    background: var(--bg-light);
+    padding: 3pt 5pt;
+    font-size: 7.5pt;
+    line-height: 1.35;
+    break-inside: avoid;
+  }
+  .esk-item strong {
+    display: block;
+    font-size: 7.5pt;
+    color: var(--dark);
+    margin-bottom: 1pt;
+  }
+
+  /* ===== EVENT-NOTIZ ===== */
+  .notiz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3pt;
+    margin-bottom: 4pt;
+  }
+  .notiz-field {
+    border: 0.5pt solid var(--border);
+    padding: 2.5pt 4pt;
+    font-size: 7pt;
+    min-height: 20pt;
+  }
+  .notiz-field .field-label {
+    font-size: 6pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sub);
+    margin-bottom: 1pt;
+  }
+  .notiz-lines {
+    border: 0.5pt solid var(--border);
+    padding: 2.5pt 4pt;
+    font-size: 7pt;
+    min-height: 36pt;
+  }
+  .notiz-lines .field-label {
+    font-size: 6pt;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sub);
+    margin-bottom: 1pt;
+  }
+
+  /* ===== FOOTER ===== */
+  .page-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 6.5pt;
+    color: var(--sub);
+    border-top: 0.5pt solid var(--border);
+    padding-top: 3pt;
+  }
+
+  /* ===== PRINT BUTTON ===== */
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    background: var(--dark);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    transition: background 0.15s, transform 0.15s;
+    z-index: 100;
+  }
+  .print-btn:hover { background: var(--mint); transform: scale(1.05); }
+  .print-btn svg { width: 20px; height: 20px; }
+
+  /* ===== SCREEN PREVIEW ===== */
+  @media screen {
+    body {
+      background: #e0e0e0;
+      padding: 20px 0;
+    }
+    .page {
+      background: #fff;
+      margin: 0 auto 20px;
+      padding: 14mm 16mm 12mm 16mm;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      width: 210mm;
+      height: 297mm;
+      overflow: hidden;
+    }
+    .page-footer {
+      bottom: 12mm;
+      left: 16mm;
+      right: 16mm;
+    }
+  }
+
+  @media print {
+    body { background: #fff; margin: 0; padding: 0; }
+    .page {
+      width: auto;
+      height: auto;
+      overflow: hidden;
+      break-after: page;
+      break-inside: avoid;
+    }
+    .page:last-child { break-after: auto; }
+    .section { break-inside: avoid; }
+    .print-btn { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()" title="Drucken">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+</button>
+
+<!-- ==================== SEITE 1 ==================== -->
+<div class="page">
+  <div class="page-header">
+    <h1>KINN Chapter <span>Cheat Sheet</span></h1>
+    <div class="meta">Kufstein · v0.2 · Stand: März 2026</div>
+  </div>
+
+  <!-- ROLLEN -->
+  <div class="section">
+    <div class="section-title">Rollen (Minimum 4 Personen)</div>
+    <table>
+      <tr><th style="width:60pt">Rolle</th><th>Kernaufgabe</th><th style="width:80pt">Badge</th></tr>
+      <tr><td><strong>Host</strong></td><td>Begrüßung 8:00, Floating zwischen Tischen, Abmoderation 8:50</td><td>Mintgrüner Rand + HOST</td></tr>
+      <tr><td><strong>Empfang</strong></td><td>Ab 7:45 am Eingang. Namensschilder, Orientierung, Luma Check-in</td><td>Mintgrüner Rand + EMPFANG</td></tr>
+      <tr><td><strong>Tisch-Mod 1</strong></td><td>Startet Runde, bindet Neue ein, bremst Monologe</td><td>Mintgrüner Rand</td></tr>
+      <tr><td><strong>Tisch-Mod 2</strong></td><td>Startet Runde, bindet Neue ein, bremst Monologe</td><td>Mintgrüner Rand</td></tr>
+    </table>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section">
+    <div class="section-title">Ablauf</div>
+    <table class="timeline">
+      <tr class="phase-label"><td colspan="2">Phase 1 — Vorbereitung</td></tr>
+      <tr><td>7:15</td><td>Location auf, Licht, Heizung. Tische aufstellen (3 Tische bis 18 Pers., 4 bei &gt;18). Max 6 pro Tisch.</td></tr>
+      <tr><td>7:30</td><td>Pro Tisch: Aufsteller + Abreißzettel + Edding. Roll-Up am Eingang. Kaffee/Gebäck-Station.</td></tr>
+      <tr><td>7:40</td><td>Gedruckte Badges bereitlegen. "Nächste Schritte"-Karte beim Ausgang.</td></tr>
+      <tr class="phase-label"><td colspan="2">Phase 2 — Einlass</td></tr>
+      <tr><td>7:45</td><td>Empfang am Eingang. Jede Person begrüßen → Badge aushändigen → Luma Check-in → Allein stehende Personen zu einem Tisch begleiten.</td></tr>
+      <tr class="phase-label"><td colspan="2">Phase 3 — Event</td></tr>
+      <tr><td>8:00</td><td><strong>Begrüßung durch Host</strong> (max. 2 min). Siehe Script unten.</td></tr>
+      <tr><td>8:05</td><td>Thementische laufen. Tisch-Mods: kurze Vorstellungsrunde am Tisch, Erstbesucher einbinden. Host: Floating.</td></tr>
+      <tr><td>8:40</td><td>Host an jeden Tisch: "Noch 5 Minuten."</td></tr>
+      <tr><td>8:50</td><td><strong>Abmoderation</strong> (max. 5 min). Siehe Script unten.</td></tr>
+      <tr><td>8:55</td><td><strong>Gruppenfoto.</strong> IMMER. Keine Ausnahme. "Wer nicht drauf will, kann kurz zur Seite."</td></tr>
+      <tr class="phase-label"><td colspan="2">Phase 4 — Nachbereitung</td></tr>
+      <tr><td>9:00</td><td>"KINN ist offiziell vorbei. Wer will, bleibt zum freien Netzwerken." Aufräumen beginnt parallel.</td></tr>
+    </table>
+  </div>
+
+  <!-- SCRIPTS -->
+  <div class="section">
+    <div class="section-title">Scripts (wortwörtlich)</div>
+    <div class="cols">
+      <div class="script">
+        <div class="label">Begrüßung 8:00 (Host, max. 2 Min.)</div>
+        <p>"Willkommen beim KINN Kufstein. Schön dass ihr da seid."</p>
+        <p>"KINN ist ein Frühstückstreff zu KI. Keine Vorträge, keine Experten auf der Bühne — wir lernen voneinander, auf Augenhöhe."</p>
+        <p>"Kein Verkaufen, kein Pitchen. Zuhören ist genauso wertvoll wie Reden."</p>
+        <p>"Heute haben wir [Thema 1], [Thema 2], [Thema 3]. Ab an die Tische."</p>
+      </div>
+      <div class="script">
+        <div class="label">Abmoderation 8:50 (Host, max. 5 Min.)</div>
+        <p><strong>1. Blitzfeedback</strong> (2 min): "Was war euer Highlight?" — 1 Satz pro Tisch, Tisch-Mod fasst zusammen.</p>
+        <p><strong>2. 1 Next Step</strong> (30 sek): "Nächsten Donnerstag sind wir wieder hier. Selbe Zeit, selbe Stelle." ODER Verweis auf nächstes Format.</p>
+        <p><strong>3. Spende + Foto</strong> (30 sek): "Wer mag: kinn.at/fund. Und gleich gibt's ein Gruppenfoto."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATERIAL -->
+  <div class="section">
+    <div class="section-title">Material-Checkliste</div>
+    <div class="cols">
+      <div>
+        <div style="font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--sub);margin-bottom:2pt;">Immer mitnehmen</div>
+        <ul class="checklist checklist-single">
+          <li>Handy geladen (Luma + Fotos)</li>
+          <li>Luma App (Host + Empfang)</li>
+          <li>Gedruckte Badges (aus Toolkit)</li>
+          <li>Edding (mind. 3, schwarz)</li>
+          <li>Abreißzettel Themen-Voting</li>
+          <li>Spendenkasse-Schild (QR kinn.at/fund)</li>
+          <li>"Nächste Schritte"-Karte</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--sub);margin-bottom:2pt;">Vor Ort prüfen</div>
+        <ul class="checklist checklist-single">
+          <li>Location offen (Schlüssel?)</li>
+          <li>Kaffee + Gebäck da</li>
+          <li>Wasser + Gläser</li>
+          <li>Genug Sitzplätze + Tische</li>
+          <li>Roll-Up aufgestellt</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>KINN Chapter Cheat Sheet — Kufstein</span>
+    <span>Seite 1 / 2</span>
+  </div>
+</div>
+
+<!-- ==================== SEITE 2 ==================== -->
+<div class="page">
+  <div class="page-header">
+    <h1>KINN Chapter <span>Cheat Sheet</span></h1>
+    <div class="meta">Kufstein · v0.2 · Stand: März 2026</div>
+  </div>
+
+  <!-- GRUNDREGELN -->
+  <div class="section">
+    <div class="section-title">Grundregeln</div>
+    <div class="rule-box">
+      <div class="rule-label">Das KINN-Gesetz</div>
+      <strong>KINN behandelt alle Community-Mitglieder gleich. Zugang, Teilnahme und Sichtbarkeit folgen transparenten Regeln.</strong>
+    </div>
+    <table>
+      <tr><td style="width:20pt;font-size:12pt;text-align:center;color:var(--mint);font-weight:700;">&#10003;</td><td>Augenhöhe. Kein Gatekeeping. Jeder wird gleich behandelt.</td></tr>
+      <tr><td style="font-size:12pt;text-align:center;color:#E74C3C;font-weight:700;">&#10007;</td><td>Kein Verkaufen, kein Pitchen, keine Lead-Verteilung, keine Firmen-Präsentationen.</td></tr>
+      <tr><td style="font-size:12pt;text-align:center;color:var(--mint);font-weight:700;">&#10003;</td><td>Peer learning am Tisch. Wir lernen voneinander, nicht von einem Speaker.</td></tr>
+      <tr><td style="font-size:12pt;text-align:center;color:#E74C3C;font-weight:700;">&#10007;</td><td>Keine Sonderrechte für Sponsoren, Partner oder Insider. Regeln gelten für alle.</td></tr>
+    </table>
+  </div>
+
+  <!-- ERSTBESUCHER -->
+  <div class="section">
+    <div class="section-title">Erstbesucher-Handling</div>
+    <table>
+      <tr><td style="width:16pt;font-weight:700;color:var(--dark);">1.</td><td><strong>Begrüßen:</strong> Freundlich willkommen heißen, Badge aushändigen.</td></tr>
+      <tr><td style="font-weight:700;color:var(--dark);">2.</td><td><strong>Orientieren:</strong> "Such dir einen Tisch der dich interessiert. Um 8 gibt's eine kurze Begrüßung."</td></tr>
+      <tr><td style="font-weight:700;color:var(--dark);">3.</td><td><strong>Begleiten:</strong> Wer allein steht: Aktiv zu einem Tisch bringen und jemanden vorstellen.</td></tr>
+    </table>
+  </div>
+
+  <!-- BADGES -->
+  <div class="section">
+    <div class="section-title">Badges</div>
+    <table>
+      <tr><th style="width:70pt">Typ</th><th>Design</th><th style="width:100pt">Zweck</th></tr>
+      <tr><td><strong>Team</strong></td><td>Mintgrüner Rand, Vorname groß, Rolle klein</td><td>Ansprechbar, sichtbar</td></tr>
+      <tr><td><strong>Erstbesucher</strong></td><td>Normaler Badge</td><td>Kein sichtbares Merkmal</td></tr>
+      <tr><td><strong>Regulars</strong></td><td>Normal, Vorname groß, "was machst du" darunter</td><td>Standard</td></tr>
+    </table>
+  </div>
+
+  <!-- ESKALATION -->
+  <div class="section">
+    <div class="section-title">Eskalation</div>
+    <div class="esk-grid">
+      <div class="esk-item"><strong>Zu wenig Team (&lt;4)</strong> 3 Personen: durchführen, Tisch-Mod spontan rekrutieren. &lt;3: absagen. Lieber absagen als schlecht.</div>
+      <div class="esk-item"><strong>Zu wenig Teilnehmer (&lt;8)</strong> Durchführen. 2 Tische statt 3. Intimere Runde ist völlig okay.</div>
+      <div class="esk-item"><strong>Jemand verkauft/pitcht</strong> "Bei KINN halten wir uns an eine Regel — kein Verkaufen. Magst du uns stattdessen erzählen, was du gerade lernst?"</div>
+      <div class="esk-item"><strong>Jemand dominiert</strong> "Danke für den Input. Ich würde gerne auch die anderen hören — [Name], wie siehst du das?"</div>
+    </div>
+  </div>
+
+  <!-- NACHBEREITUNG -->
+  <div class="section">
+    <div class="section-title">Nachbereitung (am selben Tag)</div>
+    <ul class="checklist">
+      <li>Luma Check-in abschließen, Nachzügler nachtragen</li>
+      <li>3-5 beste Fotos an Thomas (WhatsApp Chapter-Gruppe)</li>
+      <li>Erstbesucher auf LinkedIn connecten + kurze DM</li>
+      <li>Event-Notiz ausfüllen (siehe unten)</li>
+      <li>Location aufgeräumt übergeben / abschließen</li>
+      <li>24h Follow-up am Freitag: 2 Fragen via Luma Post-Event</li>
+    </ul>
+  </div>
+
+  <!-- EVENT-NOTIZ -->
+  <div class="section">
+    <div class="section-title">Event-Notiz (5 Min. nach dem Event ausfüllen)</div>
+    <div class="notiz-grid">
+      <div class="notiz-field"><div class="field-label">Datum</div></div>
+      <div class="notiz-field"><div class="field-label">Location</div></div>
+      <div class="notiz-field"><div class="field-label">Event #</div></div>
+      <div class="notiz-field"><div class="field-label">Registrierungen</div></div>
+      <div class="notiz-field"><div class="field-label">Checked-in</div></div>
+      <div class="notiz-field"><div class="field-label">Davon Erstbesucher</div></div>
+    </div>
+    <div class="cols" style="gap:3pt;">
+      <div class="notiz-lines"><div class="field-label">Was hat gut funktioniert?</div></div>
+      <div class="notiz-lines"><div class="field-label">Was hat NICHT funktioniert?</div></div>
+    </div>
+    <div class="notiz-lines" style="margin-top:3pt;min-height:28pt;"><div class="field-label">Learnings für nächstes Mal</div></div>
+  </div>
+
+  <!-- 24H FOLLOW-UP -->
+  <div class="section">
+    <div class="section-title">24h Follow-up (Freitag via Luma)</div>
+    <div class="script">
+      <p>Hey! Danke fürs Dabeisein gestern beim KINN Kufstein. Zwei kurze Fragen — dauert 10 Sekunden:</p>
+      <p><strong>1.</strong> War der Donnerstag für dich wertvoll? (Ja / Geht so / Nein)</p>
+      <p><strong>2.</strong> Hast du mindestens 1 relevanten Kontakt gemacht? (Ja / Nein)</p>
+      <p>Nächster KINN Kufstein: [Datum]. Gleiche Zeit, gleicher Ort. Bis bald!</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>KINN Chapter Cheat Sheet — Kufstein</span>
+    <span>Seite 2 / 2</span>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KINN Chapter Playbook V2.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mint: #5ED9A6;
+    --mint-hover: #4EC995;
+    --mint-active: #3EB885;
+    --mint-bg: rgba(94,217,166,0.08);
+    --mint-border: rgba(94,217,166,0.25);
+    --text-heading: #2C3E50;
+    --text-primary: #3A3A3A;
+    --text-subtitle: #6B6B6B;
+    --text-meta: #999;
+    --bg-white: #ffffff;
+    --bg-subtle: #fafcfb;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.12);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+    --radius: 0.75rem;
+    --red-soft: #E74C3C;
+    --amber-soft: #F39C12;
+    --green-soft: #27AE60;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  @page { size:A4; margin:2cm; }
+
+  body {
+    font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.618;
+    background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-subtle) 100%);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content:'';
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(94,217,166,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(94,217,166,0.04) 0%, transparent 50%);
+    pointer-events:none;
+    z-index:-1;
+  }
+
+  .container { max-width:820px; margin:0 auto; padding:2rem 1.5rem; }
+
+  /* COVER */
+  .cover {
+    min-height:90vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:4rem 2rem;
+    position:relative;
+  }
+  .cover-logo svg { width:280px; height:auto; fill:var(--text-heading); }
+  .cover-tag {
+    font-size:0.75rem;
+    font-weight:600;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--mint-active);
+    margin-top:2rem;
+  }
+  .cover h1 {
+    font-size:2.5rem;
+    font-weight:900;
+    color:var(--text-heading);
+    letter-spacing:-0.02em;
+    line-height:1.15;
+    margin-top:0.75rem;
+  }
+  .cover .sub {
+    font-size:1.05rem;
+    color:var(--text-subtitle);
+    margin-top:1rem;
+    max-width:500px;
+  }
+  .cover-meta {
+    margin-top:3rem;
+    font-size:0.8rem;
+    color:var(--text-meta);
+    line-height:1.8;
+  }
+  .cover-divider {
+    width:60px;
+    height:3px;
+    background:var(--mint);
+    border-radius:2px;
+    margin:2rem auto 0;
+  }
+  .cover-footer {
+    position:absolute;
+    bottom:2rem;
+    font-size:0.7rem;
+    color:var(--text-meta);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-weight:500;
+  }
+
+  /* NAV */
+  .nav {
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(250,252,251,0.92);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border);
+    padding:0 20px;
+    display:flex;
+    align-items:center;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .nav::-webkit-scrollbar { display:none; }
+  .nav-back {
+    font-size:12px;
+    font-weight:600;
+    color:var(--mint);
+    text-decoration:none;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    padding:14px 0;
+    flex-shrink:0;
+  }
+  .nav-sep {
+    color:var(--border);
+    margin:0 10px;
+    flex-shrink:0;
+  }
+  .nav-links {
+    display:flex;
+    gap:2px;
+    flex:1;
+  }
+  .nav-links a {
+    font-size:11px;
+    font-weight:500;
+    color:var(--text-meta);
+    text-decoration:none;
+    padding:14px 10px;
+    white-space:nowrap;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    transition:color 0.15s;
+  }
+  .nav-links a:hover { color:var(--text-heading); }
+  .nav-tag {
+    font-size:10px;
+    font-weight:700;
+    color:var(--mint);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    background:var(--mint-bg);
+    padding:3px 8px;
+    border-radius:4px;
+    margin-left:12px;
+    flex-shrink:0;
+  }
+
+  @media (max-width:640px) {
+    .nav-links { display:none; }
+  }
+
+  /* SECTION DIVIDER */
+  .section-break {
+    padding:3rem 0 1.5rem;
+    border-top:1px solid var(--border);
+    margin-top:3rem;
+    scroll-margin-top:52px;
+  }
+  .section-break:first-of-type { margin-top:0; border-top:none; }
+  .section-num {
+    font-size:0.7rem;
+    font-weight:700;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:var(--mint-active);
+  }
+
+  /* HEADINGS */
+  h1 { font-size:2rem; font-weight:700; color:var(--text-heading); letter-spacing:0.02em; line-height:1.3; margin-bottom:0.75rem; }
+  h2 { font-size:1.5rem; font-weight:600; color:var(--text-heading); letter-spacing:0.01em; line-height:1.4; margin:2.5rem 0 0.75rem; }
+  h3 { font-size:1.125rem; font-weight:600; color:var(--text-heading); line-height:1.5; margin:2rem 0 0.5rem; }
+  h4 { font-size:0.95rem; font-weight:600; color:var(--text-heading); margin:1.5rem 0 0.4rem; }
+
+  p { margin-bottom:0.85rem; }
+  p.lead { font-size:1.05rem; color:var(--text-subtitle); }
+
+  /* CALLOUT BOX */
+  .callout {
+    background:var(--mint-bg);
+    border-left:3px solid var(--mint);
+    border-radius:0 var(--radius) var(--radius) 0;
+    padding:1rem 1.25rem;
+    margin:1.25rem 0;
+    font-size:0.9rem;
+  }
+  .callout strong { color:var(--text-heading); }
+  .callout.warn {
+    background:rgba(243,156,18,0.06);
+    border-left-color:var(--amber-soft);
+  }
+  .callout.red {
+    background:rgba(231,76,60,0.05);
+    border-left-color:var(--red-soft);
+  }
+
+  /* TABLES */
+  table {
+    width:100%;
+    border-collapse:collapse;
+    margin:1.25rem 0;
+    font-size:0.88rem;
+  }
+  th {
+    text-align:left;
+    font-weight:600;
+    color:var(--text-heading);
+    padding:0.6rem 0.75rem;
+    border-bottom:2px solid var(--mint);
+    font-size:0.8rem;
+    letter-spacing:0.02em;
+  }
+  td {
+    padding:0.55rem 0.75rem;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  tr:last-child td { border-bottom:none; }
+
+  /* ROLE CARDS */
+  .role-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1.25rem 0; }
+  .role-card {
+    background:var(--bg-white);
+    border:1px solid var(--border-strong);
+    border-radius:var(--radius);
+    padding:1.25rem;
+    box-shadow:var(--shadow-sm);
+  }
+  .role-badge {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;height:32px;
+    background:var(--mint);
+    color:#000;
+    font-weight:700;
+    font-size:0.85rem;
+    border-radius:8px;
+    margin-bottom:0.5rem;
+  }
+  .role-card h4 { margin:0 0 0.35rem; font-size:0.95rem; }
+  .role-card p { margin:0; font-size:0.85rem; color:var(--text-subtitle); line-height:1.5; }
+
+  /* PHASE TIMELINE */
+  .phase {
+    position:relative;
+    padding-left:2rem;
+    margin:1.5rem 0;
+  }
+  .phase::before {
+    content:'';
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:3px;
+    background:linear-gradient(180deg, var(--mint) 0%, rgba(94,217,166,0.15) 100%);
+    border-radius:2px;
+  }
+  .phase-item {
+    position:relative;
+    padding:0 0 1.5rem;
+  }
+  .phase-item:last-child { padding-bottom:0; }
+  .phase-item::before {
+    content:'';
+    position:absolute;
+    left:-2rem;top:0.4rem;
+    width:9px;height:9px;
+    border-radius:50%;
+    background:var(--mint);
+    border:2px solid var(--bg-white);
+    box-shadow:0 0 0 2px var(--mint);
+  }
+  .phase-time {
+    font-size:0.7rem;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--mint-active);
+  }
+  .phase-title { font-weight:600; color:var(--text-heading); margin:0.15rem 0 0.25rem; }
+  .phase-desc { font-size:0.88rem; color:var(--text-subtitle); }
+
+  /* CHECKLIST */
+  .checklist { list-style:none; margin:1rem 0; }
+  .checklist li {
+    position:relative;
+    padding:0.35rem 0 0.35rem 1.75rem;
+    font-size:0.9rem;
+  }
+  .checklist li::before {
+    content:'';
+    position:absolute;
+    left:0;top:0.55rem;
+    width:14px;height:14px;
+    border:2px solid var(--mint);
+    border-radius:3px;
+  }
+
+  /* STEP CARDS */
+  .step-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin:1rem 0; }
+  .step-card {
+    background:var(--bg-white);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:1rem 1.15rem;
+  }
+  .step-num {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:24px;height:24px;
+    background:var(--text-heading);
+    color:#fff;
+    font-weight:700;
+    font-size:0.7rem;
+    border-radius:6px;
+    margin-bottom:0.4rem;
+  }
+  .step-card h4 { margin:0 0 0.3rem; font-size:0.88rem; }
+  .step-card p { margin:0; font-size:0.82rem; color:var(--text-subtitle); line-height:1.5; }
+
+  /* STUFEN */
+  .stufe {
+    display:flex;
+    border:1px solid var(--border-strong);
+    border-radius:var(--radius);
+    overflow:hidden;
+    margin:0.75rem 0;
+    background:var(--bg-white);
+  }
+  .stufe-level {
+    width:140px;
+    min-width:140px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+    border-right:1px solid var(--border);
+    text-align:center;
+  }
+  .stufe-num { font-size:1.5rem; font-weight:900; color:var(--mint); }
+  .stufe-name { font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-heading); margin-top:0.15rem; }
+  .stufe-body { padding:1rem 1.25rem; flex:1; }
+  .stufe-body .motto { font-weight:600; color:var(--text-heading); font-size:0.95rem; margin-bottom:0.35rem; }
+  .stufe-body p { font-size:0.85rem; color:var(--text-subtitle); margin-bottom:0.25rem; }
+  .stufe-body .req { font-size:0.78rem; color:var(--text-meta); font-style:italic; margin-top:0.35rem; }
+
+  /* BADGE PREVIEW */
+  .badge-preview {
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    background:var(--bg-white);
+    border:2px solid var(--border-strong);
+    border-radius:12px;
+    padding:0.75rem 1.5rem;
+    margin:0.25rem;
+    min-width:120px;
+    text-align:center;
+  }
+  .badge-preview.team { border-color:var(--mint); }
+  .badge-preview .bp-name { font-weight:700; font-size:1rem; }
+  .badge-preview .bp-role { font-size:0.7rem; color:var(--text-meta); text-transform:uppercase; letter-spacing:0.05em; }
+  .badge-preview .bp-dot {
+    width:8px;height:8px;
+    background:var(--green-soft);
+    border-radius:50%;
+    margin-top:0.25rem;
+  }
+
+  /* ESCALATION */
+  .esc-level {
+    display:flex;
+    align-items:flex-start;
+    gap:0.75rem;
+    padding:0.75rem 0;
+    border-bottom:1px solid var(--border);
+  }
+  .esc-level:last-child { border-bottom:none; }
+  .esc-icon {
+    width:28px;height:28px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:0.75rem;
+    color:#fff;
+    flex-shrink:0;
+    margin-top:0.1rem;
+  }
+  .esc-1 { background:var(--amber-soft); }
+  .esc-2 { background:var(--red-soft); }
+  .esc-3 { background:#1a1a1a; }
+
+  /* TEMPLATE BOX */
+  .template {
+    background:#f8f8f6;
+    border:1px dashed var(--border-strong);
+    border-radius:var(--radius);
+    padding:1.25rem;
+    font-family:'Work Sans', monospace;
+    font-size:0.82rem;
+    line-height:1.7;
+    color:var(--text-subtitle);
+    margin:1rem 0;
+    white-space:pre-wrap;
+  }
+
+  /* DATA FLOW */
+  .flow-row {
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    padding:0.4rem 0;
+    font-size:0.82rem;
+  }
+  .flow-arrow { color:var(--mint); font-weight:700; }
+
+  /* TOC */
+  .toc {
+    background:var(--bg-white);
+    border:1px solid var(--border-strong);
+    border-radius:var(--radius);
+    padding:1.75rem 2rem;
+    margin:2rem 0;
+    box-shadow:var(--shadow-sm);
+  }
+  .toc h3 { margin:0 0 1rem; font-size:1rem; }
+  .toc ol { list-style:none; counter-reset:toc; }
+  .toc li {
+    counter-increment:toc;
+    padding:0.3rem 0;
+    font-size:0.9rem;
+    border-bottom:1px dotted var(--border);
+  }
+  .toc li:last-child { border-bottom:none; }
+  .toc li::before {
+    content:counter(toc, decimal-leading-zero);
+    font-weight:700;
+    color:var(--mint-active);
+    margin-right:0.75rem;
+    font-size:0.8rem;
+  }
+
+  /* PRINT BUTTON */
+  .print-btn {
+    position:fixed;
+    bottom:2rem;
+    right:2rem;
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+    padding:0.75rem 1.25rem;
+    background:var(--text-heading);
+    color:#fff;
+    border:none;
+    border-radius:var(--radius);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.85rem;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 4px 20px rgba(0,0,0,0.15);
+    transition:all 0.2s ease;
+    z-index:100;
+    letter-spacing:0.01em;
+  }
+  .print-btn:hover {
+    background:#1a252f;
+    transform:translateY(-2px);
+    box-shadow:0 6px 24px rgba(0,0,0,0.2);
+  }
+  .print-btn:active { transform:translateY(0); }
+  .print-btn svg { width:16px; height:16px; }
+
+  /* PRINT */
+  @media print {
+    body { background:white; font-size:11pt; }
+    body::before { display:none; }
+    .container { max-width:100%; padding:0; }
+    .cover { min-height:auto; padding:3cm 0; page-break-after:always; }
+    .section-break { page-break-before:always; margin-top:0; padding-top:1.5rem; }
+    .no-break { page-break-inside:avoid; }
+    .role-grid, .step-grid { grid-template-columns:1fr; }
+    .print-btn { display:none !important; }
+    .nav { display:none; }
+  }
+
+  @media(max-width:700px) {
+    .role-grid, .step-grid { grid-template-columns:1fr; }
+    .stufe { flex-direction:column; }
+    .stufe-level { width:100%; min-width:0; border-right:none; border-bottom:1px solid var(--border); flex-direction:row; gap:0.5rem; padding:0.6rem 1rem; }
+    .cover h1 { font-size:1.75rem; }
+  }
+
+  .toolkit-link {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--mint-active);
+    text-decoration: none;
+    padding: 0.4rem 0;
+    letter-spacing: 0.02em;
+    transition: color 0.15s;
+  }
+  .toolkit-link:hover { color: var(--text-heading); }
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     COVER
+     ========================================================= -->
+<div class="cover">
+  <div class="cover-logo">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/>
+      <path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/>
+      <polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/>
+      <path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/>
+    </svg>
+  </div>
+  <div class="cover-tag">KI Netzwerk Tirol</div>
+  <h1>Chapter Playbook</h1>
+  <p class="sub">Wie KINN-Donnerstage funktionieren - in jeder Region Tirols. Das operative Handbuch für Chapter-Teams.</p>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    Version 2.1 - Stand: März 2026<br>
+    Verbindliche Vereinbarung - kein unverbindlicher Leitfaden<br>
+    Für: Chapter Leads, Co-Hosts, Supporter, Core Team
+  </div>
+  <div class="cover-footer">Libra Innovation FlexCo - Vertraulich</div>
+</div>
+
+<nav class="nav">
+  <a href="/" class="nav-back">kinn.at</a>
+  <span class="nav-sep">/</span>
+  <div class="nav-links">
+    <a href="#rollen">Rollen</a>
+    <a href="#ablauf">Ablauf</a>
+    <a href="#material">Material</a>
+    <a href="#thementische">Tische</a>
+    <a href="#nachbereitung">Nachbereitung</a>
+    <a href="#kommunikation">Texte</a>
+    <a href="#stufenmodell">Stufen</a>
+    <a href="#chapter">Chapter</a>
+    <a href="#eskalation">Eskalation</a>
+    <a href="/toolkit" style="color:var(--mint)">Toolkit</a>
+  </div>
+  <span class="nav-tag">Manual</span>
+</nav>
+
+<div class="container">
+
+<!-- =========================================================
+     TABLE OF CONTENTS
+     ========================================================= -->
+<div class="toc">
+  <h3>Inhalt</h3>
+  <ol>
+    <li>Über dieses Dokument</li>
+    <li>Rollen beim Event</li>
+    <li>Badges &amp; Sichtbarkeit</li>
+    <li>Materialien - Checkliste</li>
+    <li>Ablauf: Schritt für Schritt</li>
+    <li>Thementische</li>
+    <li>Event-Notiz &amp; Follow-up</li>
+    <li>Kommunikation &amp; Aussendungen</li>
+    <li>Stufenmodell</li>
+    <li>Wie ein Chapter entsteht</li>
+    <li>KPIs &amp; Datenfluss</li>
+    <li>Eskalation &amp; Probleme</li>
+    <li>Rechtlicher Rahmen</li>
+    <li>Versionierung</li>
+  </ol>
+</div>
+
+<!-- =========================================================
+     01 ÜBER DIESES DOKUMENT
+     ========================================================= -->
+<div class="section-break">
+  <div class="section-num">01</div>
+  <h1>Über dieses Dokument</h1>
+</div>
+
+<p class="lead">Dieses Playbook ist für die Person, die um 7:15 im Raum steht und wissen muss: Was mache ich jetzt, in welcher Reihenfolge, mit welchem Material?</p>
+
+<p>Es ist kein Dashboard, kein Strategie-Dokument und keine KPI-Sammlung. Die Messpunkte entstehen als Nebenprodukt eines sauberen Ablaufs - nicht als extra Aufgabe. Die Bindungsma&szlig;nahmen sind eingebaut, nicht aufgesetzt.</p>
+
+<div class="callout">
+  <strong>Verbindlichkeit:</strong> Wenn etwas in diesem Playbook steht, wird es bei jedem Event gemacht. Ohne Ausnahme. Wenn etwas nicht funktioniert, wird es nach dem Event notiert und beim nächsten Mal angepasst - nicht spontan weggelassen.
+</div>
+
+<div class="callout warn">
+  <strong>Schutzregel:</strong> Jede Änderung am Format wird gegen diese Frage geprüft: Senkt sie die Einstiegshürde, erhöht sie die Relevanz oder verbessert sie die Anschlusslogik - OHNE das 8-9-Uhr-Kernformat zu überladen? Wenn nein: parken.
+</div>
+
+<p><strong>KINN:DO Kernformat</strong> - Donnerstag, 8 bis 9 Uhr. Das ist nicht verhandelbar. Alles was davon abweicht, ist kein KINN mehr. Keine Ausnahmen, keine lokale Anpassung.</p>
+
+<!-- =========================================================
+     02 ROLLEN BEIM EVENT
+     ========================================================= -->
+<div class="section-break" id="rollen">
+  <div class="section-num">02</div>
+  <h1>Rollen beim Event</h1>
+</div>
+
+<p class="lead">Minimum für ein Chapter-Event: 3 Personen im Team. Rollen sind flexibel - eine Person kann mehrere übernehmen (z.B. Empfang + Tisch-Moderation).</p>
+
+<div class="role-grid">
+  <div class="role-card no-break">
+    <div class="role-badge">H</div>
+    <h4>Host</h4>
+    <p>Öffnet die Location, begrüßt um 8:00, macht das Wrap-up um 8:50. Floating zwischen den Tischen - nicht an einem Tisch festsitzen. Um 8:45 Signal an alle Moderatoren für Überleitung zum Wrap-up und Gruppenfoto.</p>
+  </div>
+  <div class="role-card no-break">
+    <div class="role-badge">E</div>
+    <h4>Empfang</h4>
+    <p>Steht ab 7:45 am Eingang. Namensschilder, kurze Orientierung für Neue. Erste Anlaufstelle. Freundliches Gesicht - erster Eindruck zählt.</p>
+  </div>
+  <div class="role-card no-break">
+    <div class="role-badge">M</div>
+    <h4>Tisch-Moderatoren (1 pro Tisch)</h4>
+    <p>Starten die Runde am Tisch. Binden neue Gesichter ein. Bremsen Monologe freundlich. Runden um 8:40 ab. Ideal: Menschen, die schon mehrfach bei KINN waren. Kann auch vom Empfang übernommen werden.</p>
+  </div>
+  <div class="role-card no-break">
+    <div class="role-badge">S</div>
+    <h4>Support</h4>
+    <p>Hilft beim Aufbau, macht Fotos, kümmert sich um Gebäck und Kaffee. Spricht allein stehende Personen an. Die unsichtbare Kraft, die alles zusammenhält.</p>
+  </div>
+</div>
+
+
+<p>Für die ersten 2-3 Durchläufe übernimmt Thomas den Host und begleitet das lokale Team. Ziel: Ab Durchlauf 4-5 muss Thomas nicht mehr Host sein.</p>
+
+<!-- =========================================================
+     03 BADGES
+     ========================================================= -->
+<div class="section-break">
+  <div class="section-num">03</div>
+  <h1>Badges &amp; Sichtbarkeit</h1>
+</div>
+
+<table>
+  <tr>
+    <th>Typ</th>
+    <th>Design</th>
+    <th>Zweck</th>
+  </tr>
+  <tr>
+    <td><strong>Team</strong></td>
+    <td>Mintgrüner Rand (#5ED9A6), Vorname gross, Rolle klein darunter</td>
+    <td>Ansprechbar, sichtbar, aber nicht dominant</td>
+  </tr>
+  <tr>
+    <td><strong>Erstbesucher</strong></td>
+    <td>Normaler Badge - im Toolkit als Erstbesucher markiert</td>
+    <td>Team erkennt Erstbesucher über Luma-Daten, kein sichtbares Merkmal am Badge</td>
+  </tr>
+  <tr>
+    <td><strong>Regulars</strong></td>
+    <td>Normaler Badge, Vorname gross, darunter kurz "was machst du"</td>
+    <td>Standard</td>
+  </tr>
+</table>
+
+<div style="display:flex;gap:1rem;flex-wrap:wrap;margin:1.25rem 0;">
+  <div class="badge-preview team">
+    <span class="bp-name">THOMAS</span>
+    <span class="bp-role">Host</span>
+  </div>
+  <div class="badge-preview">
+    <span class="bp-name">ANNA</span>
+    <span class="bp-role">UX Design</span>
+    <span class="bp-dot"></span>
+  </div>
+  <div class="badge-preview">
+    <span class="bp-name">MARKUS</span>
+    <span class="bp-role">Automation</span>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>Kein "NEU"-Label:</strong> Neue sollen sich willkommen fühlen, nicht markiert. Erstbesucher-Info bleibt im Toolkit - nichts Sichtbares am Badge.
+</div>
+
+<a href="/toolkit#badges" class="toolkit-link">Badges drucken im Toolkit →</a>
+
+<!-- =========================================================
+     04 MATERIALIEN
+     ========================================================= -->
+<div class="section-break" id="material">
+  <div class="section-num">04</div>
+  <h1>Materialien - Checkliste</h1>
+</div>
+
+<h3>Was KINN zentral liefert (einmalig, bleibt beim Chapter)</h3>
+
+<ul class="checklist">
+  <li>KINN Roll-Up (1 Stück, identisches Design für alle Chapters)</li>
+  <li>Tischschilder / Thementisch-Aufsteller (mind. 3 Sets)</li>
+  <li>Abreißzettel-Block für Themen-Voting</li>
+  <li>Edding (mind. 3 Stück, schwarz)</li>
+  <li>KINN Manifest-Karte (laminiert, für Host)</li>
+  <li>Spendenkasse-Schild mit QR-Code (kinn.at/fund)</li>
+  <li>"Nächste Schritte bei KINN" Karte (laminiert, A5, liegt beim Ausgang)</li>
+</ul>
+
+<h3>Was das lokale Team pro Event organisiert</h3>
+
+<ul class="checklist">
+  <li>Location offen (Schlüssel? Ansprechperson?)</li>
+  <li>Kaffee (Maschine vor Ort? Oder mitbringen?)</li>
+  <li>Gebäck (Bäcker in der Nähe? Budget? Wer holt?)</li>
+  <li>Wasser / Gläser</li>
+  <li>Genug Sitzplätze + Tischaufstellung für Kapazität</li>
+</ul>
+
+<h3>Was beim Event immer dabei sein muss</h3>
+
+<ul class="checklist">
+  <li>Handy geladen (für Luma Check-in + Fotos)</li>
+  <li>Luma App installiert (Host + Empfang)</li>
+  <li>Gedruckte Badges (aus dem Toolkit)</li>
+  <li>Abreißzettel für Themen-Voting</li>
+</ul>
+
+<!-- =========================================================
+     05 ABLAUF
+     ========================================================= -->
+<div class="section-break" id="ablauf">
+  <div class="section-num">05</div>
+  <h1>Ablauf: Schritt für Schritt</h1>
+</div>
+
+<h2>Phase 1: Vorbereitung (ab 7:15)</h2>
+<p><strong>Wer:</strong> Host + 1 Supporter</p>
+
+<table>
+  <tr><th>#</th><th>Was</th><th>Wer</th></tr>
+  <tr><td>1</td><td>Location aufschließen, Licht an, Heizung checken</td><td>Host</td></tr>
+  <tr><td>2</td><td>Tische aufstellen (3 Tische für bis zu 18 Personen, 4 bei mehr als 18)</td><td>Host + Support</td></tr>
+  <tr><td>3</td><td>Pro Tisch: Aufsteller + Abreißzettel + Edding</td><td>Support</td></tr>
+  <tr><td>4</td><td>KINN Roll-Up aufstellen (Eingangsbereich)</td><td>Support</td></tr>
+  <tr><td>5</td><td>Kaffee/Gebäck-Station einrichten</td><td>Support</td></tr>
+  <tr><td>6</td><td>Spendenkasse-Schild aufstellen</td><td>Support</td></tr>
+  <tr><td>7</td><td>Gedruckte Badges bereitlegen (aus dem Toolkit)</td><td>Host</td></tr>
+  <tr><td>9</td><td>"Nächste Schritte"-Karte beim Ausgang hinlegen</td><td>Support</td></tr>
+</table>
+
+<div class="callout">
+  <strong>Tisch-Aufstellung:</strong> Runde oder quadratische Tische, max. 6 Personen pro Tisch. Genug Abstand dass man sich unterhalten kann ohne den Nebentisch zu stören. Ein Tisch = ein Thema. Aufsteller mit Thema sichtbar auf dem Tisch.
+</div>
+
+<a href="/toolkit#dashboard" class="toolkit-link">Event vorbereiten im Toolkit →</a>
+
+<h2>Phase 2: Einlass (ab 7:45)</h2>
+<p><strong>Wer:</strong> Empfang (+ Host als Backup)</p>
+
+<table>
+  <tr><th>#</th><th>Was</th><th>Wer</th></tr>
+  <tr><td>1</td><td>Am Eingang stehen. Jede Person begrüßen.</td><td>Empfang</td></tr>
+  <tr><td>2</td><td>Frage: "Warst du schon mal bei einem KINN?"</td><td>Empfang</td></tr>
+  <tr><td>3</td><td>Badge aushändigen (vorgedruckt aus dem Toolkit).</td><td>Empfang</td></tr>
+  <tr><td>4</td><td>Luma Check-in - QR-Code scannen oder manuell einchecken</td><td>Empfang</td></tr>
+  <tr><td>5</td><td>Erstbesucher orientieren: "Such dir einen Tisch. Um 8 gibt es eine kurze Begrüßung."</td><td>Empfang</td></tr>
+  <tr><td>6</td><td>Allein stehende Personen aktiv zu einem Tisch begleiten</td><td>Empfang / Host</td></tr>
+</table>
+
+<div class="callout red">
+  <strong>Check-in ist Pflicht:</strong> Jede Person wird in Luma eingecheckt - auch Nachzügler, auch Team-Mitglieder. Übrig gebliebene Badges zeigen wer nicht gekommen ist.
+</div>
+
+<h3>Erstbesucher-Handling</h3>
+<p>Neue Gesichter nicht hervorheben oder markieren. Einfach natürlich willkommen heißen:</p>
+<ol style="margin-left:1.25rem;margin-bottom:1rem;font-size:0.9rem;">
+  <li style="margin-bottom:0.3rem;">Kurze Orientierung: "Such dir einen Tisch, um 8 gibt es eine kurze Begrüßung."</li>
+  <li>Wenn jemand allein steht: Zu einem Tisch begleiten und kurz vorstellen.</li>
+</ol>
+
+<h2>Phase 3: Event (8:00 - 9:00)</h2>
+
+<h3>8:00 - Begrüßung (max. 2 Minuten)</h3>
+<p>Host steht zentral, alle hören zu.</p>
+
+<ul class="checklist">
+  <li>"Willkommen beim KINN [Standort]. Schön dass ihr da seid."</li>
+  <li>Für Erstbesucher: "KINN ist ein Frühstückstreff zu KI. Keine Vorträge, keine Experten auf der Bühne - wir lernen voneinander, auf Augenhöhe."</li>
+  <li>Regeln: "Kein Verkaufen, kein Pitchen. Zuhören ist genauso wertvoll wie Reden."</li>
+  <li>Thementische kurz vorstellen</li>
+  <li>"Ab an die Tische. Viel Spaß."</li>
+</ul>
+
+<div class="callout warn">
+  <strong>Nicht:</strong> Lange Vorstellungsrunde. Nicht "Jeder sagt mal kurz was er macht." Das passiert am Tisch, nicht im Plenum.
+</div>
+
+<h3>8:05 - Thementische laufen</h3>
+
+<p><strong>Tisch-Moderatoren starten:</strong></p>
+<ul style="margin-left:1.25rem;margin-bottom:1rem;font-size:0.9rem;">
+  <li style="margin-bottom:0.3rem;">Kurze Vorstellungsrunde nur am eigenen Tisch: "Vorname, was machst du, was interessiert dich bei KI?"</li>
+  <li style="margin-bottom:0.3rem;">Neue Gesichter aktiv einbinden: "Was hat dich zum KINN gebracht?" oder "Was beschäftigt dich gerade bei KI?"</li>
+  <li>Gespräch laufen lassen. Nicht steuern. Nur eingreifen wenn jemand monologisiert oder ein Verkaufspitch startet.</li>
+</ul>
+
+<p><strong>Host:</strong> Floating zwischen Tischen. Nicht an einem Tisch festsitzen. Alle 10 Minuten kurz an jedem Tisch vorbeischauen. Allein stehende Personen auffangen.</p>
+
+<h3>8:40 - Floating-Signal</h3>
+<p>Host geht an jeden Tisch: "Noch 5 Minuten."</p>
+
+<h3>8:45 - Signal an Moderatoren</h3>
+<p>Host gibt unauffällig Zeichen: "Wrap-up einleiten, gleich Gruppenfoto."</p>
+
+<h3>8:50 - Abmoderation (max. 5 Minuten)</h3>
+
+<div class="callout">
+  <strong>Das hier ist ein Bindungshebel - nicht nur ein formaler Abschluss.</strong>
+</div>
+
+<p>Alle zusammen. Host moderiert:</p>
+
+<ol style="margin-left:1.25rem;margin-bottom:1rem;font-size:0.9rem;">
+  <li style="margin-bottom:0.5rem;"><strong>Blitzfeedback</strong> (2 Minuten): 1 Satz pro Tisch - "Was war euer Highlight?" Tisch-Mod fasst zusammen.</li>
+  <li style="margin-bottom:0.5rem;"><strong>1 klarer Next Step</strong> (30 Sekunden): Nicht zehn Termine herunterretten. Eine Sache: "Nächsten Donnerstag sind wir wieder hier." Oder: "Wer tiefer einsteigen will: Am [Datum] gibt es [Format]."</li>
+  <li><strong>Spende + Foto</strong> (30 Sekunden): "Wer mag: kinn.at/fund. Und gleich gibt es ein Gruppenfoto."</li>
+</ol>
+
+<h3>8:55 - Gruppenfoto</h3>
+<p>Immer machen. Keine Ausnahme. Das ist Marketing-Material für ganz Tirol. "Wer nicht aufs Foto will, kann sich kurz zur Seite stellen - kein Problem."</p>
+
+<h3>9:00 - Offizielles Ende</h3>
+<p>"KINN ist offiziell vorbei. Wer will, bleibt zum freien Netzwerken."</p>
+<p>Ab Event #3 (wenn der Grundablauf sitzt): "Wer heute zum ersten Mal da war und mehr über KINN erfahren will - kommt kurz zu [Name], die/der erzählt euch in 10 Minuten alles."</p>
+
+<h2>Phase 4: Nachbereitung (am selben Tag + 24h)</h2>
+
+<table>
+  <tr><th>#</th><th>Was</th><th>Wer</th><th>Bis wann</th></tr>
+  <tr><td>1</td><td>Check-in in Luma abschließen. Nachzügler nachtragen.</td><td>Empfang</td><td>Mittag</td></tr>
+  <tr><td>2</td><td>Fotos sichten. 3-5 beste Bilder auswählen.</td><td>Support</td><td>Mittag</td></tr>
+  <tr><td>3</td><td>Fotos an Thomas schicken (WhatsApp Chapter-Gruppe)</td><td>Support</td><td>Mittag</td></tr>
+  <tr><td>4</td><td>Optional: Neue Gesichter auf LinkedIn connecten</td><td>Host</td><td>Abend</td></tr>
+  <tr><td>5</td><td>Event-Notiz ausfüllen (siehe Kapitel 07)</td><td>Host</td><td>Abend</td></tr>
+  <tr><td>6</td><td>Location aufgeräumt übergeben / abschließen</td><td>Host</td><td>Direkt nach Event</td></tr>
+</table>
+
+<!-- =========================================================
+     06 THEMENTISCHE
+     ========================================================= -->
+<div class="section-break" id="thementische">
+  <div class="section-num">06</div>
+  <h1>Thementische</h1>
+</div>
+
+<h3>Vor dem Event (mind. 3 Tage vorher)</h3>
+<ol style="margin-left:1.25rem;margin-bottom:1rem;font-size:0.9rem;">
+  <li style="margin-bottom:0.3rem;">Luma-Blast an registrierte Teilnehmer: "Welche Themen brennen euch diese Woche?"</li>
+  <li style="margin-bottom:0.3rem;">Rückmeldungen sammeln</li>
+  <li style="margin-bottom:0.3rem;">Host wählt 3 Themen (bei mehr als 18 Registrierungen: 4 Themen)</li>
+  <li>Themen auf Aufsteller schreiben oder ausdrucken</li>
+</ol>
+
+<h3>Wenn keine Themenvorschläge kommen</h3>
+<p>Standard-Themen in der Hinterhand:</p>
+<ul style="margin-left:1.25rem;margin-bottom:1rem;font-size:0.9rem;">
+  <li style="margin-bottom:0.3rem;">"KI im Alltag - was nutzt ihr wirklich?"</li>
+  <li style="margin-bottom:0.3rem;">"KI und mein Business - wo stehe ich gerade?"</li>
+  <li>"Offener Tisch - bring dein Thema mit"</li>
+</ul>
+
+<h3>Abreißzettel-Voting (Testphase)</h3>
+<p>Am Eingang: 3-4 Themen auf Abreißzetteln. Teilnehmer reissen ab, was sie interessiert. Meistgewählte Themen kommen auf die Tische. Bei den ersten 2 Events testen: Funktioniert es flüssig oder bremst es den Einlass?</p>
+
+<a href="/toolkit#tische" class="toolkit-link">Aufsteller generieren im Toolkit →</a>
+
+<!-- =========================================================
+     07 EVENT-NOTIZ & FOLLOW-UP
+     ========================================================= -->
+<div class="section-break" id="nachbereitung">
+  <div class="section-num">07</div>
+  <h1>Event-Notiz &amp; Follow-up</h1>
+</div>
+
+<h3>Event-Notiz (5 Minuten, direkt nach dem Event)</h3>
+
+<div class="template">EVENT-NOTIZ KINN [CHAPTER]
+===========================
+Datum: _______________
+Location: _______________
+Event #: _______________
+
+ZAHLEN (aus Luma):
+- Registrierungen (Going): ___
+- Checked-in: ___
+- Waitlist: ___
+- Davon Erstbesucher (grüner Punkt): ___
+- Tische: ___
+
+TEAM HEUTE:
+- Host: _______________
+- Empfang: _______________
+- Tisch-Mod 1: _______________
+- Tisch-Mod 2: _______________
+- Support: _______________
+
+MOTIVFRAGE-VERTEILUNG (aus Luma):
+- Netzwerk: ___
+- Aufträge/Business: ___
+- Skills/Lernen: ___
+- Orientierung: ___
+
+BEOBACHTUNGEN:
+- Stimmung (1 Satz):
+- Was hat gut funktioniert?
+- Was hat NICHT funktioniert?
+- Probleme mit Material/Location/Ablauf?
+- Erstbesucher: Wirkten sie integriert oder verloren?
+
+ABMODERATION:
+- Welchen Next Step habe ich genannt?
+- Reaktion darauf?
+
+LEARNINGS FÜRS NÄCHSTE MAL:
+1.
+2.
+3.</div>
+
+<h3>24h Follow-up (Freitag) via Luma Post-Event-Message</h3>
+
+<div class="template">Hey! Danke fürs Dabeisein gestern beim KINN [Standort].
+Zwei kurze Fragen - dauert 10 Sekunden:
+
+1. War der Donnerstag für dich wertvoll? (Ja / Geht so / Nein)
+2. Was nimmst du mit? (1 Satz)
+
+Nächster KINN [Standort]: [Datum]. Gleiche Zeit, gleicher Ort.
+Bis bald!</div>
+
+<p>Frage 1 = Stimmungs-Check. Frage 2 = Stimmen-Pool für die Events-Seite. Zwei Fragen = hohe Response.</p>
+
+<h3>Luma-Registrierung: Motivfrage</h3>
+
+<p>Bei der Anmeldung wird eine Frage gestellt. Nicht mehr.</p>
+<p><strong>Frage:</strong> "Was bringt dich heute zum KINN?"</p>
+<table>
+  <tr><th>Option</th><th>Zweck</th></tr>
+  <tr><td>Netzwerk aufbauen</td><td>Beziehungs-orientiert</td></tr>
+  <tr><td>Aufträge / Business</td><td>Revenue-orientiert</td></tr>
+  <tr><td>Skills / Lernen</td><td>Wissens-orientiert</td></tr>
+  <tr><td>Orientierung - bin neu beim Thema KI</td><td>Einsteiger</td></tr>
+</table>
+
+<a href="/toolkit#notiz" class="toolkit-link">Event-Notiz ausfüllen im Toolkit →</a>
+
+<!-- =========================================================
+     08 KOMMUNIKATION & AUSSENDUNGEN
+     ========================================================= -->
+<div class="section-break" id="kommunikation">
+  <div class="section-num">08</div>
+  <h1>Kommunikation & Aussendungen</h1>
+</div>
+
+<p class="lead">Jedes KINN-Event hat einen klaren Kommunikationsrhythmus. Vier Aussendungen, vier Zeitpunkte, immer gleich. Das macht es replizierbar und entlastet das Team.</p>
+
+<h3>Der Rhythmus</h3>
+
+<table>
+  <tr><th>Wann</th><th>Was</th><th>Kanal</th><th>Wer</th></tr>
+  <tr><td><strong>Event erstellen</strong></td><td>Event-Beschreibung</td><td>Luma (About-Text)</td><td>Host</td></tr>
+  <tr><td><strong>Mittwoch</strong></td><td>Voting-Blast</td><td>Luma Message</td><td>Host</td></tr>
+  <tr><td><strong>Mi Abend / Do Früh</strong></td><td>Themen & Ablauf</td><td>Luma Message</td><td>Host</td></tr>
+  <tr><td><strong>Freitag</strong></td><td>Post-Event-Blast</td><td>Luma Post-Event</td><td>Host</td></tr>
+</table>
+
+<h3>1. Event-Beschreibung (Luma About)</h3>
+<p>Wird beim Erstellen des Luma-Events als Beschreibungstext eingefügt. Enthält:</p>
+<ul>
+  <li>Was KINN ist (1 Satz)</li>
+  <li>Was die Teilnehmer erwartet (Thementische, Kaffee, Austausch)</li>
+  <li>Was es nicht ist (keine Vorträge, kein Pitch)</li>
+  <li>Limitierte Plätze + Hinweis für Erstbesucher</li>
+  <li>Ort, Zeit, Kontakt</li>
+</ul>
+<div class="callout"><strong>Wichtig:</strong> Jedes Event hat denselben Grundtext. Nur Chapter, Location und eventuelle Besonderheiten (Premiere, Gastlocation) werden angepasst. Das spart Zeit und hält die Marke konsistent.</div>
+
+<h3>2. Voting-Blast (Mittwoch)</h3>
+<p>Geht an alle registrierten Teilnehmer. Ziel: Themenabstimmung vor dem Event, damit Tische vorbereitet werden können.</p>
+<ul>
+  <li>Verweis auf kinn.at für die Themenabstimmung</li>
+  <li>Kurze Erinnerung an Termin und Location</li>
+  <li>Ton: direkt, kurz, kein Marketing-Speak</li>
+</ul>
+<p>Themen-Voting läuft über kinn.at. Die Ergebnisse können im Toolkit unter "Tische" direkt geladen und als Aufsteller gedruckt werden.</p>
+
+<h3>3. Themen & Ablauf-Blast (Mittwoch Abend oder Donnerstag Früh)</h3>
+<p>Finale Themen stehen fest. Diese Nachricht gibt den Teilnehmern Orientierung:</p>
+<ul>
+  <li>Welche Tische gibt es (mit Nummer und Thema)</li>
+  <li>"So funktioniert's" — kurzer Ablauf: Check-in ab 7:45, Tisch wählen, Vorstellungsrunde, Austausch, Wrap-up 8:50, Foto</li>
+  <li>Tischwahl: First come, first serve</li>
+  <li>Hinweis: Nicht nur nehmen, auch beitragen</li>
+</ul>
+<div class="callout"><strong>Schutzregel:</strong> Nicht zu viel erklären. Die Nachricht soll Vorfreude und Orientierung geben, kein Handbuch sein. Maximal 15 Zeilen.</div>
+
+<h3>4. Post-Event-Blast (Freitag)</h3>
+<p>Geht an alle eingecheckten Teilnehmer via Luma Post-Event-Message. Ziele:</p>
+<ul>
+  <li>Danke sagen — ehrlich, kurz</li>
+  <li>Community stärken: "Drüberposten hilft mehr als jede Werbung"</li>
+  <li>kinn.at/fund verlinken — transparent, kein Druck</li>
+  <li>Nächstes Event ankündigen (Datum, gleicher Ort)</li>
+</ul>
+<p>Optional: Fotos vom Event einbinden (Luma unterstützt Bilder in Post-Event-Messages).</p>
+
+<div class="callout warn"><strong>Nicht verwechseln:</strong> Der Post-Event-Blast ist nicht dasselbe wie das 24h-Follow-up (Sektion 07). Der Blast ist Marketing/Community-Building (öffentlich sichtbar). Das Follow-up sind die 2 Feedback-Fragen (privat, für KPI-Tracking).</div>
+
+<a href="/toolkit#texte" class="toolkit-link">Texte generieren im Toolkit →</a>
+
+<!-- =========================================================
+     09 STUFENMODELL
+     ========================================================= -->
+<div class="section-break" id="stufenmodell">
+  <div class="section-num">09</div>
+  <h1>Stufenmodell</h1>
+</div>
+
+<p class="lead">Bei KINN wird Verantwortung nicht vergeben. Sie wird verdient. Nicht durch Bewerbung, sondern durch Präsenz, Vorleistung und Spirit.</p>
+
+<div class="stufe no-break">
+  <div class="stufe-level">
+    <div class="stufe-num">1</div>
+    <div class="stufe-name">Teilnehmer</div>
+  </div>
+  <div class="stufe-body">
+    <div class="motto">Kommt. Fragt. Lernt.</div>
+    <p>Jede Person, die bei einem KINN-Event dabei ist. Keine Verpflichtung, keine Erwartung außer: Respekt und Neugier. Du bist willkommen, so wie du bist.</p>
+    <div class="req">Voraussetzung: Anmeldung über Luma, Erscheinen.</div>
+  </div>
+</div>
+
+<div class="stufe no-break">
+  <div class="stufe-level">
+    <div class="stufe-num">2</div>
+    <div class="stufe-name">Supporter</div>
+  </div>
+  <div class="stufe-body">
+    <div class="motto">Kommt regelmäßig. Hilft mit. Bringt sich ein.</div>
+    <p>Menschen, die von sich aus anbieten: "Kann ich was tun?" Helfen beim Aufbau, sprechen Neue an, bringen Gebäck mit, teilen auf LinkedIn. Keine formelle Ernennung - es passiert einfach.</p>
+    <div class="req">Voraussetzung: Mehrfach bei KINN gewesen. Eigeninitiative gezeigt. Vom Team wahrgenommen.</div>
+  </div>
+</div>
+
+<div class="stufe no-break">
+  <div class="stufe-level">
+    <div class="stufe-num">3</div>
+    <div class="stufe-name">Co-Host</div>
+  </div>
+  <div class="stufe-body">
+    <div class="motto">Übernimmt Verantwortung. Moderiert. Organisiert mit.</div>
+    <p>Wird vom Host oder Core Team eingeladen, eine Rolle zu übernehmen: Tisch-Moderation, Empfang, Event-Organisation. Bekommt Zugang zur Chapter-WhatsApp-Gruppe. Trägt den mintgrünen Badge-Rand.</p>
+    <div class="req">Voraussetzung: Bewährt als Supporter. Versteht und lebt die KINN-Werte. Persönliche Einladung.</div>
+  </div>
+</div>
+
+<div class="stufe no-break">
+  <div class="stufe-level">
+    <div class="stufe-num">4</div>
+    <div class="stufe-name">Chapter Lead</div>
+  </div>
+  <div class="stufe-body">
+    <div class="motto">Trägt ein Chapter. Ist das lokale Gesicht von KINN.</div>
+    <p>Verantwortet die Organisation eines KINN-Standorts: Location-Beziehung, Hosting, lokales Team aufbauen. Unterzeichnet das KINN Chapter Commitment. Erstes eigenes Event immer gemeinsam mit Thomas oder einem bestehenden Chapter Lead.</p>
+    <div class="req">Voraussetzung: Erfahrung als Co-Host. Beim Original-Format in Innsbruck dabei gewesen. Vertrauen des Core Teams. Unterzeichnetes Chapter Commitment.</div>
+  </div>
+</div>
+
+<h3>Prinzipien</h3>
+<div class="step-grid">
+  <div class="step-card no-break">
+    <h4>Aufstieg durch Tun</h4>
+    <p>Niemand bewirbt sich. Menschen zeigen durch ihre Handlungen, dass sie bereit sind. Das Core Team erkennt es und lädt ein.</p>
+  </div>
+  <div class="step-card no-break">
+    <h4>Kein Abstieg - nur Rückzug</h4>
+    <p>Wenn jemand weniger Zeit hat, zieht er sich zurück - ohne Gesichtsverlust. Die Tür bleibt offen.</p>
+  </div>
+  <div class="step-card no-break">
+    <h4>Wertebruch = Support-Entzug</h4>
+    <p>Wer bei Events verkauft, die Community als Lead-Quelle missbraucht oder gegen den Kodex handelt - verliert den Support des Netzwerks.</p>
+  </div>
+  <div class="step-card no-break">
+    <h4>Vertrauen als Währung</h4>
+    <p>KINN funktioniert wie ein Stamm, nicht wie eine Firma.</p>
+  </div>
+</div>
+
+<!-- =========================================================
+     09 WIE EIN CHAPTER ENTSTEHT
+     ========================================================= -->
+<div class="section-break" id="chapter">
+  <div class="section-num">10</div>
+  <h1>Wie ein Chapter entsteht</h1>
+</div>
+
+<p class="lead">KINN expandiert nicht von Innsbruck aus - es entstehen eigene Formate in den Regionen. "Tiroler brauchen Tiroler" - und Kufsteiner brauchen Kufsteiner.</p>
+
+<div class="phase">
+  <div class="phase-item">
+    <div class="phase-time">Schritt 1</div>
+    <div class="phase-title">Persönlicher Besuch</div>
+    <div class="phase-desc">Thomas oder ein bestehendes Chapter-Team fährt in die Region und trifft lokale Interessierte persönlich. Kein Remote-Launch.</div>
+  </div>
+  <div class="phase-item">
+    <div class="phase-time">Schritt 2</div>
+    <div class="phase-title">Lokale Partner aktivieren</div>
+    <div class="phase-desc">Co-Working-Space, FH, Wirtschaftsverein - mindestens eine Location muss stehen.</div>
+  </div>
+  <div class="phase-item">
+    <div class="phase-time">Schritt 3</div>
+    <div class="phase-title">Team aufbauen</div>
+    <div class="phase-desc">Mindestens 1 Chapter Lead + 3 weitere Personen für das Minimum-Team (4 Rollen).</div>
+  </div>
+  <div class="phase-item">
+    <div class="phase-time">Schritt 4</div>
+    <div class="phase-title">Soft-Launch</div>
+    <div class="phase-desc">Erstes Event immer mit Begleitung durch das Core Team. Thomas übernimmt Host für die ersten 2-3 Durchläufe.</div>
+  </div>
+  <div class="phase-item">
+    <div class="phase-time">Schritt 5</div>
+    <div class="phase-title">Commitment unterzeichnen</div>
+    <div class="phase-desc">Chapter Lead unterzeichnet das KINN Chapter Commitment. Verbindlich.</div>
+  </div>
+  <div class="phase-item">
+    <div class="phase-time">Laufend</div>
+    <div class="phase-title">Autonomer Betrieb</div>
+    <div class="phase-desc">Chapter-Lead-Sync, Austausch über WhatsApp Chapter-Gruppe. Digitale Infrastruktur (Luma, kinn.at, Marke) bleibt zentral bei Libra Innovation.</div>
+  </div>
+</div>
+
+<h3>Was ein Chapter Lead von KINN bekommt</h3>
+<table>
+  <tr><th>Leistung</th><th>Details</th></tr>
+  <tr><td>Manual &amp; Playbook</td><td>Dieses Dokument + KINN Manual</td></tr>
+  <tr><td>Marketingmaterial</td><td>Roll-Up, Aufsteller, Badges, Sticker</td></tr>
+  <tr><td>First-Level-Support</td><td>Event-Support, Tischmoderation, Einführung, Guideline</td></tr>
+  <tr><td>Event Management</td><td>Bis Self-Serve möglich ist</td></tr>
+  <tr><td>Thementisch-Karten</td><td>Zentral bereitgestellt bis Dienstag Abend</td></tr>
+  <tr><td>WhatsApp Chapter-Gruppe</td><td>Zentral bereitgestellt, nur organisatorisch</td></tr>
+</table>
+
+<h3>Was ein Chapter Lead zusagen darf</h3>
+<p>Support beim Aufbau - also First-Level-Event-Support und Tischmoderation mit Einführung und Guideline. Alles darüber hinaus (Partnerschaften, Sponsorings, Formatanpassungen) läuft über das Core Team.</p>
+
+<h3>Freqünz</h3>
+<p><strong>Start:</strong> Mindestens 1x pro Monat. Donnerstag 8 Uhr. Fix.</p>
+<p><strong>Evaluierung:</strong> Nach 4 Events prüfen ob 2x pro Monat möglich und sinnvoll ist.</p>
+<p><strong>KPI-Minimum:</strong> Mindestens ein KINN pro Monat. No-Show-Rate unter 10%. Feedback-Durchschnitt über 4,5.</p>
+
+<!-- =========================================================
+     10 KPIs & DATENFLUSS
+     ========================================================= -->
+<div class="section-break">
+  <div class="section-num">11</div>
+  <h1>KPIs &amp; Datenfluss</h1>
+</div>
+
+<p class="lead">Sauberer Prozess erzeugt saubere Daten. Nicht andersrum.</p>
+
+<table>
+  <tr><th>Operativer Schritt</th><th>Erzeugt Datenpunkt für</th><th>KPI (ab Event #6)</th></tr>
+  <tr><td>Luma Check-in am Eingang</td><td>Wer war wirklich da</td><td>Checked-ins, Show-up-Rate</td></tr>
+  <tr><td>Luma Registrierung + Kapazität</td><td>Wer wollte kommen, wie viele auf Waitlist</td><td>Show-up-Rate, Waitlist-Pressure</td></tr>
+  <tr><td>Grüner Klebepunkt + Luma People CSV</td><td>Anteil neuer Gesichter</td><td>First-Timer-Anteil</td></tr>
+  <tr><td>Motivfrage bei Registrierung</td><td>Warum kommen die Leute</td><td>Segment-Auswertung</td></tr>
+  <tr><td>Event-Notiz: Stimmung + Beobachtungen</td><td>Qualitative Momentaufnahme</td><td>Basis für Feedback-Scores</td></tr>
+  <tr><td>24h Follow-up Frage 1 (wertvoll?)</td><td>Subjektiver Mehrwert</td><td>Stimmungs-KPI</td></tr>
+  <tr><td>24h Follow-up Frage 2 (Kontakt gemacht?)</td><td>Objektiver Mehrwert</td><td>Kontakt-Quote</td></tr>
+  <tr><td>Luma People CSV (kumuliert)</td><td>Wer kommt wieder</td><td>30-Tage-Rückkehrquote</td></tr>
+</table>
+
+<h3>Phasenlogik</h3>
+
+<div class="step-grid">
+  <div class="step-card no-break">
+    <div class="step-num">1</div>
+    <h4>Event #1-2: Basis</h4>
+    <p>Check-in konseqünt, Klebepunkte testen, Abreißzettel-Voting testen, Motivfrage laufen lassen. Beobachten, nicht optimieren.</p>
+  </div>
+  <div class="step-card no-break">
+    <div class="step-num">2</div>
+    <h4>Event #3-4: Erweitern</h4>
+    <p>Optionales Onboarding nach 9 Uhr testen. First-Timer-Matching durch Supporter. "Nächste Schritte"-Karte am Ausgang.</p>
+  </div>
+  <div class="step-card no-break">
+    <div class="step-num">3</div>
+    <h4>Event #5: Stabilisieren</h4>
+    <p>Was funktioniert bleibt, was nicht funktioniert wird angepasst. Grundablauf muss sitzen.</p>
+  </div>
+  <div class="step-card no-break">
+    <div class="step-num">4</div>
+    <h4>Event #6+: Kalibrieren</h4>
+    <p>Erst jetzt genug Daten für: Realistische Show-up-Rate, First-Timer-Anteil, Rückkehrquote, Ampellogik.</p>
+  </div>
+</div>
+
+<a href="/toolkit#dashboard" class="toolkit-link">Dashboard und Daten im Toolkit →</a>
+
+<!-- =========================================================
+     11 ESKALATION & PROBLEME
+     ========================================================= -->
+<div class="section-break" id="eskalation">
+  <div class="section-num">12</div>
+  <h1>Eskalation &amp; Probleme</h1>
+</div>
+
+<h3>Während des Events</h3>
+
+<table>
+  <tr><th>Problem</th><th>Lösung</th></tr>
+  <tr><td><strong>Zu wenig Team (&lt; 4)</strong></td><td>Option A: Event mit 3 Personen durchführen, zweiten Tisch-Mod aus erfahrenen Teilnehmern spontan rekrutieren. Option B: Bei weniger als 3 Personen absagen. Lieber absagen als schlecht durchführen.</td></tr>
+  <tr><td><strong>Zu wenig Teilnehmer (&lt; 8)</strong></td><td>Durchführen. 2 Tische statt 3. Intimere Runde ist okay.</td></tr>
+  <tr><td><strong>Location-Problem</strong></td><td>Immer Handynummer der Location-Kontaktperson gespeichert haben.</td></tr>
+  <tr><td><strong>Jemand verkauft/pitcht</strong></td><td>Tisch-Mod: "Bei KINN halten wir uns an eine Regel - kein Verkaufen. Magst du uns stattdessen erzählen, was du gerade lernst?"</td></tr>
+  <tr><td><strong>Jemand dominiert</strong></td><td>Tisch-Mod: "Danke für den Input. Ich würde gerne auch die anderen hören - [Name], wie siehst du das?"</td></tr>
+</table>
+
+<h3>Eskalation bei Wertebruch</h3>
+
+<div class="esc-level">
+  <div class="esc-icon esc-1">1</div>
+  <div>
+    <strong>Klärendes Gespräch</strong><br>
+    <span style="font-size:0.88rem;color:var(--text-subtitle);">Hinweis auf das unterschriebene Playbook und die KINN-Werte. Persönlich, nicht öffentlich.</span>
+  </div>
+</div>
+<div class="esc-level">
+  <div class="esc-icon esc-2">2</div>
+  <div>
+    <strong>Entzug aller Zugänge</strong><br>
+    <span style="font-size:0.88rem;color:var(--text-subtitle);">Wenn nicht respektiert und nicht zurückgeändert - Deaktivierung der offiziellen Kanäle, E-Mail-Adresse und Chapter.</span>
+  </div>
+</div>
+<div class="esc-level">
+  <div class="esc-icon esc-3">3</div>
+  <div>
+    <strong>Rechtliche Schritte</strong><br>
+    <span style="font-size:0.88rem;color:var(--text-subtitle);">Wenn das nicht dazu führt dass die Dinge unterlassen werden - Unterlassungsanzeige aus dem Markenschutz bis hin zur Klage.</span>
+  </div>
+</div>
+
+<a href="/toolkit#regeln" class="toolkit-link">Quick Reference im Toolkit →</a>
+
+<!-- =========================================================
+     12 RECHTLICHER RAHMEN
+     ========================================================= -->
+<div class="section-break">
+  <div class="section-num">13</div>
+  <h1>Rechtlicher Rahmen</h1>
+</div>
+
+<h3>Veranstalterin</h3>
+<p>Libra Innovation FlexCo ist die offizielle Veranstalterin aller KINN-Events. Die Marke KINN, die digitale Infrastruktur (kinn.at, Luma, WhatsApp Community) und die visülle Identität werden zentral verwaltet.</p>
+
+<h3>Markenverwendung</h3>
+<p>Ein Chapter Lead darf die Marke KINN im Rahmen des unterzeichneten Chapter Commitments verwenden. Eigenständige Nutzung der Marke KINN außerhalb des vereinbarten Rahmens ist nicht gestattet. Keine eigenständigen öffentlichen KINN-Kanäle oder Online-Gruppen ohne Abstimmung mit dem Core Team.</p>
+
+<h3>Haftung</h3>
+<p>Die Teilnahme an KINN-Events erfolgt auf eigene Verantwortung. Libra Innovation FlexCo haftet nicht für Schäden, die nicht auf Vorsatz oder grobe Fahrlässigkeit zurückzuführen sind. Für Garderobe und mitgebrachte Gegenstände wird keine Haftung übernommen.</p>
+
+<h3>Foto- und Videoaufnahmen</h3>
+<p>Mit der Anmeldung über Luma erklären sich Teilnehmer mit Foto- und Videoaufnahmen einverstanden. Wer das nicht möchte, teilt das vor Ort mit. Das wird respektiert.</p>
+
+<h3>Ehrenamtliches Engagement</h3>
+<p>Alle Chapter-Rollen (Host, Empfang, Tisch-Mod, Support, Chapter Lead) sind ehrenamtliches Engagement. Es besteht kein Dienstverhältnis, keine Weisungsgebundenheit und kein Anspruch auf Vergütung. Engagement erfolgt freiwillig und kann jederzeit beendet werden.</p>
+
+<!-- =========================================================
+     13 VERSIONIERUNG
+     ========================================================= -->
+<div class="section-break">
+  <div class="section-num">14</div>
+  <h1>Versionierung</h1>
+</div>
+
+<table>
+  <tr><th>Version</th><th>Datum</th><th>Was geändert</th></tr>
+  <tr><td>v0.1</td><td>14. März 2026</td><td>Erstversion, reiner Ablauf</td></tr>
+  <tr><td>v0.2</td><td>14. März 2026</td><td>Stefan-Playbooks integriert: Bindungsmaßnahmen Phase 1, KPI-Datenfluss, Phasenlogik</td></tr>
+  <tr><td>v2.0</td><td>8. März 2026</td><td>Rechtlicher Rahmen, Haftung, Community Organizer Vereinbarung, verbindlicher Charakter</td></tr>
+  <tr><td>v2.1</td><td>16. März 2026</td><td>Konsolidierung aller Quellen. Stufenmodell, Chapter-Entstehung, Eskalation, KPIs integriert. Klärungsbogen-Antworten eingearbeitet.</td></tr>
+  <tr><td>v3.0</td><td>nach Event #6</td><td>[Erste stabile Version für Rollout auf alle Chapters]</td></tr>
+</table>
+
+<div class="callout" style="margin-top:2rem;">
+  <strong>Änderungen an diesem Dokument</strong> erfolgen nur per Beschluss der Gesellschafter (Thomas &amp; Stefan Seiger, Libra Innovation FlexCo) mit Input der aktiven Chapter Leads. Feedback der Chapter Leads fliesst ein. Das Ziel bleibt: So wenig Formalität wie nötig, so viel Schutz wie möglich.
+</div>
+
+<p style="text-align:center;margin-top:3rem;color:var(--text-meta);font-size:0.8rem;font-weight:500;">
+  KINN - KI Netzwerk Tirol | Libra Innovation FlexCo | Nicht zur Veröffentlichung
+</p>
+
+</div><!-- /container -->
+
+<a href="/manual/print.html" class="print-btn" target="_blank">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  2-Seiten Cheat Sheet
+</a>
+
+</body>
+</html>

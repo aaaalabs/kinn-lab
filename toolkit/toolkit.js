@@ -76,13 +76,28 @@ async function loadEvents() {
   }
 }
 
+function eventPillLabel(name) {
+  // "KINN#18 Kufstein" → { nr: "#18", label: "Kufstein" }
+  const kinnMatch = name.match(/KINN#(\d+)\s*(.*)/i);
+  if (kinnMatch) {
+    const chapter = kinnMatch[2].trim() || 'Innsbruck';
+    return { nr: '#' + kinnMatch[1], label: chapter };
+  }
+  // "KINN:TALK - RAG" → { nr: "TALK", label: "RAG" }
+  const colonMatch = name.match(/KINN:(\w+)\s*[-–—]\s*(.+)/i);
+  if (colonMatch) return { nr: colonMatch[1], label: colonMatch[2].trim() };
+  // "KINN TechTalk - X" → { nr: "TECH", label: "X" }
+  const ttMatch = name.match(/KINN\s+TechTalk\s*(?:#\d+\s*)?[-–—]\s*(.+)/i);
+  if (ttMatch) return { nr: 'TECH', label: ttMatch[1].trim() };
+  return { nr: '', label: name };
+}
+
 function populateChapters() {
   const now = new Date();
-  const upcoming = kinnEvents.filter(ev =>
-    new Date(ev.startAt) > now && /KINN#\d+/i.test(ev.name)
-  );
+  const upcoming = kinnEvents
+    .filter(ev => new Date(ev.startAt) > now)
+    .sort((a, b) => new Date(a.startAt) - new Date(b.startAt));
 
-  // Render pills
   const container = document.getElementById('event-pills');
   container.innerHTML = '';
   if (!upcoming.length) {
@@ -92,18 +107,15 @@ function populateChapters() {
   }
 
   upcoming.forEach(ev => {
-    const nrMatch = ev.name.match(/(KINN#?\d+)/i);
-    const nr = nrMatch ? nrMatch[1].replace('KINN', '') : '';
-    const chapter = parseChapter(ev.name, ev.location?.city);
+    const { nr, label } = eventPillLabel(ev.name);
     const pill = document.createElement('button');
     pill.className = 'event-pill';
     pill.dataset.eventId = ev.id;
-    pill.innerHTML = `<span class="pill-nr">${escapeHtml(nr)}</span><span class="pill-chapter">${escapeHtml(chapter)}</span>`;
+    pill.innerHTML = `<span class="pill-nr">${escapeHtml(nr)}</span><span class="pill-chapter">${escapeHtml(label)}</span>`;
     pill.onclick = () => selectEvent(ev.id);
     container.appendChild(pill);
   });
 
-  // Auto-select first
   selectEvent(upcoming[0].id);
   populatePastEventSelect();
 }
@@ -130,6 +142,76 @@ function selectEvent(eventId) {
 
   updateLabels();
   loadGuests(ev.id);
+  loadCapacity(ev.id);
+}
+
+// ====== CAPACITY CONFIG ======
+async function loadCapacity(eventId) {
+  const el = document.getElementById('capacity-config');
+  if (!el) return;
+  try {
+    const res = await fetch('/api/events/capacity?event_id=' + encodeURIComponent(eventId));
+    const data = await res.json();
+    renderCapacity(eventId, data);
+  } catch {
+    renderCapacity(eventId, null);
+  }
+}
+
+function renderCapacity(eventId, config) {
+  const el = document.getElementById('capacity-config');
+  if (!el) return;
+  const eb = config?.earlyBird || '';
+  const rp = config?.restplaetze || '';
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <label style="font-size:12px;font-weight:600;color:var(--text-subtitle)">Kapazität</label>
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="number" id="cap-earlybird" value="${eb}" placeholder="Early Bird" min="1" max="200"
+          style="width:72px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;text-align:center">
+        <span style="font-size:11px;color:var(--text-meta)">Plätze</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <input type="number" id="cap-restplaetze" value="${rp}" placeholder="Rest" min="0" max="50"
+          style="width:56px;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;text-align:center">
+        <span style="font-size:11px;color:var(--text-meta)">Restplätze</span>
+      </div>
+      <button onclick="handleSaveCapacity('${eventId}')"
+        style="padding:5px 14px;background:var(--mint);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity 0.15s"
+        onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Speichern</button>
+      <span id="cap-status" style="font-size:11px;color:var(--text-meta)">
+        ${config ? `Max: ${config.maxCapacity} + ${config.overbook} Überb. = ${config.absolutMax}` : 'Nicht konfiguriert'}
+      </span>
+    </div>`;
+}
+
+async function handleSaveCapacity(eventId) {
+  const eb = parseInt(document.getElementById('cap-earlybird').value);
+  const rp = parseInt(document.getElementById('cap-restplaetze').value);
+  if (!eb || eb < 1) {
+    document.getElementById('cap-status').textContent = 'Early Bird muss > 0 sein';
+    return;
+  }
+  const body = { earlyBird: eb };
+  if (!isNaN(rp)) body.restplaetze = rp;
+
+  try {
+    const res = await fetch('/api/events/capacity?event_id=' + encodeURIComponent(eventId), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const config = await res.json();
+    document.getElementById('cap-status').textContent =
+      `Gespeichert — Max: ${config.maxCapacity} + ${config.overbook} Überb. = ${config.absolutMax}`;
+    document.getElementById('cap-status').style.color = 'var(--mint)';
+    setTimeout(() => {
+      const s = document.getElementById('cap-status');
+      if (s) { s.style.color = 'var(--text-meta)'; s.textContent = `Max: ${config.maxCapacity} + ${config.overbook} Überb. = ${config.absolutMax}`; }
+    }, 2000);
+  } catch {
+    document.getElementById('cap-status').textContent = 'Fehler beim Speichern';
+  }
 }
 
 function handleEventSelect() {}

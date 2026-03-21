@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KINN Events — Tirols KI-Community</title>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mint: #5ED9A6;
+    --mint-hover: #4EC995;
+    --text-heading: #2C3E50;
+    --text-body: #3A3A3A;
+    --text-sub: #6B6B6B;
+    --text-meta: #999;
+    --bg: #fafcfb;
+    --card-bg: rgba(255,255,255,0.85);
+    --border: rgba(0,0,0,0.06);
+    --border-solid: #e8e8e8;
+    /* no stars */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Work Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-body);
+    line-height: 1.618;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(94,217,166,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(94,217,166,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250,252,251,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-back {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mint);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 14px 0;
+    flex-shrink: 0;
+  }
+  .nav-sep { color: var(--border-solid); margin: 0 10px; flex-shrink: 0; }
+  .nav-links { display: flex; gap: 2px; flex: 1; }
+  .nav-links a {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-meta);
+    text-decoration: none;
+    padding: 14px 10px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text-heading); }
+  .nav-links a.active { color: var(--mint); font-weight: 600; }
+  .nav-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--mint);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(94,217,166,0.08);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 12px;
+    flex-shrink: 0;
+  }
+
+  .container {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+  }
+
+  /* Header */
+  .page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .page-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+  }
+  .page-header .subtitle {
+    font-size: 1rem;
+    color: var(--text-sub);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Stats */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+    padding: 1.25rem 2rem;
+    background: var(--card-bg);
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+  }
+  .stat { text-align: center; }
+  .stat-val {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    line-height: 1.2;
+  }
+  .stat-val.mint { color: var(--mint); }
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-meta);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+
+  /* Upcoming */
+  .upcoming-section { margin-bottom: 2.5rem; }
+  .upcoming-section h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 1rem;
+  }
+  .upcoming-grid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .upcoming-grid::-webkit-scrollbar { display: none; }
+  .upcoming-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  .upcoming-card:hover {
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+  }
+  .upcoming-thumb {
+    position: relative;
+    overflow: hidden;
+  }
+  .upcoming-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+    transition: transform 3s ease;
+  }
+  .upcoming-card:hover .upcoming-img {
+    transform: scale(1.03);
+  }
+
+  /* Ticket icon overlay */
+  .upcoming-ticket {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+    width: 28px;
+    height: 28px;
+    color: rgba(255,255,255,0.85);
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
+    transition: color 0.2s;
+  }
+  .upcoming-card:hover .upcoming-ticket { color: #fff; }
+
+  /* Bottom bar: seamless, no padding separation */
+  .upcoming-footer {
+    padding: 0.75rem 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+  }
+  .upcoming-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    line-height: 1.3;
+  }
+  .upcoming-when {
+    font-size: 0.6875rem;
+    color: var(--text-meta);
+    letter-spacing: 0.01em;
+  }
+
+  /* Availability status bar */
+  .upcoming-status {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .upcoming-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .upcoming-status-text { opacity: 0.85; }
+
+  /* Stadium 1: Open — mint */
+  .status-open .upcoming-status-dot { background: var(--mint); }
+  .status-open .upcoming-status-text { color: #3a7a63; }
+
+  /* Stadium 2: Waitlist — warm amber */
+  .status-waitlist .upcoming-status-dot { background: #E8A317; }
+  .status-waitlist .upcoming-status-text { color: #8B6914; }
+
+  /* Stadium 3: Sold out — muted */
+  .status-sold_out .upcoming-status-dot { background: var(--text-meta); }
+  .status-sold_out .upcoming-status-text { color: var(--text-meta); }
+  .status-sold_out .upcoming-img { filter: saturate(0.6); }
+
+  /* Section Divider */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1.5rem;
+  }
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-divider h2 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-meta);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+
+  /* (source badge removed) */
+
+  /* Event Cards */
+  .event-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(10px);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    overflow: hidden;
+  }
+  .event-card:hover {
+    box-shadow: 0 12px 40px rgba(0,0,0,0.07);
+    transform: translateY(-2px);
+  }
+  .event-card-body {
+    padding: 1.5rem;
+  }
+
+  /* Group Photo */
+  .event-photo {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 5 / 2;
+    background: #f0f0ee;
+  }
+  .event-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.6s ease, transform 4s ease;
+  }
+  .event-photo img.loaded {
+    opacity: 1;
+  }
+  .event-card:hover .event-photo img.loaded {
+    transform: scale(1.015);
+  }
+  .event-photo::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(to top, rgba(255,255,255,0.85), transparent);
+    pointer-events: none;
+  }
+
+  .event-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+  .event-info h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    margin-bottom: 0.15rem;
+  }
+  .event-meta {
+    font-size: 0.8125rem;
+    color: var(--text-meta);
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  /* Chapter Badge */
+  .chapter-badge {
+    display: inline-block;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.25rem;
+    margin-left: 0.5rem;
+    position: relative;
+    top: -1px;
+  }
+  .chapter-innsbruck { background: rgba(94,217,166,0.15); color: #3a7a63; }
+  .chapter-kufstein { background: rgba(74,144,226,0.12); color: #3a6fa3; }
+  .chapter-kitzbuehel { background: rgba(245,166,35,0.12); color: #9a6e1e; }
+  .chapter-default { background: rgba(0,0,0,0.06); color: var(--text-sub); }
+
+  /* (tags removed — Thementische not shown on events page) */
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    margin-top: 2.5rem;
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+  .cta-section p {
+    font-size: 0.9375rem;
+    color: var(--text-sub);
+    margin-bottom: 1rem;
+  }
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--mint);
+    color: #000;
+    text-decoration: none;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .cta-button:hover {
+    background: var(--mint-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(94,217,166,0.25);
+  }
+
+  .api-note {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: var(--text-meta);
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+  .api-note a { color: var(--mint); text-decoration: none; font-weight: 500; }
+
+  /* Stimmen Count */
+  .stimmen-block {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .stimmen-count {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    line-height: 1;
+  }
+  .stimmen-label {
+    font-size: 0.6875rem;
+    color: var(--text-meta);
+    margin-top: 0.15rem;
+  }
+  .has-photo > .stimmen-block .stimmen-count,
+  .has-photo > .stimmen-block .stimmen-label {
+    color: var(--text-heading);
+    text-shadow: 0 0 8px rgba(255,255,255,0.6);
+  }
+  /* Floating badge on cards with photo */
+  .has-photo {
+    position: relative;
+  }
+  .has-photo > .stimmen-block {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    z-index: 2;
+    background: rgba(255,255,255,0.45);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    padding: 0.4rem 0.65rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+
+  /* Stimmen Quotes */
+  .stimmen-section {
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .stimmen-header {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--text-meta);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.5rem;
+  }
+  .stimme {
+    position: relative;
+    padding: 0.4rem 0 0.4rem 0.85rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.875rem;
+    color: var(--text-body);
+    line-height: 1.55;
+  }
+  .stimme::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2.5px;
+    background: var(--mint);
+    border-radius: 2px;
+  }
+  .stimme cite {
+    display: block;
+    font-style: normal;
+    font-size: 0.75rem;
+    color: var(--text-meta);
+    font-weight: 500;
+    margin-top: 0.15rem;
+  }
+
+  /* Stimmen toggle */
+  .stimmen-toggle {
+    display: inline-block;
+    margin-top: 0.35rem;
+    padding: 0;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--mint);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .stimmen-toggle:hover { color: var(--text-heading); }
+
+  /* Event stats row */
+  .event-stats {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-meta);
+    margin-top: 0.25rem;
+  }
+
+  /* Load More */
+  .load-more-btn {
+    display: block;
+    width: 100%;
+    padding: 0.875rem;
+    margin-top: 0.5rem;
+    background: none;
+    border: 1px dashed var(--border-solid);
+    border-radius: 0.75rem;
+    color: var(--text-meta);
+    font-family: inherit;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .load-more-btn:hover {
+    border-color: var(--mint);
+    color: var(--text-heading);
+    background: rgba(94,217,166,0.04);
+  }
+
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-meta);
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 640px) {
+    .container { padding: 1.5rem 1rem; }
+    .page-header h1 { font-size: 1.5rem; }
+    .stats-bar { gap: 1.5rem; padding: 1rem; flex-wrap: wrap; }
+    .stat-val { font-size: 1.375rem; }
+    .upcoming-card { min-width: 200px; }
+    .event-card-body { padding: 1.25rem; }
+    .has-photo > .stimmen-block {
+      top: 0.625rem;
+      right: 0.625rem;
+      padding: 0.3rem 0.5rem;
+    }
+    .has-photo > .stimmen-block .stimmen-count { font-size: 1rem; }
+    .has-photo > .stimmen-block .stimmen-label { font-size: 0.6rem; }
+    .event-photo { aspect-ratio: 16 / 9; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-back">kinn.at</a>
+  <span class="nav-sep">/</span>
+  <div class="nav-links">
+    <a class="active">Events</a>
+  </div>
+  <span class="nav-tag">Events</span>
+</nav>
+
+<div class="container">
+
+  <div class="page-header">
+    <h1>KINN Events</h1>
+    <p class="subtitle" id="subtitle">Lade Events...</p>
+  </div>
+
+  <div class="stats-bar" id="stats-bar" style="display:none">
+    <div class="stat"><div class="stat-val" id="stat-total">-</div><div class="stat-label">Events</div></div>
+    <div class="stat"><div class="stat-val" id="stat-chapters">-</div><div class="stat-label">Standorte</div></div>
+    <div class="stat"><div class="stat-val mint" id="stat-upcoming">-</div><div class="stat-label">Kommende</div></div>
+    <div class="stat"><div class="stat-val" id="stat-stimmen">-</div><div class="stat-label">Stimmen</div></div>
+  </div>
+
+  <!-- Upcoming -->
+  <div class="upcoming-section" id="upcoming-section" style="display:none">
+    <h2>Kommende Treffen</h2>
+    <div class="upcoming-grid" id="upcoming-grid"></div>
+  </div>
+
+  <!-- Past Events -->
+  <div id="past-section" style="display:none">
+    <div class="section-divider"><h2>Vergangene Treffen</h2></div>
+    <div id="past-events"></div>
+  </div>
+
+  <div class="loading" id="loading">Events werden geladen...</div>
+
+  <div class="cta-section" id="cta" style="display:none">
+    <p>Jeden Donnerstag um 8. Gleiche Zeit, gleicher Ort.</p>
+    <a href="https://kinn.at" class="cta-button">Nächstes KINN finden</a>
+  </div>
+
+  <div class="api-note" id="api-note" style="display:none">
+    Stimmen sind kuratiert vom KINN Team. Events via <a href="https://luma.com/kinns" target="_blank" rel="noopener">Luma</a>.
+  </div>
+
+</div>
+
+<script>
+const MONTHS = ['Jänner','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const DAYS = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return `${d.getDate()}. ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function fmtShort(iso) {
+  const d = new Date(iso);
+  return `${DAYS[d.getDay()]} ${d.getDate()}. ${MONTHS[d.getMonth()].substring(0,3)} · ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+function displayName(name) {
+  // "KINN TechTalk #1 - VoiceAI" → "KINN:TECH VoiceAI"
+  const tt = name.match(/^KINN\s+TechTalk\s*(?:#\d+\s*)?[-–—]\s*(.+)$/i);
+  if (tt) return `KINN:TECH ${tt[1]}`;
+  // "KINN:TALK - RAG" → "KINN:TALK RAG"
+  const talk = name.match(/^KINN:TALK\s*[-–—]\s*(.+)$/i);
+  if (talk) return `KINN:TALK ${talk[1]}`;
+  return name;
+}
+
+function chapterFromName(name) {
+  const lower = name.toLowerCase();
+  if (lower.includes('kufstein')) return 'kufstein';
+  if (lower.includes('kitzbühel') || lower.includes('kitzbuehel') || lower.includes('kitzbuhel')) return 'kitzbuehel';
+  if (lower.includes('innsbruck')) return 'innsbruck';
+  return 'default';
+}
+
+function chapterLabel(name) {
+  const ch = chapterFromName(name);
+  const labels = { innsbruck: 'Innsbruck', kufstein: 'Kufstein', kitzbuehel: 'Kitzbühel' };
+  return labels[ch] || '';
+}
+
+async function loadEvents() {
+  try {
+    // Load both sources in parallel
+    const [lumaRes, feedbackRes] = await Promise.all([
+      fetch('/api/luma/events'),
+      fetch('/api/events/feedback').catch(() => null),
+    ]);
+    if (!lumaRes.ok) throw new Error('API Fehler: ' + lumaRes.status);
+    const lumaData = await lumaRes.json();
+    const feedbackData = feedbackRes?.ok ? await feedbackRes.json() : { events: [] };
+
+    // Build feedback lookup by Luma ID and by name
+    const fbByLumaId = {};
+    const fbByName = {};
+    (feedbackData.events || []).forEach(fb => {
+      if (fb.lumaId) fbByLumaId[fb.lumaId] = fb;
+      if (fb.name) fbByName[fb.name.toLowerCase()] = fb;
+    });
+
+    // Merge: enrich Luma events with feedback data
+    const lumaIds = new Set();
+    const lumaNames = new Set();
+    const events = (lumaData.events || []).map(ev => {
+      lumaIds.add(ev.id);
+      lumaNames.add(ev.name.toLowerCase());
+      const fb = fbByLumaId[ev.id] || fbByName[ev.name.toLowerCase()] || null;
+      return {
+        ...ev,
+        groupPhoto: fb?.groupPhoto || null,
+        stats: fb?.stats || null,
+        feedback: fb?.feedback || [],
+      };
+    });
+
+    // Add feedback-only events (KINN#1-6, etc.) not in Luma
+    (feedbackData.events || []).forEach(fb => {
+      const inLuma = (fb.lumaId && lumaIds.has(fb.lumaId)) || lumaNames.has(fb.name.toLowerCase());
+      if (!inLuma && fb.date) {
+        events.push({
+          id: fb.id,
+          name: fb.name,
+          startAt: fb.date,
+          location: fb.location || {},
+          url: fb.url || null,
+          coverUrl: fb.coverUrl || null,
+          groupPhoto: fb.groupPhoto || null,
+          tags: fb.tags || [],
+          stats: fb.stats || null,
+          feedback: fb.feedback || [],
+        });
+      }
+    });
+
+    // Sort by date descending
+    events.sort((a, b) => new Date(b.startAt || b.date) - new Date(a.startAt || a.date));
+
+    await renderEvents(events);
+  } catch (e) {
+    document.getElementById('loading').textContent = 'Events konnten nicht geladen werden: ' + e.message;
+  }
+}
+
+async function renderEvents(events) {
+  const now = new Date();
+  const upcoming = events.filter(e => new Date(e.startAt) > now);
+  const past = events.filter(e => new Date(e.startAt) <= now);
+
+  // Stats
+  const venues = new Set(events.map(e => e.location?.name).filter(Boolean));
+  const locations = new Set(events.map(e => e.location?.city).filter(Boolean));
+  const totalStimmen = events.reduce((sum, e) => sum + (e.stats?.totalFeedback || 0), 0);
+  const totalEvents = events.length;
+
+  document.getElementById('stat-total').textContent = totalEvents;
+  document.getElementById('stat-chapters').textContent = venues.size || locations.size || '-';
+  document.getElementById('stat-upcoming').textContent = upcoming.length;
+  document.getElementById('stat-stimmen').textContent = totalStimmen || '-';
+  document.getElementById('stats-bar').style.display = '';
+  document.getElementById('subtitle').textContent = `${totalEvents} Treffen seit November 2025. Jeden Donnerstag um 8.`;
+
+  // Upcoming
+  if (upcoming.length) {
+    const grid = document.getElementById('upcoming-grid');
+    grid.innerHTML = '';
+    // Dynamic width: fit all in one row up to 5, then scroll
+    const count = Math.min(upcoming.length, 5);
+    const cardWidth = `calc((100% - ${(count - 1)}rem) / ${count})`;
+    const ticketSvg = '<svg class="upcoming-ticket" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l0 2"/><path d="M15 11l0 2"/><path d="M15 17l0 2"/><path d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 0 0 0 -4v-3a2 2 0 0 1 2 -2"/></svg>';
+    upcoming.reverse().forEach(ev => {
+      const imgUrl = ev.coverUrl
+        ? ev.coverUrl.replace(/width=\d+/, 'width=400').replace(/height=\d+/, 'height=400')
+        : '';
+      const a = ev.availability;
+      const stage = a?.stage || 'open';
+      let statusText;
+      if (stage === 'sold_out') {
+        statusText = 'Ausgebucht';
+      } else if (stage === 'waitlist') {
+        statusText = 'Warteliste';
+      } else {
+        statusText = a?.spotsLeft ? `${a.spotsLeft} Plätze frei` : 'Anmelden';
+      }
+      grid.innerHTML += `
+        <a class="upcoming-card" href="${stage === 'sold_out' ? '#' : (ev.url || '#')}" ${stage === 'sold_out' ? '' : 'target="_blank" rel="noopener"'} style="width:${cardWidth};min-width:160px">
+          <div class="upcoming-thumb">
+            ${imgUrl ? `<img class="upcoming-img" src="${imgUrl}" alt="${esc(displayName(ev.name))}" loading="lazy">` : ''}
+            ${stage !== 'sold_out' ? ticketSvg : ''}
+          </div>
+          <div class="upcoming-footer">
+            <div class="upcoming-title">${esc(displayName(ev.name))}</div>
+            <div class="upcoming-when">${fmtShort(ev.startAt)}</div>
+            <div class="upcoming-status status-${stage}">
+              <span class="upcoming-status-dot"></span>
+              <span class="upcoming-status-text">${statusText}</span>
+            </div>
+          </div>
+        </a>`;
+    });
+    document.getElementById('upcoming-section').style.display = '';
+  }
+
+  // Past (progressive disclosure)
+  const INITIAL_SHOW = 6;
+  let pastShown = 0;
+
+  if (past.length) {
+    const container = document.getElementById('past-events');
+    container.innerHTML = '';
+
+    function renderPastBatch(start, count) {
+      const batch = past.slice(start, start + count);
+      batch.forEach(ev => {
+      const ch = chapterFromName(ev.name);
+      const chLabel = chapterLabel(ev.name);
+      const badge = chLabel ? `<span class="chapter-badge chapter-${ch}">${esc(chLabel)}</span>` : '';
+      const loc = ev.location?.name || '';
+
+      // Stimmen block (replaces ratings)
+      const s = ev.stats;
+      const stimmenCount = s?.totalFeedback || 0;
+      let stimmenBlock = '';
+      if (stimmenCount > 0) {
+        stimmenBlock = `
+          <div class="stimmen-block">
+            <div class="stimmen-count">${stimmenCount}</div>
+            <div class="stimmen-label">Stimme${stimmenCount !== 1 ? 'n' : ''}</div>
+          </div>`;
+      }
+
+      // People count
+      let metaPeople = '';
+      if (s && s.checkedIn) {
+        metaPeople = `<span>${s.checkedIn} Menschen waren da</span>`;
+      }
+
+      // Stimmen quotes
+      let stimmenHtml = '';
+      if (ev.feedback && ev.feedback.length) {
+        const allQuotes = ev.feedback.filter(f => f.text);
+        if (allQuotes.length) {
+          const renderQuote = f => {
+            const attr = f.firstName
+              ? `${esc(f.firstName)}${f.lastInitial ? ' ' + esc(f.lastInitial) + '.' : ''}`
+              : 'Anonym';
+            return `<div class="stimme">${esc(f.text)}<cite>— ${attr}</cite></div>`;
+          };
+          const visible = allQuotes.slice(0, 3).map(renderQuote).join('');
+          const hidden = allQuotes.length > 3
+            ? allQuotes.slice(3).map(renderQuote).join('')
+            : '';
+          const moreBtn = allQuotes.length > 3
+            ? `<div class="stimmen-more" style="display:none">${hidden}</div>
+               <button class="stimmen-toggle" onclick="this.previousElementSibling.style.display='';this.remove()">+ ${allQuotes.length - 3} weitere Stimmen</button>`
+            : '';
+          stimmenHtml = `
+            <div class="stimmen-section">
+              <div class="stimmen-header">Was nimmst du mit?</div>
+              ${visible}
+              ${moreBtn}
+            </div>`;
+        }
+      }
+
+      const hasPhoto = !!ev.groupPhoto;
+      const photoHtml = hasPhoto
+        ? `<div class="event-photo"><img src="${ev.groupPhoto}" alt="${esc(ev.name)}" loading="lazy" onload="this.classList.add('loaded')"></div>`
+        : '';
+
+      container.innerHTML += `
+        <div class="event-card${hasPhoto ? ' has-photo' : ''}">
+          ${photoHtml}
+          ${hasPhoto && stimmenBlock ? stimmenBlock : ''}
+          <div class="event-card-body">
+            <div class="event-top">
+              <div class="event-info">
+                <h3>${esc(displayName(ev.name))} ${badge}</h3>
+                <div class="event-meta">
+                  <span>${fmtDate(ev.startAt)}</span>
+                  ${loc ? `<span>${esc(loc)}</span>` : ''}
+                  ${metaPeople}
+                </div>
+              </div>
+              ${!hasPhoto ? stimmenBlock : ''}
+            </div>
+            ${stimmenHtml}
+          </div>
+        </div>`;
+      });
+      pastShown += batch.length;
+    }
+
+    renderPastBatch(0, INITIAL_SHOW);
+
+    // "Mehr laden" button
+    if (past.length > INITIAL_SHOW) {
+      const moreBtn = document.createElement('button');
+      moreBtn.className = 'load-more-btn';
+      moreBtn.textContent = `+ ${past.length - INITIAL_SHOW} weitere Treffen`;
+      moreBtn.onclick = function() {
+        renderPastBatch(pastShown, past.length);
+        moreBtn.remove();
+      };
+      container.after(moreBtn);
+    }
+
+    document.getElementById('past-section').style.display = '';
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('cta').style.display = '';
+  document.getElementById('api-note').style.display = '';
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+loadEvents();
+</script>
+
+</body>
+</html>
