@@ -249,6 +249,7 @@ async function loadGuests(eventId) {
     const data = await res.json();
     guests = data.guests || [];
     updateDashboard();
+    prefillBadges();
   } catch (e) {
     console.warn('[Toolkit] Gästeliste konnte nicht geladen werden:', e.message);
     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-meta);padding:32px">Gästeliste konnte nicht geladen werden</td></tr>';
@@ -338,26 +339,21 @@ function parseNames(raw) {
 }
 
 function getBadgeData() {
-  const guestNames = parseNames(document.getElementById('badge-guests-input').value);
   const teamNames = parseNames(document.getElementById('badge-team-input').value);
-  const firstTimerNames = new Set(parseNames(document.getElementById('badge-firsttimer-input').value).map(n => n.toLowerCase()));
+  const guestNames = parseNames(document.getElementById('badge-guests-input').value);
+  const firstTimerNames = parseNames(document.getElementById('badge-firsttimer-input').value);
 
+  // 3 separate categories, no overlap
   const all = [];
-
   teamNames.sort((a, b) => a.localeCompare(b, 'de')).forEach(name => {
-    all.push({ name, isTeam: true, isFirstTimer: firstTimerNames.has(name.toLowerCase()) });
+    all.push({ name, isTeam: true, isFirstTimer: false });
   });
   guestNames.sort((a, b) => a.localeCompare(b, 'de')).forEach(name => {
-    all.push({ name, isTeam: false, isFirstTimer: firstTimerNames.has(name.toLowerCase()) });
+    all.push({ name, isTeam: false, isFirstTimer: false });
   });
-
-  // Erstbesucher als eigene Badges (immer, auch bei gleichem Namen)
-  parseNames(document.getElementById('badge-firsttimer-input').value)
-    .sort((a, b) => a.localeCompare(b, 'de'))
-    .forEach(name => {
-      all.push({ name, isTeam: false, isFirstTimer: true });
-    });
-
+  firstTimerNames.sort((a, b) => a.localeCompare(b, 'de')).forEach(name => {
+    all.push({ name, isTeam: false, isFirstTimer: true });
+  });
   return all;
 }
 
@@ -969,9 +965,57 @@ function escapeHtml(str) {
 // ====== BADGE INPUT WATCHER ======
 function updateBadgeButtons() {
   const hasNames = document.getElementById('badge-guests-input').value.trim() ||
-                   document.getElementById('badge-team-input').value.trim();
+                   document.getElementById('badge-team-input').value.trim() ||
+                   document.getElementById('badge-firsttimer-input').value.trim();
   document.getElementById('btn-badge-preview').disabled = !hasNames;
   document.getElementById('btn-badge-print').disabled = !hasNames;
+}
+
+// ====== BADGE AUTO-PREFILL ======
+async function prefillBadges() {
+  // Only prefill if all 3 inputs are empty
+  const inputs = ['badge-team-input', 'badge-guests-input', 'badge-firsttimer-input'];
+  if (inputs.some(id => document.getElementById(id).value.trim())) return;
+
+  // Need guests from current event + attendance data
+  const approved = guests.filter(g => g.status === 'approved');
+  if (!approved.length) return;
+
+  // Load attendance counts if not already loaded
+  if (!Object.keys(attendanceCounts).length) {
+    try {
+      const res = await fetch('/api/luma/attendance');
+      const data = await res.json();
+      attendanceCounts = data.counts || {};
+    } catch { return; }
+  }
+
+  const team = [];       // 3+ Besuche
+  const regulars = [];   // 1-2 Besuche (Stammgäste unter 3)
+  const firstTimers = []; // 0 bisherige Besuche (Erstbesucher)
+
+  approved.forEach(g => {
+    const firstName = g.firstName || g.name?.split(' ')[0] || '';
+    if (!firstName) return;
+    const email = (g.email || '').toLowerCase().trim();
+    const visits = email ? (attendanceCounts[email] || 0) : 0;
+
+    if (visits >= 3) {
+      team.push(firstName);
+    } else if (visits >= 1) {
+      regulars.push(firstName);
+    } else {
+      firstTimers.push(firstName);
+    }
+  });
+
+  document.getElementById('badge-team-input').value = team.sort((a, b) => a.localeCompare(b, 'de')).join('\n');
+  document.getElementById('badge-guests-input').value = regulars.sort((a, b) => a.localeCompare(b, 'de')).join('\n');
+  document.getElementById('badge-firsttimer-input').value = firstTimers.sort((a, b) => a.localeCompare(b, 'de')).join('\n');
+  updateBadgeButtons();
+
+  const info = document.getElementById('badge-info');
+  if (info) info.textContent = `Vorausgefüllt: ${team.length} Team (3+ Besuche) · ${regulars.length} Gäste · ${firstTimers.length} Erstbesucher`;
 }
 
 // ====== NACHBEREITUNG / CRM ======
@@ -1250,7 +1294,7 @@ async function saveCrmNotes(textarea) {
 document.addEventListener('DOMContentLoaded', () => {
   loadEvents();
   handleHashNav();
-  ['badge-guests-input', 'badge-team-input'].forEach(id => {
+  ['badge-guests-input', 'badge-team-input', 'badge-firsttimer-input'].forEach(id => {
     document.getElementById(id).addEventListener('input', updateBadgeButtons);
   });
 });

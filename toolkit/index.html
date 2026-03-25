@@ -923,21 +923,21 @@ input:focus, select:focus, textarea:focus {
 <div style="font-size:12px;margin-bottom:16px"><a href="/manual#rollen" style="color:var(--text-meta);text-decoration:none">← Badges & Rollen im Manual</a></div>
   <div class="card">
     <h2>Badge Drucker</h2>
-    <p>80x50mm Etiketten, 2x5 pro A4. Mintgrüner Rand = Team. Grüner Punkt = Erstbesucher.</p>
+    <p>80x50mm Etiketten, 2x5 pro A4. Drei Kategorien, kein Overlap.</p>
 
     <div class="form-group">
-      <label>Gäste-Etiketten (Vornamen, komma-separiert oder je Zeile)</label>
-      <textarea id="badge-guests-input" rows="4" placeholder="Anna, Ben, Clara, David"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Team-Etiketten (mit Mint-Border, komma-separiert oder je Zeile)</label>
+      <label>Team (mintgrüner Rand)</label>
       <textarea id="badge-team-input" rows="2" placeholder="Thomas, Carina, Stefan"></textarea>
     </div>
 
     <div class="form-group">
-      <label>Erstbesucher (grüner Punkt, komma-separiert oder je Zeile)</label>
-      <textarea id="badge-firsttimer-input" rows="2" placeholder="Namen von oben die Erstbesucher sind"></textarea>
+      <label>Gäste</label>
+      <textarea id="badge-guests-input" rows="4" placeholder="Anna, Ben, Clara, David"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Erstbesucher (grüner Punkt)</label>
+      <textarea id="badge-firsttimer-input" rows="2" placeholder="Eva, Felix, Greta"></textarea>
     </div>
 
     <div class="btn-row">
@@ -1371,7 +1371,7 @@ input:focus, select:focus, textarea:focus {
   <div class="card">
     <h3>Phase 1 Massnahmen (ab Event #1)</h3>
     <ul>
-      <li>Erstbesucher: Grüner Punkt auf Badge (nur für Team sichtbar)</li>
+      <li>Erstbesucher: Eigene Badge-Kategorie mit grünem Punkt (nur für Team erkennbar)</li>
       <li>Team: Mintgrüner Rand auf Badges</li>
       <li>Motivfrage bei Luma-Registrierung (1 Frage)</li>
       <li>Abmoderation mit genau 1 Next Step</li>
