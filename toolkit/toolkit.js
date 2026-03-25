@@ -973,9 +973,7 @@ function updateBadgeButtons() {
 
 // ====== BADGE AUTO-PREFILL ======
 async function prefillBadges() {
-  // Only prefill if all 3 inputs are empty
-  const inputs = ['badge-team-input', 'badge-guests-input', 'badge-firsttimer-input'];
-  if (inputs.some(id => document.getElementById(id).value.trim())) return;
+  // Clear previous prefill on event change
 
   // Need guests from current event + attendance data
   const approved = guests.filter(g => g.status === 'approved');
