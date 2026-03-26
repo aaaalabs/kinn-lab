@@ -1,7 +1,7 @@
 # Format-Gating & Events-Seite — Design Spec
 
 **Datum:** 2026-03-26
-**Status:** Approved
+**Status:** Approved (nach Plausibilitätstest)
 
 ---
 
@@ -25,15 +25,15 @@ TALK/KURS-Anmeldungen ohne vorherige KINN-Donnerstag-Teilnahme. Manuelle Absagen
 Kein separater Freischalt-Flow. Der bestehende Magic-Link-Flow auf kinn.at IST der Unlock-Mechanismus.
 
 ```
-User besucht Events-Seite
+User besucht Events-Seite (lab.kinn.at/events)
     |
-    ├── Nicht eingeloggt
+    ├── Nicht eingeloggt (kein lab_session)
     |   ├── Donnerstag-Events: offen, Luma-Link sichtbar
     |   └── TALK/KURS: Karte sichtbar, leicht gedimmt, CTA = Login-Modal
     |
-    └── Eingeloggt (kinn_session in localStorage)
+    └── Eingeloggt (lab_session in localStorage)
         |
-        └── Events-Endpoint: GET /api/events?email_hash=xxx
+        └── Events-Endpoint: GET /api/events/gated?email=xxx
             |
             ├── Verifiziert (Attendance >= 1 ODER Whitelist)
             |   └── TALK/KURS: Karte voll aktiv, Luma-Link sichtbar
@@ -47,9 +47,9 @@ User besucht Events-Seite
 ### Datenfluss
 
 ```
-Events-Seite (kinn.at)
+Events-Seite (lab.kinn.at)
     |
-    ├── GET /api/events?email_hash=xxx
+    ├── GET /api/events/gated?email=xxx (HTTPS, serverseitig)
     |   ├── Redis: kinn:event:* (alle Events mit Typ, Datum, Location, lumaUrl)
     |   ├── Redis: Attendance-Daten (email -> visitCount)
     |   ├── Redis: kinn:verified:whitelist (Pre-2026 Set)
@@ -65,7 +65,7 @@ Events-Seite (kinn.at)
 
 ### Hierarchie
 
-Donnerstag prominent (Hero-Card), TALK/KURS sekundär darunter. Dynamisch: wenn keine TALK/KURS-Events existieren, zeigt die Seite nur den Donnerstag — kein leerer Bereich.
+Donnerstag prominent (Hero-Card), TALK/KURS sekundär darunter. Dynamisch: wenn keine TALK/KURS-Events existieren, zeigt die Seite nur den Donnerstag — kein leerer Bereich, kein Placeholder.
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -104,10 +104,11 @@ Karte voll aktiv, normaler Style. CTA-Button verlinkt auf den Luma-Event-Link (u
 
 TALK/KURS-Events in Luma:
 - **Unlisted** — nicht öffentlich auffindbar
-- **Require Approval** — Backup falls jemand den Direktlink kennt
-- Auto-Approve via Make.com oder manuell durch Host
+- **Require Approval** — Backup falls jemand den Direktlink findet
+- Prototyp: manuelles Approve/Decline durch Host
+- Später (Phase 3): Auto-Approve via Make.com mit Attendance-Check
 
-kinn.at ist der einzige öffentliche Einstiegspunkt für TALK/KURS.
+kinn.at/lab.kinn.at ist der einzige öffentliche Einstiegspunkt für TALK/KURS.
 
 ---
 
@@ -115,7 +116,7 @@ kinn.at ist der einzige öffentliche Einstiegspunkt für TALK/KURS.
 
 ### Primär: Attendance-Daten
 
-Bestehende Luma-Attendance-Daten (bereits in Redis via `/api/luma/attendance`). Check: `visitCount >= 1` = verifiziert.
+Bestehende Luma-Attendance-Daten (bereits in Redis via `/api/luma/attendance`). Check: `visitCount >= 1` = verifiziert. Cross-Chapter: Kufstein-Teilnahme gilt auch für Innsbruck-TALK.
 
 ### Sekundär: Whitelist
 
@@ -137,14 +138,14 @@ User meldet sich mit anderer Email an als beim Donnerstag. Lösung: Kontakt-Link
 
 ## 5. API-Endpoint
 
-### GET /api/events
+### GET /api/events/gated
 
-Liefert alle upcoming Events mit Gating-Status.
+Liefert alle upcoming Events mit Gating-Status. Auf lab.kinn.at (LAB-Repo).
 
 **Query-Parameter:**
 | Param | Optional | Beschreibung |
 |-------|----------|-------------|
-| `email_hash` | ja | SHA-256 Hash der User-Email. Wenn gesetzt: Verify-Check inkl. |
+| `email` | ja | Klartext-Email des Users (nur über HTTPS). Wenn gesetzt: Verify-Check inkl. |
 
 **Response:**
 ```json
@@ -185,43 +186,77 @@ Liefert alle upcoming Events mit Gating-Status.
 - `hero`: nächster Donnerstag (immer offen, kein Gating)
 - `events`: TALK/KURS-Events, `locked` basierend auf Verify-Check
 - `verified`: globaler Status des Users
-- Ohne `email_hash`: alle Events mit `locked: true` für TALK/KURS
+- Ohne `email`: alle Events mit `locked: true` für TALK/KURS
 - `lumaUrl` nur included wenn `locked: false`
+- **`Cache-Control: private`** wenn `email` Parameter gesetzt (keine CDN-Caches für personalisierte Responses)
+- Ohne `email`: `Cache-Control: s-maxage=60, stale-while-revalidate=300`
 
 ---
 
 ## 6. Auth-Integration
 
-### Bestehender Magic-Link-Flow (kinn.at)
+### Cross-Domain: lab.kinn.at ↔ kinn.at
 
-Bereits implementiert:
-- `POST /api/signup` — sendet Magic Link per Email
-- `/api/auth/login?token=xxx` — verifiziert, redirected
-- `localStorage: kinn_session` (JWT, 30 Tage) + `kinn_email`
-- `auth.js: getSession(), getUserEmail(), isSessionValid()`
+Die Events-Seite läuft auf lab.kinn.at (Prototyp). Auth (Magic Link) läuft auf kinn.at. Unterschiedliche Origins → localStorage nicht geteilt.
+
+**Lösung: Redirect-basierter Auth**
+
+1. User klickt gelockte Karte auf lab.kinn.at → Login-Modal
+2. Modal sendet Email an kinn.at: `POST https://kinn.at/api/signup` mit `{ email, redirect: "https://lab.kinn.at/events" }`
+3. kinn.at sendet Magic Link per Email
+4. User klickt Magic Link → `/api/auth/login?token=xxx&redirect=https://lab.kinn.at/events`
+5. kinn.at verifiziert Token, redirected zu: `https://lab.kinn.at/events#token=xxx&email=user@example.com`
+6. lab.kinn.at extrahiert Token + Email aus Hash, speichert in localStorage als `lab_session` + `lab_email`
+7. Events-Seite lädt neu mit Gating-Check
+
+**kinn.at unterstützt redirect bereits:** `POST /api/signup` akzeptiert `{ redirect }`, `/api/auth/login` redirected korrekt (inkl. Safe-Redirect-Validation: muss mit `/` oder `https://` starten, kein `//`).
+
+**Beim Umzug nach kinn.at:** Redirect entfällt, `kinn_session` wird direkt verwendet.
 
 ### Events-Seite Integration
 
 ```js
+// Token aus Hash extrahieren (nach Magic-Link-Return)
+function extractAuthFromHash() {
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const token = params.get('token');
+  const email = params.get('email');
+  if (token && email) {
+    localStorage.setItem('lab_session', token);
+    localStorage.setItem('lab_email', email);
+    window.history.replaceState(null, '', window.location.pathname);
+  }
+}
+
 // Beim Laden der Events-Seite
-const session = getSession();
-if (session && isSessionValid()) {
-  const emailHash = await sha256(getUserEmail());
-  const res = await fetch('/api/events?email_hash=' + emailHash);
+extractAuthFromHash();
+const email = localStorage.getItem('lab_email');
+const token = localStorage.getItem('lab_session');
+
+if (email && token) {
+  const res = await fetch('/api/events/gated?email=' + encodeURIComponent(email));
   // → Events mit locked: true/false
 } else {
-  const res = await fetch('/api/events');
+  const res = await fetch('/api/events/gated');
   // → Alle TALK/KURS locked: true
 }
 ```
 
-### Login-Trigger
+### Login-Modal
 
-Nicht-eingeloggt + Klick auf gelockte TALK/KURS-Karte → bestehender Login-Modal öffnet sich. Nach Magic-Link-Return: Events-Seite lädt neu, Gating-Check läuft automatisch.
+Nicht-eingeloggt + Klick auf gelockte TALK/KURS-Karte → Login-Modal:
+- Email-Eingabe
+- Submit → `POST https://kinn.at/api/signup` mit `{ email, redirect: "https://lab.kinn.at/events" }`
+- Bestätigung: "Link kommt ins Postfach"
+
+**Wichtig:** Nicht-eingeloggt + Klick auf gelockte Karte öffnet den Login-Modal. Wenn der User sich einloggt aber nicht verifiziert ist, sieht er danach den Lock-Hinweis mit Donnerstag-Einladung. Das ist gewollt — der Login-Flow ist der universelle Einstieg, egal ob verifiziert oder nicht.
 
 ### Status-Persistenz
 
-localStorage (unbegrenzt). `kinn_session` ist bereits persistent. Kein zusätzlicher Unlock-State nötig — Session-Existenz + Verify-Check = Unlock-Status.
+localStorage (unbegrenzt): `lab_session` + `lab_email`. Kein Re-Check, kein TTL. "Einmal freigeschaltet = freigeschaltet."
+
+Anderes Gerät/Browser: User muss sich erneut einloggen (Magic Link, 3 Sekunden). Bekannte Limitation von localStorage-basierter Auth.
 
 ---
 
@@ -264,22 +299,45 @@ Kein zusätzlicher Luma-API-Call im Frontend. Redis ist die einzige Datenquelle 
 
 ---
 
-## 9. Rollout
+## 9. Bekannte Limitierungen
+
+| Thema | Details | Akzeptiert weil |
+|-------|---------|-----------------|
+| Per-Device Auth | Neues Gerät = erneuter Magic Link | 3 Sekunden, kein Blocker |
+| In-App Browser | Magic Link in Gmail/Outlook öffnet In-App-Webview, localStorage transferiert nicht zum System-Browser | Allgemeines Magic-Link-Problem, nicht lösbar ohne App |
+| Attendance-Cache | 1h Redis TTL + CDN Cache. Check-in um 09:00, Verify evtl. erst ab 10:00 möglich | Donnerstag-TALK-Anmeldungen passieren nicht in Echtzeit nach Check-in |
+| Luma-Direktlink | Wer den unlisted Link hat, kann sich direkt auf Luma anmelden | Require Approval fängt das ab |
+| Andere Email | User muss manuell kontaktieren | 2-3 Fälle/Monat, kein Aufwand |
+
+---
+
+## 10. Sicherheit
+
+- **Klartext-Email** an API (kein Hash): HTTPS verschlüsselt den Transport. Serverseitig nötig für Attendance-Lookup. Email wird nicht geloggt, nicht gecacht, nicht in Response inkludiert.
+- **`Cache-Control: private`** für personalisierte Responses (mit `email`-Parameter). Verhindert CDN-Cache-Poisoning.
+- **`lumaUrl` in Response**: Nicht die Security-Boundary. Luma Require Approval ist das eigentliche Gate. URL-Secrecy ist Defense-in-Depth.
+- **Cross-Origin Auth**: Token + Email kommen im URL-Fragment (Hash), nicht in Query-Params. Hash wird nicht an Server gesendet, nicht in Server-Logs.
+
+---
+
+## 11. Rollout
 
 ### Phase 0 — Sofort
 - TALK/KURS in Luma auf Unlisted + Require Approval
-- Pre-2026-Whitelist als Redis-Set anlegen
+- Pre-2026-Whitelist als Redis-Set anlegen (`kinn:verified:whitelist`)
 
-### Phase 1 — Events-Seite mit Gating
-- Events-Endpoint bauen (`/api/events` mit Verify-Check)
-- Events-Seite: Layout mit Hero + Sekundär-Karten
+### Phase 1 — Events-Seite mit Gating (lab.kinn.at)
+- `/api/events/gated` Endpoint bauen (Events + Verify-Check)
+- Events-Seite: Layout mit Hero + sekundäre Karten
 - Lock/Unlock-States implementieren
-- Magic-Link-Modal Integration
+- Login-Modal: Cross-Domain Auth via kinn.at Redirect
+- Token-Extraktion aus Hash nach Magic-Link-Return
 
 ### Phase 2 — Voting-Widget
 - Top-3 Teaser auf Events-Seite
 - Voting-Modal einbetten
 
-### Phase 3 — Automation
-- Make.com: Auto-Approve bei Luma Require Approval (Backup)
+### Phase 3 — Automation & Migration
+- Make.com: Auto-Approve bei Luma mit Attendance-Check (nicht blind)
 - Unlock-Benachrichtigung nach erstem Check-in
+- Migration der Events-Seite von lab.kinn.at nach kinn.at
