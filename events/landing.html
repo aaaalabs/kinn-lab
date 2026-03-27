@@ -128,23 +128,46 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .voting-cta:hover { background: var(--mint); color: #fff; }
 
-/* ====== FORMAT CARDS ====== */
-.format-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+/* ====== HERO QUOTE ====== */
+.hero-quote {
+  max-width: 440px; width: 100%; text-align: left;
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 3px solid var(--mint);
+  border-radius: var(--r-sm); padding: 14px 18px;
+  margin-top: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  animation: fadeUp 0.6s ease-out 0.2s both;
+}
+.hero-quote-text { font-size: 13px; font-style: italic; color: var(--text-s); line-height: 1.5; }
+.hero-quote-author { font-size: 11px; font-weight: 600; color: var(--text-m); margin-top: 6px; }
+
+/* ====== FORMAT CARDS (compact for locked) ====== */
+.format-grid { display: flex; flex-direction: column; gap: 10px; }
 .format-card {
   position: relative; overflow: hidden;
   background: var(--card); border: 1px solid var(--border);
   border-radius: var(--r); box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   transition: box-shadow 0.2s, transform 0.2s;
 }
-.format-card:hover { box-shadow: var(--sh); transform: translateY(-2px); }
-.format-card-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; border-bottom: 1px solid var(--border); }
-.format-card.locked .format-card-cover { filter: grayscale(0.25) brightness(0.93); }
-.format-card.locked .format-card-body { opacity: 0.8; }
-.format-card-body { padding: 16px 20px; }
+.format-card:hover { box-shadow: var(--sh); transform: translateY(-1px); }
+
+/* Unlocked: full card with cover */
+.format-card.unlocked .format-card-cover { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; border-bottom: 1px solid var(--border); }
+.format-card.unlocked .format-card-body { padding: 16px 20px; }
+
+/* Locked: compact row, no cover image */
+.format-card.locked { display: flex; align-items: center; padding: 14px 18px; gap: 12px; }
+.format-card.locked .format-card-cover { display: none; }
+.format-card.locked .format-card-body { padding: 0; flex: 1; opacity: 0.75; }
+.format-card.locked .format-card-body .format-card-meta { margin-bottom: 0; }
+.format-card.locked .lock-bar {
+  padding: 0; background: none; border: none;
+  font-size: 11px; flex-shrink: 0; text-align: right; max-width: 180px;
+}
+
 .format-card-type { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; display: inline-block; padding: 2px 8px; border-radius: 4px; }
 .format-card-type.talk { color: var(--talk); background: rgba(59,130,246,0.08); }
 .format-card-type.kurs { color: var(--kurs); background: rgba(139,92,246,0.08); }
-.format-card-title { font-size: 16px; font-weight: 700; color: var(--text-h); margin: 6px 0 2px; }
+.format-card-title { font-size: 15px; font-weight: 700; color: var(--text-h); margin: 4px 0 2px; }
 .format-card-meta { font-size: 12px; color: var(--text-s); margin-bottom: 12px; }
 .format-card-cta {
   display: inline-block; padding: 7px 18px;
@@ -153,13 +176,20 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   text-decoration: none; cursor: pointer; transition: background 0.15s;
 }
 .format-card-cta:hover { background: var(--mint-hover); }
-.lock-bar {
-  padding: 12px 20px; background: #fafafa; border-top: 1px solid var(--border);
-  font-size: 12px; color: var(--text-s); line-height: 1.5;
-}
+.lock-bar { font-size: 12px; color: var(--text-s); line-height: 1.5; }
 .lock-bar a { color: var(--mint); font-weight: 600; text-decoration: none; }
 .lock-bar a:hover { text-decoration: underline; }
 .lock-bar-sub { font-size: 11px; color: var(--text-m); margin-top: 3px; }
+
+/* Shared lock hint for all locked cards */
+.format-lock-hint {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 18px; margin-top: 10px;
+  font-size: 12px; color: var(--text-s); line-height: 1.5;
+  text-align: center;
+}
+.format-lock-hint a { color: var(--mint); font-weight: 600; text-decoration: none; }
+.format-lock-hint a:hover { text-decoration: underline; }
 
 /* ====== PAST EVENTS ====== */
 .photos-scroll {
@@ -266,6 +296,7 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   <div class="hero-event" id="hero-event">
     <div style="color:var(--text-m);font-size:13px">Lädt...</div>
   </div>
+  <div id="hero-quote"></div>
   <div class="stats" id="stats"></div>
   <div class="hero-login" id="hero-login"></div>
   <div class="scroll-hint" id="scroll-hint"></div>

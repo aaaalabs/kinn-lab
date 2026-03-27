@@ -43,6 +43,7 @@ async function loadAll() {
   if (feedback.status === 'fulfilled') {
     const all = feedback.value.events || [];
     renderStats(all);
+    renderHeroQuote(all);
     const past = all.filter(e => e.groupPhoto || e.feedback?.length).reverse().slice(0, 10);
     renderPast(past);
   }
@@ -81,6 +82,19 @@ function renderHeroEvent(hero) {
   `;
 }
 
+// ====== HERO QUOTE ======
+function renderHeroQuote(allEvents) {
+  const el = document.getElementById('hero-quote');
+  const allQuotes = allEvents.flatMap(e => (e.feedback || []).map(q => ({ ...q, event: e.name })));
+  if (!allQuotes.length) return;
+  // Pick a random quote each load
+  const q = allQuotes[Math.floor(Math.random() * allQuotes.length)];
+  el.innerHTML = `<div class="hero-quote">
+    <div class="hero-quote-text">\u201E${esc(q.text?.substring(0, 120))}${q.text?.length > 120 ? '...' : ''}\u201C</div>
+    <div class="hero-quote-author">${esc(q.firstName)} ${esc(q.lastInitial)} \u00b7 ${esc(q.event)}</div>
+  </div>`;
+}
+
 // ====== STATS ======
 function renderStats(allEvents) {
   const el = document.getElementById('stats');
@@ -117,39 +131,52 @@ function renderFormats(events, hero) {
   if (!events.length) return;
 
   const heroUrl = hero?.lumaUrl || '#';
+  const hasLocked = events.some(e => e.locked);
+
   const cards = events.map(ev => {
     const typeLabel = ev.type === 'talk' ? 'TALK' : ev.type === 'kurs' ? 'KURS' : 'KINN';
     const typeCls = ev.type || 'chapter';
     const displayName = ev.name.replace(/^KINN[:\s]+\w+\s*[-\u2013\u2014]\s*/i, '').trim() || ev.name;
     const meta = [fmtDate(ev.date), ev.time, ev.location].filter(Boolean).join(' \u00b7 ');
 
-    let cta;
     if (!ev.locked) {
-      cta = `<a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="format-card-cta">Anmelden</a>`;
-    } else {
-      const login = !isLoggedIn() ? `<a href="#" onclick="openModal();return false">Einloggen</a> oder ` : '';
-      cta = `<div class="lock-bar">
-        Freigeschaltet nach deinem ersten KINN Donnerstag.
-        <br>${login}<a href="${escUrl(heroUrl)}" target="_blank" rel="noopener">Zum n\u00e4chsten Donnerstag</a>
-        ${isLoggedIn() ? '<div class="lock-bar-sub">Schon mal da gewesen? <a href="mailto:kontakt@kinn.at">Schreib uns</a></div>' : ''}
+      // Unlocked: full card with cover
+      return `<div class="format-card unlocked">
+        ${ev.coverUrl ? `<img class="format-card-cover" src="${escUrl(ev.coverUrl)}" alt="" loading="lazy">` : ''}
+        <div class="format-card-body">
+          <span class="format-card-type ${typeCls}">${esc(typeLabel)}</span>
+          <div class="format-card-title">${esc(displayName)}</div>
+          <div class="format-card-meta">${esc(meta)}</div>
+          <a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="format-card-cta">Anmelden</a>
+        </div>
       </div>`;
     }
 
-    return `<div class="format-card ${ev.locked ? 'locked' : ''}">
-      ${ev.coverUrl ? `<img class="format-card-cover" src="${escUrl(ev.coverUrl)}" alt="" loading="lazy">` : ''}
+    // Locked: compact row — no cover, no repeated lock text
+    return `<div class="format-card locked">
       <div class="format-card-body">
         <span class="format-card-type ${typeCls}">${esc(typeLabel)}</span>
         <div class="format-card-title">${esc(displayName)}</div>
         <div class="format-card-meta">${esc(meta)}</div>
-        ${!ev.locked ? cta : ''}
       </div>
-      ${ev.locked ? cta : ''}
     </div>`;
   }).join('');
+
+  // Shared lock hint (once, not per card)
+  let lockHint = '';
+  if (hasLocked) {
+    const login = !isLoggedIn() ? `<a href="#" onclick="openModal();return false">Einloggen</a> oder ` : '';
+    const contact = isLoggedIn() ? ' · <a href="mailto:kontakt@kinn.at">Schon da gewesen? Schreib uns</a>' : '';
+    lockHint = `<div class="format-lock-hint">
+      Alle Formate freigeschaltet nach deinem ersten KINN Donnerstag.
+      ${login}<a href="${escUrl(heroUrl)}" target="_blank" rel="noopener">Zum n\u00e4chsten Donnerstag</a>${contact}
+    </div>`;
+  }
 
   el.innerHTML = `<div class="section reveal">
     <div class="section-label">Weitere Formate</div>
     <div class="format-grid">${cards}</div>
+    ${lockHint}
   </div>`;
 }
 
