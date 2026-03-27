@@ -147,13 +147,12 @@ function renderChapters(chapters) {
   if (!chapters.length) { el.innerHTML = ''; return; }
 
   const cards = chapters.map(ch => {
-    const chapter = chapterFromName(ch.name, null);
     const meta = [fmtDate(ch.date), ch.time].filter(Boolean).join(' \u00b7 ');
-    const loc = ch.location || ch.locationCity || '';
+    const loc = ch.locationCity || (ch.location || '').split(',')[0];
     return `<div class="chapter-card">
       <div class="chapter-card-info">
-        <div class="chapter-card-name">${esc(ch.name)} \u00b7 ${esc(chapter)}</div>
-        <div class="chapter-card-meta">${esc(meta)}${loc ? ' \u00b7 ' + esc(loc.split(',')[0]) : ''}</div>
+        <div class="chapter-card-name">${esc(ch.name)}</div>
+        <div class="chapter-card-meta">${esc(meta)}${loc ? ' \u00b7 ' + esc(loc) : ''}</div>
       </div>
       ${ch.lumaUrl ? `<a href="${escUrl(ch.lumaUrl)}" target="_blank" rel="noopener" class="chapter-card-cta">Dabei sein</a>` : ''}
     </div>`;
