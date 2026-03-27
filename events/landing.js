@@ -171,52 +171,57 @@ function renderFormats(events, hero) {
   if (!events.length) return;
 
   const heroUrl = hero?.lumaUrl || '#';
-  const hasLocked = events.some(e => e.locked);
+  const unlocked = events.filter(e => !e.locked);
+  const locked = events.filter(e => e.locked);
 
-  const cards = events.map(ev => {
+  let html = '';
+
+  // Unlocked: full cards with covers
+  unlocked.forEach(ev => {
     const typeLabel = ev.type === 'talk' ? 'TALK' : ev.type === 'kurs' ? 'KURS' : 'KINN';
     const typeCls = ev.type || 'chapter';
     const displayName = ev.name.replace(/^KINN[:\s]+\w+\s*[-\u2013\u2014]\s*/i, '').trim() || ev.name;
     const meta = [fmtDate(ev.date), ev.time, ev.location].filter(Boolean).join(' \u00b7 ');
-
-    if (!ev.locked) {
-      // Unlocked: full card with cover
-      return `<div class="format-card unlocked">
-        ${ev.coverUrl ? `<img class="format-card-cover" src="${escUrl(ev.coverUrl)}" alt="" loading="lazy">` : ''}
-        <div class="format-card-body">
-          <span class="format-card-type ${typeCls}">${esc(typeLabel)}</span>
-          <div class="format-card-title">${esc(displayName)}</div>
-          <div class="format-card-meta">${esc(meta)}</div>
-          <a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="format-card-cta">Anmelden</a>
-        </div>
-      </div>`;
-    }
-
-    // Locked: compact row — no cover, no repeated lock text
-    return `<div class="format-card locked">
+    html += `<div class="format-card-unlocked">
+      ${ev.coverUrl ? `<img class="format-card-cover" src="${escUrl(ev.coverUrl)}" alt="" loading="lazy">` : ''}
       <div class="format-card-body">
         <span class="format-card-type ${typeCls}">${esc(typeLabel)}</span>
         <div class="format-card-title">${esc(displayName)}</div>
         <div class="format-card-meta">${esc(meta)}</div>
+        <a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="format-card-cta">Anmelden</a>
       </div>
     </div>`;
-  }).join('');
+  });
 
-  // Shared lock hint (once, not per card)
-  let lockHint = '';
-  if (hasLocked) {
+  // Locked: compact list in one card
+  if (locked.length) {
+    const rows = locked.map(ev => {
+      const typeLabel = ev.type === 'talk' ? 'TALK' : ev.type === 'kurs' ? 'KURS' : 'KINN';
+      const typeCls = ev.type || 'chapter';
+      const displayName = ev.name.replace(/^KINN[:\s]+\w+\s*[-\u2013\u2014]\s*/i, '').trim() || ev.name;
+      const meta = [fmtDate(ev.date), ev.time].filter(Boolean).join(' \u00b7 ');
+      return `<div class="format-locked-row">
+        <span class="format-locked-badge ${typeCls}">${esc(typeLabel)}</span>
+        <span class="format-locked-title">${esc(displayName)}</span>
+        <span class="format-locked-meta">${esc(meta)}</span>
+      </div>`;
+    }).join('');
+
     const login = !isLoggedIn() ? `<a href="#" onclick="openModal();return false">Einloggen</a> oder ` : '';
-    const contact = isLoggedIn() ? ' · <a href="mailto:kontakt@kinn.at">Schon da gewesen? Schreib uns</a>' : '';
-    lockHint = `<div class="format-lock-hint">
-      Alle Formate freigeschaltet nach deinem ersten KINN Donnerstag.
-      ${login}<a href="${escUrl(heroUrl)}" target="_blank" rel="noopener">Zum n\u00e4chsten Donnerstag</a>${contact}
+    const contact = isLoggedIn() ? ' \u00b7 <a href="mailto:kontakt@kinn.at">Schon da gewesen? Schreib uns</a>' : '';
+
+    html += `<div class="format-locked-list">
+      ${rows}
+      <div class="format-lock-hint">
+        Freigeschaltet nach deinem ersten KINN Donnerstag.
+        ${login}<a href="${escUrl(heroUrl)}" target="_blank" rel="noopener">Zum n\u00e4chsten Donnerstag</a>${contact}
+      </div>
     </div>`;
   }
 
   el.innerHTML = `<div class="section reveal">
     <div class="section-label">Weitere Formate</div>
-    <div class="format-grid">${cards}</div>
-    ${lockHint}
+    ${html}
   </div>`;
 }
 
