@@ -43,10 +43,10 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
     radial-gradient(ellipse at 70% 80%, rgba(94,217,166,0.05) 0%, transparent 60%);
   pointer-events: none;
 }
-.hero-logo {
-  font-weight: 900; font-size: clamp(56px, 12vw, 96px);
-  letter-spacing: 8px; color: var(--dark);
-  line-height: 1; margin-bottom: 12px; position: relative;
+.hero-logo-svg {
+  width: clamp(180px, 30vw, 280px); height: auto;
+  fill: var(--dark); margin-bottom: 14px; position: relative;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.06));
 }
 .hero-tagline {
   font-size: clamp(16px, 3vw, 22px); font-weight: 400;
@@ -329,7 +329,12 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 
 <!-- ====== HERO (kinn.at simplicity) ====== -->
 <section class="hero">
-  <div class="hero-logo">KINN</div>
+  <svg class="hero-logo-svg" viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/>
+    <path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/>
+    <polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/>
+    <path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/>
+  </svg>
   <div class="hero-tagline">Der KI-Treff für Tirol.</div>
   <div class="hero-ritual">Jeden Donnerstag. 8 Uhr. Kaffee und Klartext.</div>
   <div class="hero-event" id="hero-event">
