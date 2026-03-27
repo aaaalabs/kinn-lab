@@ -625,6 +625,19 @@ input:focus, select:focus, textarea:focus {
 }
 .event-feedback-item:last-child { border-bottom: none; }
 .event-feedback-item p { color: var(--text-subtitle); margin-top: 4px; font-style: italic; }
+
+.fb-entry { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.fb-entry:last-child { border-bottom: none; }
+.fb-entry-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.fb-entry-name { font-size: 13px; font-weight: 600; color: var(--text-heading); }
+.fb-entry-rating { font-size: 12px; font-weight: 700; color: var(--mint); }
+.fb-entry-contact { font-size: 11px; padding: 1px 6px; border-radius: 3px; font-weight: 600; }
+.fb-entry-contact.yes { background: var(--mint-bg); color: #065F46; }
+.fb-entry-contact.no { background: #FEF2F2; color: #991B1B; }
+.fb-entry-text { font-size: 12px; color: var(--text-subtitle); margin-top: 4px; font-style: italic; line-height: 1.5; }
+.fb-open-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; margin: 8px 0; }
+.fb-open-badge.open { background: var(--mint-bg); color: #065F46; }
+.fb-open-badge.closed { background: #F3F4F6; color: var(--text-meta); }
 .crm-enrich-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-meta); margin-bottom: 4px; }
 
 /* ====== RESPONSIVE ====== */
@@ -851,6 +864,7 @@ input:focus, select:focus, textarea:focus {
     <a onclick="showPanel('notiz',this)">Notiz</a>
     <a onclick="showPanel('bewertung',this)">Bewertung</a>
     <a onclick="showPanel('followup',this)">Follow-up</a>
+    <a onclick="showPanel('feedback',this)">Feedback</a>
     <a onclick="showPanel('texte',this)">Texte</a>
     <a onclick="showPanel('nachbereitung',this)">Nachbereitung</a>
     <a onclick="showPanel('playbook',this)">Regeln</a>
@@ -1274,6 +1288,34 @@ input:focus, select:focus, textarea:focus {
     </div>
     <div id="fu-results" style="margin-top:8px"></div>
     <p class="hint">Rücklaufquote ab 40% = gut. Kontakt-Quote ab 60% = starker Mehrwert. Unter 40% = Handlungsbedarf bei Tischmoderation.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PANEL: FEEDBACK DASHBOARD                                     -->
+<!-- ============================================================ -->
+<div class="panel" id="panel-feedback">
+  <div class="card">
+    <h2>Feedback Dashboard</h2>
+    <p>Automatisches Email-Feedback nach Events. Versand via Cron (Do 10:00).</p>
+    <div id="fb-event-pills" class="event-pills" style="margin-top:12px">Lade...</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="fb-stats" style="display:none">
+    <div class="stat-card"><div class="stat-val" id="fb-stat-answered">-</div><div class="stat-label">Antworten</div></div>
+    <div class="stat-card"><div class="stat-val" id="fb-stat-rate">-</div><div class="stat-label">Rücklaufquote</div></div>
+    <div class="stat-card"><div class="stat-val" id="fb-stat-rating">-</div><div class="stat-label">Rating</div></div>
+    <div class="stat-card"><div class="stat-val" id="fb-stat-contact">-</div><div class="stat-label">Kontaktquote</div></div>
+  </div>
+
+  <!-- Status badge -->
+  <div id="fb-status-badge" style="display:none"></div>
+
+  <!-- Feedback entries -->
+  <div class="card" id="fb-entries" style="display:none">
+    <h3 style="font-size:14px;font-weight:600;margin-bottom:12px">Einzelne Antworten</h3>
+    <div id="fb-entry-list"></div>
   </div>
 </div>
 

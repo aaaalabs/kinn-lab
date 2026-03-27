@@ -29,6 +29,9 @@ function showPanel(id, el) {
     });
   }
   history.replaceState(null, '', '#' + id);
+
+  // Lazy-load feedback dashboard
+  if (id === 'feedback' && !fbEvents.length) loadFeedbackDashboard();
 }
 
 function handleHashNav() {
@@ -1286,6 +1289,119 @@ async function saveCrmNotes(textarea) {
   } catch (e) {
     console.warn('[Toolkit] Notizen speichern fehlgeschlagen:', e.message);
   }
+}
+
+// ====== FEEDBACK DASHBOARD ======
+let fbEvents = [];
+
+async function loadFeedbackDashboard() {
+  const container = document.getElementById('fb-event-pills');
+  if (!container) return;
+
+  try {
+    const res = await fetch('/api/feedback/dashboard');
+    if (!res.ok) throw new Error('API Fehler: ' + res.status);
+    const data = await res.json();
+    fbEvents = (data.events || []).filter(e => e.totalFeedback > 0 || e.feedbackOpen);
+
+    container.innerHTML = '';
+    if (!fbEvents.length) {
+      container.textContent = 'Keine Events mit Feedback';
+      return;
+    }
+
+    fbEvents.forEach(ev => {
+      const nrMatch = ev.name?.match(/KINN#(\d+)/i);
+      const nr = nrMatch ? '#' + nrMatch[1] : '';
+      const chapterMatch = ev.name?.match(/KINN#\d+\s+(.*)/i);
+      const chapter = chapterMatch ? chapterMatch[1].trim() : (nr || ev.name);
+      const pill = document.createElement('button');
+      pill.className = 'event-pill';
+      pill.dataset.fbKey = ev.key;
+      const badge = ev.totalFeedback > 0 ? `<span style="font-size:10px;color:var(--mint);font-weight:700;margin-left:4px">${ev.totalFeedback}</span>` : '';
+      pill.innerHTML = `<span class="pill-nr">${escapeHtml(nr)}</span><span class="pill-chapter">${escapeHtml(chapter)}</span>${badge}`;
+      pill.onclick = () => selectFeedbackEvent(ev.key);
+      container.appendChild(pill);
+    });
+
+    selectFeedbackEvent(fbEvents[0].key);
+  } catch (e) {
+    console.warn('[Toolkit] Feedback Dashboard laden fehlgeschlagen:', e.message);
+    container.textContent = 'Fehler beim Laden';
+  }
+}
+
+async function selectFeedbackEvent(key) {
+  // Active pill
+  document.querySelectorAll('#fb-event-pills .event-pill').forEach(p => p.classList.remove('active'));
+  const pill = document.querySelector(`#fb-event-pills .event-pill[data-fb-key="${key}"]`);
+  if (pill) pill.classList.add('active');
+
+  const stats = document.getElementById('fb-stats');
+  const entries = document.getElementById('fb-entries');
+  stats.style.display = 'none';
+  entries.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/feedback/dashboard?key=' + encodeURIComponent(key));
+    if (!res.ok) throw new Error('API Fehler: ' + res.status);
+    const data = await res.json();
+    renderFeedbackDashboard(data);
+  } catch (e) {
+    console.warn('[Toolkit] Feedback Detail laden fehlgeschlagen:', e.message);
+  }
+}
+
+function renderFeedbackDashboard(data) {
+  const { event, feedback } = data;
+
+  // Stats
+  const stats = document.getElementById('fb-stats');
+  stats.style.display = '';
+  document.getElementById('fb-stat-answered').textContent = event.totalFeedback || 0;
+  document.getElementById('fb-stat-rate').textContent = event.responseRate != null ? event.responseRate + '%' : '-';
+  document.getElementById('fb-stat-rating').textContent = event.avgRating != null ? event.avgRating.toFixed(1) : '-';
+  document.getElementById('fb-stat-contact').textContent = event.contactRate != null ? event.contactRate + '%' : '-';
+
+  // Status badge
+  const badge = document.getElementById('fb-status-badge');
+  badge.style.display = '';
+  badge.innerHTML = event.feedbackOpen
+    ? '<span class="fb-open-badge open">Feedback offen</span>'
+    : '<span class="fb-open-badge closed">Feedback geschlossen</span>';
+
+  // Entries
+  const entries = document.getElementById('fb-entries');
+  const list = document.getElementById('fb-entry-list');
+  if (!feedback?.length) {
+    entries.style.display = 'none';
+    return;
+  }
+
+  entries.style.display = '';
+  list.innerHTML = '';
+
+  // Sort by rating descending
+  const sorted = [...feedback].sort((a, b) => (b.valueRating || 0) - (a.valueRating || 0));
+
+  sorted.forEach(f => {
+    const rating = f.valueRating != null ? f.valueRating + '/5' : '-';
+    const contactCls = f.contactMade ? 'yes' : 'no';
+    const contactLabel = f.contactMade ? 'Kontakt' : 'Kein Kontakt';
+    const texts = [f.valueText, f.missingText].filter(Boolean);
+
+    let html = `<div class="fb-entry">
+      <div class="fb-entry-header">
+        <span class="fb-entry-name">${escapeHtml(f.firstName)} ${escapeHtml(f.lastInitial)}</span>
+        <span class="fb-entry-rating">${rating}</span>
+        <span class="fb-entry-contact ${contactCls}">${contactLabel}</span>
+      </div>`;
+    if (texts.length) {
+      html += texts.map(t => `<div class="fb-entry-text">${escapeHtml(t)}</div>`).join('');
+    }
+    html += '</div>';
+    list.innerHTML += html;
+  });
 }
 
 // ====== INIT ======

@@ -30,6 +30,10 @@
     {
       "source": "/map",
       "destination": "/map/index.html"
+    },
+    {
+      "source": "/pr-review",
+      "destination": "/pages/pr-review/index.html"
     }
   ],
   "headers": [
