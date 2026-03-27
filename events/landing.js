@@ -29,6 +29,7 @@ async function loadAll() {
   if (gated.status === 'fulfilled') {
     const d = gated.value;
     renderHeroEvent(d.hero);
+    renderChapters(d.events.filter(e => e.type === 'chapter'));
     renderFormats(d.events.filter(e => e.type !== 'chapter'), d.hero);
 
     // Login hint
@@ -87,10 +88,25 @@ function renderHeroQuote(allEvents) {
   const el = document.getElementById('hero-quote');
   const allQuotes = allEvents.flatMap(e => (e.feedback || []).map(q => ({ ...q, event: e.name })));
   if (!allQuotes.length) return;
-  // Pick a random quote each load
-  const q = allQuotes[Math.floor(Math.random() * allQuotes.length)];
+
+  // Filter for positive, newcomer-friendly quotes (not process criticism)
+  const positive = ['format', 'austausch', 'toll', 'super', 'cool', 'erste', 'unglaublich', 'spannend', 'wirkung', 'wieder', 'energie', 'vernetz'];
+  const negative = ['nicht', 'fehlt', 'leider', 'laut', 'kurz', 'problem', 'funktioniert nicht'];
+
+  const good = allQuotes.filter(q => {
+    const t = (q.text || '').toLowerCase();
+    if (t.length < 40) return false;
+    const hasPositive = positive.some(kw => t.includes(kw));
+    const hasNegative = negative.some(kw => t.includes(kw));
+    return hasPositive && !hasNegative;
+  });
+
+  const pool = good.length ? good : allQuotes.filter(q => (q.text || '').length > 40);
+  if (!pool.length) return;
+  const q = pool[Math.floor(Math.random() * pool.length)];
+
   el.innerHTML = `<div class="hero-quote">
-    <div class="hero-quote-text">\u201E${esc(q.text?.substring(0, 120))}${q.text?.length > 120 ? '...' : ''}\u201C</div>
+    <div class="hero-quote-text">\u201E${esc(q.text?.substring(0, 130))}${q.text?.length > 130 ? '...' : ''}\u201C</div>
     <div class="hero-quote-author">${esc(q.firstName)} ${esc(q.lastInitial)} \u00b7 ${esc(q.event)}</div>
   </div>`;
 }
@@ -122,6 +138,30 @@ function renderVoting(topics) {
       <div class="voting-topics">${pills}</div>
       <button class="voting-cta" onclick="alert('Voting-Details kommen bald!')">Stimm ab</button>
     </div>
+  </div>`;
+}
+
+// ====== CHAPTERS ======
+function renderChapters(chapters) {
+  const el = document.getElementById('chapters-section');
+  if (!chapters.length) { el.innerHTML = ''; return; }
+
+  const cards = chapters.map(ch => {
+    const chapter = chapterFromName(ch.name, null);
+    const meta = [fmtDate(ch.date), ch.time].filter(Boolean).join(' \u00b7 ');
+    const loc = ch.location || ch.locationCity || '';
+    return `<div class="chapter-card">
+      <div class="chapter-card-info">
+        <div class="chapter-card-name">${esc(ch.name)} \u00b7 ${esc(chapter)}</div>
+        <div class="chapter-card-meta">${esc(meta)}${loc ? ' \u00b7 ' + esc(loc.split(',')[0]) : ''}</div>
+      </div>
+      ${ch.lumaUrl ? `<a href="${escUrl(ch.lumaUrl)}" target="_blank" rel="noopener" class="chapter-card-cta">Dabei sein</a>` : ''}
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `<div class="section reveal" style="padding-top:24px;padding-bottom:0">
+    <div class="section-label">Weitere Standorte</div>
+    <div class="chapters">${cards}</div>
   </div>`;
 }
 
@@ -274,6 +314,20 @@ function chapterFromName(name, chapter) {
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 function escUrl(u) { if (!u) return ''; try { return new URL(u).href; } catch { return esc(u); } }
 
+// ====== PARTNER LOGOS ======
+function renderPartners() {
+  const logos = [
+    { src: 'https://kinn.at/public/logos/land-tirol.svg', alt: 'Land Tirol' },
+    { src: 'https://kinn.at/public/logos/inncubator.svg', alt: 'Inncubator' },
+    { src: 'https://kinn.at/public/logos/impacthub.svg', alt: 'Impact Hub Tirol' },
+    { src: 'https://kinn.at/public/logos/werkstaette-wattens.svg', alt: 'Werkst\u00e4tte Wattens' },
+    { src: 'https://kinn.at/public/logos/innovationsraum-kufstein.svg', alt: 'Innovationsraum Kufstein' },
+  ];
+  const el = document.getElementById('partners');
+  el.innerHTML = logos.map(l => `<img src="${l.src}" alt="${esc(l.alt)}" loading="lazy">`).join('');
+}
+
 // ====== INIT ======
 extractAuthFromHash();
 loadAll();
+renderPartners();

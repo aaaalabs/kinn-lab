@@ -50,7 +50,11 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .hero-tagline {
   font-size: clamp(16px, 3vw, 22px); font-weight: 400;
-  color: var(--text-s); margin-bottom: 28px; position: relative;
+  color: var(--text-s); margin-bottom: 6px; position: relative;
+}
+.hero-ritual {
+  font-size: 13px; font-weight: 500; color: var(--text-m);
+  letter-spacing: 0.04em; margin-bottom: 28px; position: relative;
 }
 .hero-event {
   position: relative;
@@ -270,6 +274,35 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .modal-status { font-size: 13px; color: var(--text-s); margin-top: 12px; text-align: center; }
 .modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 22px; color: var(--text-m); cursor: pointer; }
 
+/* ====== CHAPTERS ====== */
+.chapters { display: flex; gap: 10px; flex-wrap: wrap; }
+.chapter-card {
+  flex: 1; min-width: 200px;
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 18px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.chapter-card-info { flex: 1; }
+.chapter-card-name { font-size: 14px; font-weight: 700; color: var(--text-h); }
+.chapter-card-meta { font-size: 12px; color: var(--text-s); }
+.chapter-card-cta {
+  padding: 6px 14px; background: var(--mint); color: #fff;
+  border: none; border-radius: 6px; font-family: inherit;
+  font-size: 12px; font-weight: 600; text-decoration: none;
+  white-space: nowrap; transition: background 0.15s;
+}
+.chapter-card-cta:hover { background: var(--mint-hover); }
+
+/* ====== PARTNER LOGOS ====== */
+.partner-row {
+  display: flex; gap: 20px; justify-content: center; align-items: center;
+  flex-wrap: wrap; opacity: 0.5; transition: opacity 0.3s;
+}
+.partner-row:hover { opacity: 0.8; }
+.partner-row img { height: 24px; object-fit: contain; filter: grayscale(1); transition: filter 0.2s; }
+.partner-row img:hover { filter: grayscale(0); }
+
 /* ====== ANIMATIONS ====== */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes modalIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
@@ -293,6 +326,7 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 <section class="hero">
   <div class="hero-logo">KINN</div>
   <div class="hero-tagline">Der KI-Treff für Tirol.</div>
+  <div class="hero-ritual">Jeden Donnerstag. 8 Uhr. Kaffee und Klartext.</div>
   <div class="hero-event" id="hero-event">
     <div style="color:var(--text-m);font-size:13px">Lädt...</div>
   </div>
@@ -304,13 +338,15 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 
 <!-- ====== BELOW THE FOLD ====== -->
 <div class="wrap">
+  <div id="chapters-section"></div>
   <div id="voting-section"></div>
   <div id="formats-section"></div>
   <div id="past-section"></div>
 </div>
 
 <footer class="footer" id="footer">
-  <div style="margin-bottom:8px">kinn.at &middot; Tirols KI-Community</div>
+  <div class="partner-row" id="partners"></div>
+  <div style="margin-top:16px">kinn.at &middot; Tirols KI-Community</div>
 </footer>
 
 <!-- ====== LOGIN MODAL ====== -->
