@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PR #1 — TypeScript Migration Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    @font-face { font-family:'Futura'; src:local('Futura'),local('Futura-Medium'),local('FuturaPT-Book'); font-weight:400; }
+
+    :root {
+      --mintgreen:#5ED9A6;
+      --heavy-metal:#2B3228;
+      --ecru-white:#F5F0E6;
+      --spring-rain:#A8C8B0;
+      --malta:#BDB2A1;
+      --kangaroo:#C6C3B5;
+      --teal:#4A9B8C;
+      --dark-teal:#2D6B60;
+      --cream:#F5F1E8;
+      --mint-glow:rgba(94,217,166,0.15);
+      --mint-subtle:rgba(94,217,166,0.08);
+      --bg:var(--ecru-white);
+      --text:var(--heavy-metal);
+      --text-muted:#6B7068;
+      --surface:#FFFFFF;
+      --border:rgba(43,50,40,0.1);
+      --warn:#D4956A;
+      --warn-bg:rgba(212,149,106,0.08);
+      --danger:#C85A5A;
+      --danger-bg:rgba(200,90,90,0.08);
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Futura','Work Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.618;-webkit-font-smoothing:antialiased}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,240,230,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.6rem 2rem;display:flex;align-items:center;gap:1.5rem}
+    nav .logo-nav{display:flex;align-items:center;text-decoration:none}
+    nav .logo-nav svg{height:18px;width:auto;fill:var(--heavy-metal)}
+    nav .nav-links{display:flex;gap:0.15rem;flex-wrap:wrap}
+    nav a.nl{font-family:'Futura','Work Sans',sans-serif;font-size:0.7rem;color:var(--text-muted);text-decoration:none;padding:0.3rem 0.55rem;border-radius:6px;transition:all 0.2s;letter-spacing:0.04em;text-transform:uppercase}
+    nav a.nl:hover{background:var(--mint-glow);color:var(--heavy-metal)}
+    nav .nav-tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--mintgreen);color:var(--heavy-metal);padding:0.2rem 0.5rem;border-radius:4px;margin-left:auto}
+
+    .page{min-height:100vh;padding:5.5rem 2rem 4rem;display:flex;align-items:center;justify-content:center;position:relative}
+    .pi{max-width:920px;width:100%}
+    .page.pg-light::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 30%,var(--mint-subtle) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(168,200,176,0.06) 0%,transparent 50%);pointer-events:none}
+    .page.pg-light-alt{background:linear-gradient(180deg,var(--ecru-white) 0%,#F0EBE1 100%)}
+    .page.pg-light-alt::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 70% 20%,rgba(189,178,161,0.08) 0%,transparent 50%),radial-gradient(circle at 30% 80%,var(--mint-subtle) 0%,transparent 50%);pointer-events:none}
+
+    .page.pg-dark{background:var(--heavy-metal);color:var(--ecru-white)}
+    .page.pg-dark::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 30% 40%,rgba(94,217,166,0.06) 0%,transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(168,200,176,0.04) 0%,transparent 60%);pointer-events:none}
+    .pg-dark h1,.pg-dark h2{color:var(--ecru-white)}
+    .pg-dark p,.pg-dark .sub{color:var(--spring-rain)}
+    .pg-dark .sn{color:var(--mintgreen);opacity:0.2}
+    .pg-dark .sl{color:var(--spring-rain)}
+    .pg-dark .note{background:rgba(94,217,166,0.08);border-color:var(--mintgreen)}
+    .pg-dark .note strong{color:var(--mintgreen)}
+
+    .page.pg-mint{background:linear-gradient(135deg,#38C98A 0%,#5ED9A6 55%,#7BE6B8 100%);color:var(--heavy-metal)}
+    .pg-mint .sn{color:var(--heavy-metal);opacity:0.15}
+    .pg-mint .sl{color:var(--dark-teal)}
+    .pg-mint .sub{color:var(--dark-teal)}
+    .pg-mint .metric{background:rgba(43,50,40,0.1);border-color:rgba(43,50,40,0.08);backdrop-filter:blur(4px)}
+    .pg-mint .metric-val{color:var(--heavy-metal)}
+    .pg-mint .metric-unit{color:var(--dark-teal)}
+    .pg-mint .metric-label{color:var(--heavy-metal)}
+
+    .cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:var(--heavy-metal)!important;color:var(--ecru-white)!important}
+    .cover-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(94,217,166,0.18) 0%,transparent 70%);pointer-events:none;animation:pulse-glow 8s ease-in-out infinite}
+    @keyframes pulse-glow{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}50%{transform:translate(-50%,-50%) scale(1.08);opacity:0.5}}
+    .cl{width:320px;max-width:70%;margin:0 auto 1.5rem;z-index:1;position:relative}
+    .cl svg{width:100%;height:auto;fill:var(--ecru-white);filter:drop-shadow(0 0 30px rgba(94,217,166,0.3))}
+    .ct{font-size:0.9rem;color:var(--spring-rain);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:2rem;z-index:1;position:relative}
+    .ch{font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(1.75rem,5vw,2.8rem);color:var(--ecru-white);margin-bottom:1rem;z-index:1;position:relative}
+    .cs{font-size:1rem;color:var(--spring-rain);margin-bottom:0.5rem;z-index:1;position:relative}
+    .cb{display:inline-block;font-size:0.75rem;color:var(--mintgreen);background:rgba(94,217,166,0.12);border:1px solid rgba(94,217,166,0.25);padding:0.4rem 1.25rem;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;margin-top:3rem;z-index:1;position:relative;font-family:'Montserrat',sans-serif;font-weight:700}
+    .ml{width:60px;height:3px;background:var(--mintgreen);border-radius:2px;margin:1.5rem auto;z-index:1;position:relative}
+
+    h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.75rem,4vw,2.5rem);color:var(--heavy-metal);letter-spacing:0.02em;line-height:1.15;margin-bottom:1.5rem}
+    h2{font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--heavy-metal);line-height:1.3;margin-top:2.5rem;margin-bottom:1rem}
+    h3{font-family:'Montserrat',sans-serif;font-weight:700;font-size:1.1rem;color:var(--teal);margin-top:1.5rem;margin-bottom:0.75rem}
+    p{margin-bottom:1rem;line-height:1.7}
+    .sn{font-family:'Montserrat',sans-serif;font-weight:900;font-size:4rem;color:var(--spring-rain);opacity:0.4;line-height:1;margin-bottom:-0.5rem}
+    .sl{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .sub{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.85rem;color:var(--teal);letter-spacing:0.04em;margin-bottom:1.25rem}
+
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+    .metric{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1.25rem;text-align:center;transition:transform 0.2s,box-shadow 0.2s}
+    .metric:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(43,50,40,0.08)}
+    .metric-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.5rem,3vw,2rem);color:var(--teal);line-height:1.1}
+    .metric-unit{font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.7rem;color:var(--kangaroo);letter-spacing:0.05em;text-transform:uppercase;margin-top:0.15rem}
+    .metric-label{font-size:0.8rem;color:var(--text-muted);margin-top:0.4rem}
+
+    .note{background:rgba(94,217,166,0.08);border-left:3px solid var(--mintgreen);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.9rem}
+    .note strong{color:var(--teal)}
+    .note.warn{background:var(--warn-bg);border-color:var(--warn)}
+    .note.warn strong{color:var(--warn)}
+    .note.danger{background:var(--danger-bg);border-color:var(--danger)}
+    .note.danger strong{color:var(--danger)}
+
+    .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin:1.5rem 0}
+    .phase{background:var(--surface);border-radius:16px;padding:1.75rem 1.5rem;border:1px solid var(--border);position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+    .phase:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(43,50,40,0.08)}
+    .phase::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--spring-rain)}
+    .phase.active::before{background:var(--mintgreen)}
+    .phase.warn::before{background:var(--warn)}
+    .phase.danger::before{background:var(--danger)}
+    .phase-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:0.5rem}
+    .phase-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--heavy-metal);margin-bottom:0.25rem}
+    .phase-body{font-size:0.88rem;color:var(--text-muted);line-height:1.6}
+
+    .flow{display:flex;align-items:stretch;gap:0;margin:1.5rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+    .flow-item{flex:1;padding:1.25rem 1rem;background:var(--surface);position:relative;text-align:center;transition:background 0.2s}
+    .flow-item:hover{background:var(--mint-subtle)}
+    .flow-item:not(:last-child){border-right:1px solid var(--border)}
+    .flow-item:not(:last-child)::after{content:'\2192';position:absolute;right:-0.6rem;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--mintgreen);z-index:2;background:var(--surface);width:1.2rem;height:1.2rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;line-height:1}
+    .flow-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);margin-bottom:0.25rem}
+    .flow-text{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
+
+    /* AREA CHART */
+    .area-chart{display:grid;grid-template-columns:repeat(6,1fr);gap:0.5rem;margin:1.5rem 0}
+    .area-bar{border-radius:12px;padding:1rem 0.75rem;text-align:center;position:relative;overflow:hidden;min-height:120px;display:flex;flex-direction:column;justify-content:flex-end}
+    .area-bar-fill{position:absolute;bottom:0;left:0;right:0;border-radius:12px;transition:height 0.5s}
+    .area-bar-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);position:relative;z-index:1;margin-bottom:0.25rem}
+    .area-bar-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.1rem;color:var(--heavy-metal);position:relative;z-index:1}
+    .area-bar-sub{font-size:0.65rem;color:var(--text-muted);position:relative;z-index:1}
+
+    /* RISK MATRIX */
+    .risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+    .risk-card{border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;transition:transform 0.2s}
+    .risk-card:hover{transform:translateY(-2px)}
+    .risk-card.green{background:rgba(94,217,166,0.08);border:1px solid rgba(94,217,166,0.2)}
+    .risk-card.yellow{background:var(--warn-bg);border:1px solid rgba(212,149,106,0.2)}
+    .risk-card.red{background:var(--danger-bg);border:1px solid rgba(200,90,90,0.2)}
+    .risk-tag{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:5px;display:inline-block;margin-bottom:0.5rem}
+    .risk-tag.low{background:var(--mintgreen);color:var(--heavy-metal)}
+    .risk-tag.med{background:var(--warn);color:white}
+    .risk-tag.high{background:var(--danger);color:white}
+    .risk-title{font-family:'Montserrat',sans-serif;font-weight:800;font-size:0.95rem;margin-bottom:0.35rem}
+    .risk-body{font-size:0.82rem;color:var(--text-muted);line-height:1.5}
+
+    .pg-dark .risk-card.green{background:rgba(94,217,166,0.06);border-color:rgba(94,217,166,0.15)}
+    .pg-dark .risk-card.yellow{background:rgba(212,149,106,0.06);border-color:rgba(212,149,106,0.15)}
+    .pg-dark .risk-card.red{background:rgba(200,90,90,0.06);border-color:rgba(200,90,90,0.15)}
+    .pg-dark .risk-title{color:var(--ecru-white)}
+    .pg-dark .risk-body{color:var(--spring-rain)}
+
+    .pg-footer{background:var(--heavy-metal)!important;min-height:auto;padding:4rem 2rem}
+    .pg-footer .pi{text-align:center}
+
+    @media(max-width:768px){
+      .page{padding:4.5rem 1rem 3rem}
+      .cl{width:220px}
+      .phases{grid-template-columns:1fr}
+      .metrics{grid-template-columns:repeat(2,1fr)}
+      .flow{flex-direction:column}
+      .flow-item:not(:last-child){border-right:none;border-bottom:1px solid var(--border)}
+      .flow-item:not(:last-child)::after{display:none}
+      .risk-grid{grid-template-columns:1fr}
+      .area-chart{grid-template-columns:repeat(3,1fr)}
+      .cover-glow{width:350px;height:350px}
+      nav .nav-links{display:none}
+    }
+    @media print{nav{display:none}.page{min-height:auto;page-break-after:always;padding:2rem}body{background:white}}
+    [id]{scroll-margin-top:4rem}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#cover" class="logo-nav">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+  </a>
+  <div class="nav-links">
+    <a href="#scope" class="nl">Scope</a>
+    <a href="#architektur" class="nl">Architektur</a>
+    <a href="#impact" class="nl">Impact</a>
+    <a href="#risiken" class="nl">Risiken</a>
+    <a href="#chancen" class="nl">Chancen</a>
+    <a href="#empfehlung" class="nl">Empfehlung</a>
+  </div>
+  <div class="nav-tag">PR #1 Review</div>
+</nav>
+
+
+<!-- COVER -->
+<div class="page cover" id="cover">
+  <div class="cover-glow"></div>
+  <div class="cl">
+    <svg viewBox="0 0 931.35 308.55" xmlns="http://www.w3.org/2000/svg"><polygon points="495.04 20.27 569.04 153.27 569.04 20.27 654.04 20.27 654.04 288.27 572.54 288.27 498.04 159.27 498.04 288.27 416.04 288.27 416.04 20.27 495.04 20.27"/><path d="M682.04,20.27l78.89.11,73.11,133.89V20.27h81v268h-80l-72-130v130h-78.5c-.61,0-1.53-.8-2.5,0V20.27Z"/><polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/><path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/></svg>
+  </div>
+  <div class="ct">Software Architecture Review</div>
+  <div class="ch">PR #1: TypeScript Migration</div>
+  <div class="ml"></div>
+  <div class="cs">TypeScript Type System, Biome Linting & Quality Tooling</div>
+  <div style="font-size:0.85rem;color:var(--spring-rain);margin-top:0.5rem;z-index:1;position:relative">Autor: <strong>sftmlg</strong> &middot; 18.03.2026 &middot; DRAFT</div>
+  <div class="cb">+13.379 / -14.798 Zeilen &middot; 100 Dateien</div>
+</div>
+
+
+<!-- 01: SCOPE -->
+<div class="page pg-mint" id="scope"><div class="pi">
+  <div class="sn">01</div>
+  <div class="sl">Scope</div>
+  <h1>Was ändert sich?</h1>
+  <p class="sub">Vanilla JS &rarr; Strict TypeScript &middot; Biome Linting &middot; Dead Code Removal</p>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">32</div><div class="metric-unit">gelöscht</div><div class="metric-label">.js Dateien</div></div>
+    <div class="metric"><div class="metric-val">67</div><div class="metric-unit">erstellt</div><div class="metric-label">.ts Dateien</div></div>
+    <div class="metric"><div class="metric-val">9</div><div class="metric-unit">neue</div><div class="metric-label">Type Definitions</div></div>
+    <div class="metric"><div class="metric-val">21</div><div class="metric-unit">bestanden</div><div class="metric-label">Tests</div></div>
+  </div>
+
+  <h2>Kern-Maßnahmen</h2>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-label">Convert</div>
+      <div class="flow-text">32 JS &rarr; TS mit strikter Typisierung</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Type</div>
+      <div class="flow-text">9 Type-Definitionen (API, Auth, Fund, Gov, Radar, Badges)</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Lint</div>
+      <div class="flow-text">Biome 2.4 mit strikten Regeln (noExplicitAny, noDoubleEquals)</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">Clean</div>
+      <div class="flow-text">Dead Code entfernt (redis-typed.ts, oc.ts), knip Detector</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Security Fix enthalten:</strong> XSS-Vulnerability in branded-error (HTML Escaping + URL Protocol Sanitization) + Math.random() JTI durch crypto.randomUUID() ersetzt.</div>
+</div></div>
+
+
+<!-- 02: ARCHITEKTUR -->
+<div class="page pg-dark" id="architektur"><div class="pi">
+  <div class="sn">02</div>
+  <div class="sl">Architektur</div>
+  <h1>Betroffene Systeme</h1>
+  <p class="sub">6 Bereiche, 100 Dateien &mdash; praktisch jeder API-Endpoint betroffen</p>
+
+  <div class="area-chart">
+    <div class="area-bar" style="background:rgba(94,217,166,0.08);border:1px solid rgba(94,217,166,0.15)">
+      <div class="area-bar-fill" style="height:80%;background:linear-gradient(to top,rgba(94,217,166,0.25),rgba(94,217,166,0.05))"></div>
+      <div class="area-bar-val">41</div>
+      <div class="area-bar-label">Admin</div>
+      <div class="area-bar-sub">2.375+ / 2.696-</div>
+    </div>
+    <div class="area-bar" style="background:rgba(94,217,166,0.08);border:1px solid rgba(94,217,166,0.15)">
+      <div class="area-bar-fill" style="height:42%;background:linear-gradient(to top,rgba(94,217,166,0.25),rgba(94,217,166,0.05))"></div>
+      <div class="area-bar-val">22</div>
+      <div class="area-bar-label">Gov</div>
+      <div class="area-bar-sub">1.090+ / 868-</div>
+    </div>
+    <div class="area-bar" style="background:rgba(94,217,166,0.08);border:1px solid rgba(94,217,166,0.15)">
+      <div class="area-bar-fill" style="height:38%;background:linear-gradient(to top,rgba(94,217,166,0.25),rgba(94,217,166,0.05))"></div>
+      <div class="area-bar-val">20</div>
+      <div class="area-bar-label">API</div>
+      <div class="area-bar-sub">948+ / 1.388-</div>
+    </div>
+    <div class="area-bar" style="background:rgba(94,217,166,0.08);border:1px solid rgba(94,217,166,0.15)">
+      <div class="area-bar-fill" style="height:19%;background:linear-gradient(to top,rgba(94,217,166,0.25),rgba(94,217,166,0.05))"></div>
+      <div class="area-bar-val">10</div>
+      <div class="area-bar-label">Fund</div>
+      <div class="area-bar-sub">683+ / 621-</div>
+    </div>
+    <div class="area-bar" style="background:rgba(94,217,166,0.08);border:1px solid rgba(94,217,166,0.15)">
+      <div class="area-bar-fill" style="height:8%;background:linear-gradient(to top,rgba(94,217,166,0.25),rgba(94,217,166,0.05))"></div>
+      <div class="area-bar-val">4</div>
+      <div class="area-bar-label">Badge</div>
+      <div class="area-bar-sub">111+ / 107-</div>
+    </div>
+    <div class="area-bar" style="background:rgba(94,217,166,0.08);border:1px solid rgba(94,217,166,0.15)">
+      <div class="area-bar-fill" style="height:4%;background:linear-gradient(to top,rgba(94,217,166,0.25),rgba(94,217,166,0.05))"></div>
+      <div class="area-bar-val">2</div>
+      <div class="area-bar-label">Discord</div>
+      <div class="area-bar-sub">106+ / 127-</div>
+    </div>
+  </div>
+
+  <h2>TypeScript Config</h2>
+  <div class="flow">
+    <div class="flow-item">
+      <div class="flow-label">strict</div>
+      <div class="flow-text">Alle strict Checks aktiviert</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">noUnchecked</div>
+      <div class="flow-text">Index-Zugriffe geprüft</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">exactOptional</div>
+      <div class="flow-text">Exakte Optional Props</div>
+    </div>
+    <div class="flow-item">
+      <div class="flow-label">verbatim</div>
+      <div class="flow-text">Module Syntax strikt</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Verifikation:</strong> 15 unabhängige Review-Agenten, 3 Iterationen (5 Agenten x 3 Runden). TypeScript 0 Errors, Biome 0 Warnings, 21/21 Tests bestanden, 0 JS/TS Naming Conflicts.</div>
+</div></div>
+
+
+<!-- 03: IMPACT -->
+<div class="page pg-light-alt" id="impact"><div class="pi">
+  <div class="sn">03</div>
+  <div class="sl">Impact-Analyse</div>
+  <h1>Blast Radius</h1>
+  <p class="sub">Nahezu jeder serverless Endpoint wird angefasst &mdash; das gesamte Backend</p>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-val">100%</div><div class="metric-unit">der</div><div class="metric-label">Admin-Endpoints</div></div>
+    <div class="metric"><div class="metric-val">100%</div><div class="metric-unit">der</div><div class="metric-label">Gov-Endpoints</div></div>
+    <div class="metric"><div class="metric-val">100%</div><div class="metric-unit">der</div><div class="metric-label">Fund-Endpoints</div></div>
+    <div class="metric"><div class="metric-val">0%</div><div class="metric-unit">der</div><div class="metric-label">Frontend-Dateien</div></div>
+  </div>
+
+  <h2>Was NICHT betroffen ist</h2>
+  <p>Das Frontend (admin/js/*, pages/*, public/js/*) wird nicht angefasst. Radar-System (api/radar/) fehlt im PR. Feedback-System (api/feedback/) fehlt ebenfalls &mdash; wurde parallel von uns neu gebaut.</p>
+
+  <div class="note warn"><strong>Achtung Merge-Konflikte:</strong> Unser parallel entwickeltes Feedback-System (api/feedback/*.js, lib/feedback.js) existiert im PR-Branch nicht. Nach Merge muss geprüft werden ob die neuen .js Dateien neben den .ts Dateien koexistieren können.</div>
+</div></div>
+
+
+<!-- 04: RISIKEN -->
+<div class="page pg-dark" id="risiken"><div class="pi">
+  <div class="sn">04</div>
+  <div class="sl">Risiko-Bewertung</div>
+  <h1>Was kann schiefgehen?</h1>
+  <p class="sub">Big-Bang Migration: 100 Dateien in einem PR</p>
+
+  <div class="risk-grid">
+    <div class="risk-card red">
+      <div class="risk-tag high">Hoch</div>
+      <div class="risk-title">Big-Bang Deployment</div>
+      <div class="risk-body">100 Dateien in einem Merge. Wenn ein Endpoint bricht, ist Rollback nur komplett möglich. Kein schrittweises Deployment. Vercel baut alles gleichzeitig &mdash; ein TypeScript-Fehler im Build stoppt das gesamte Deployment.</div>
+    </div>
+
+    <div class="risk-card red">
+      <div class="risk-tag high">Hoch</div>
+      <div class="risk-title">Merge-Konflikte mit main</div>
+      <div class="risk-body">PR ist 9 Tage alt (18.03.). Seitdem wurden 12+ Commits auf main gepusht (Feedback-System, Testimonials, Voting). Massive Konflikte in vercel.json, package.json, und möglicherweise lib/* Dateien erwartet.</div>
+    </div>
+
+    <div class="risk-card yellow">
+      <div class="risk-tag med">Mittel</div>
+      <div class="risk-title">Vercel TS Runtime</div>
+      <div class="risk-body">Vercel Serverless Functions unterstützen .ts nativ, aber das Verhalten bei Edge Cases (dynamische Imports, ES Modules) kann abweichen. "npx tsc" lokal bestanden heißt nicht "Vercel baut korrekt".</div>
+    </div>
+
+    <div class="risk-card yellow">
+      <div class="risk-tag med">Mittel</div>
+      <div class="risk-title">Ungetestete Runtime</div>
+      <div class="risk-body">21 Unit-Tests, aber kein Preview-Deployment getestet (Test-Plan zeigt "Deploy to Vercel preview" als offen). Typen stimmen, aber Runtime-Verhalten ist nicht validiert &mdash; z.B. Redis-Deserialisierung, JWT-Token-Handling, Stripe API Calls.</div>
+    </div>
+
+    <div class="risk-card yellow">
+      <div class="risk-tag med">Mittel</div>
+      <div class="risk-title">JS/TS Koexistenz</div>
+      <div class="risk-body">Neue .js Dateien (unser Feedback-System, Radar) müssen neben .ts Dateien funktionieren. Biome-Config und tsconfig könnten unsere JS-Dateien blockieren oder mit Warnings überfluten.</div>
+    </div>
+
+    <div class="risk-card green">
+      <div class="risk-tag low">Niedrig</div>
+      <div class="risk-title">Regressions in Types</div>
+      <div class="risk-body">Strikteste TS-Config + 3 Iterationen Review-Agenten. Typ-Sicherheit ist wahrscheinlich korrekt. Geringe Gefahr falscher Type-Casts (nur 1 "as" Cast im gesamten PR, dokumentiert).</div>
+    </div>
+  </div>
+</div></div>
+
+
+<!-- 05: CHANCEN -->
+<div class="page pg-light" id="chancen"><div class="pi">
+  <div class="sn">05</div>
+  <div class="sl">Chancen</div>
+  <h1>Was bringt es?</h1>
+  <p class="sub">Langfristige Code-Qualität vs. kurzfristiges Risiko</p>
+
+  <div class="phases">
+    <div class="phase active">
+      <div class="phase-label">Sofort</div>
+      <div class="phase-title">Type Safety</div>
+      <div class="phase-body">Compile-Time Fehler statt Runtime-Crashes. Jeder API-Endpoint hat klare Input/Output-Typen. IDE-Autocomplete und Refactoring werden dramatisch besser.</div>
+    </div>
+    <div class="phase active">
+      <div class="phase-label">Sofort</div>
+      <div class="phase-title">Security Fixes</div>
+      <div class="phase-body">XSS in branded-error gefixt. Math.random() JTI durch crypto.randomUUID() ersetzt. Beides waren echte Vulnerabilities.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Kurzfristig</div>
+      <div class="phase-title">Dead Code Elimination</div>
+      <div class="phase-body">knip Detector findet ungenutzte Exports und Dateien. redis-typed.ts und oc.ts bereits entfernt. Weniger Code = weniger Angriffsfläche.</div>
+    </div>
+  </div>
+
+  <div class="phases">
+    <div class="phase">
+      <div class="phase-label">Mittelfristig</div>
+      <div class="phase-title">Konsistente Code-Qualität</div>
+      <div class="phase-body">Biome erzwingt einheitlichen Style, blockt unsichere Patterns (noExplicitAny, noDoubleEquals). Neue Beiträge werden automatisch geprüft.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Mittelfristig</div>
+      <div class="phase-title">Developer Experience</div>
+      <div class="phase-body">Type Definitions als lebende Dokumentation. Neue Entwickler verstehen Datenstrukturen sofort. Redis-Schema als Type statt als CLAUDE.md Kommentar.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Langfristig</div>
+      <div class="phase-title">Skalierbarkeit</div>
+      <div class="phase-body">Mit wachsendem Team (Contributors, KINN:PATE) wird Type Safety zum Sicherheitsnetz. Refactoring wird sicherer, API-Contracts sind explizit.</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Netto-Effekt:</strong> -1.419 Zeilen trotz umfassender Type Definitions. Der Code wird nicht größer, sondern sicherer &mdash; ein seltenes Ergebnis bei TS-Migrationen.</div>
+</div></div>
+
+
+<!-- 06: EMPFEHLUNG -->
+<div class="page pg-mint" id="empfehlung"><div class="pi">
+  <div class="sn">06</div>
+  <div class="sl">Empfehlung</div>
+  <h1>Nicht blind mergen.</h1>
+  <p class="sub">Der PR ist gut &mdash; aber das Deployment-Risiko erfordert einen klaren Plan</p>
+
+  <div class="phases">
+    <div class="phase active">
+      <div class="phase-label">Schritt 1</div>
+      <div class="phase-title">Preview Deploy</div>
+      <div class="phase-body">PR-Branch auf Vercel Preview deployen. Jeden Endpoint manuell testen: Auth, Fund, Gov, Admin. Der offene Testplan-Punkt "Deploy to Vercel preview" muss erledigt werden.</div>
+    </div>
+    <div class="phase warn">
+      <div class="phase-label">Schritt 2</div>
+      <div class="phase-title">Merge-Konflikte lösen</div>
+      <div class="phase-body">main in PR-Branch rebasen. Feedback-System (api/feedback/*.js, lib/feedback.js) muss als JS neben TS koexistieren. Biome/tsconfig darf unsere JS-Dateien nicht blockieren.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Schritt 3</div>
+      <div class="phase-title">Staged Merge</div>
+      <div class="phase-body">Merge in Low-Traffic Window (z.B. Sonntag). Sofort alle kritischen Flows testen: Signup, Fund, Admin-Login, Feedback-Versand. Rollback-Plan: git revert des Merge-Commits.</div>
+    </div>
+  </div>
+
+  <div class="note"><strong>Bottom Line:</strong> Der PR bringt echten Mehrwert (Type Safety, Security Fixes, DX). Aber ein 100-Dateien Big-Bang Merge ohne Preview-Deployment wäre KINNlos riskant. Erst Preview testen, dann mergen.</div>
+</div></div>
+
+
+<!-- FOOTER -->
+<div class="page pg-footer"><div class="pi">
+  <p style="color:var(--kangaroo);font-size:0.8rem;margin-bottom:0.5rem">PR #1 Architecture Review &middot; Generiert 27.03.2026</p>
+  <p style="color:var(--spring-rain);font-size:0.7rem">github.com/aaaalabs/kinn-landing/pull/1</p>
+</div></div>
+
+</body>
+</html>

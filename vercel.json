@@ -32,8 +32,8 @@
       "destination": "/map/index.html"
     },
     {
-      "source": "/pr-review",
-      "destination": "/pages/pr-review/index.html"
+      "source": "/drafts/:path*",
+      "destination": "/drafts/:path*"
     }
   ],
   "headers": [
