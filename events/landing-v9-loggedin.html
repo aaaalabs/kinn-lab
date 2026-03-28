@@ -211,15 +211,21 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 
 /* ====== VOTING ====== */
 .voting {
-  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  display: flex; align-items: baseline; gap: 16px;
   padding: 14px 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
 }
-.voting-topics { display: flex; gap: 16px; flex-wrap: wrap; flex: 1; }
+.voting-topics {
+  display: flex; gap: 16px; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .voting-topic {
   font-size: 13px; font-weight: 500; color: var(--text-s);
+  flex-shrink: 0;
 }
+.voting-topic:last-child { flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; }
 .voting-topic-n { font-weight: 700; color: var(--dark); margin-right: 4px; }
 .voting-cta {
   font-size: 12px; font-weight: 600; color: var(--mint);
@@ -472,6 +478,40 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   border-radius: 20px; outline: none; font-family: inherit;
   min-width: 80px; background: transparent;
 }
+
+/* Skill autocomplete */
+.skill-autocomplete { position: relative; }
+.skill-ac-input {
+  width: 100%; padding: 8px 0; border: none; border-bottom: 1.5px solid var(--border-s);
+  font-family: inherit; font-size: 13px; color: var(--dark);
+  background: transparent; outline: none; transition: border-color 0.15s;
+}
+.skill-ac-input:focus { border-color: var(--mint); }
+.skill-ac-input::placeholder { color: var(--text-m); }
+.skill-ac-counter {
+  position: absolute; right: 0; top: 9px;
+  font-size: 11px; font-weight: 600; color: var(--text-m);
+}
+.skill-ac-counter.warn { color: #DC2626; }
+.skill-ac-dropdown {
+  position: absolute; left: 0; right: 0; top: 100%;
+  background: #fff; border: 1px solid var(--border-s); border-top: none;
+  border-radius: 0 0 8px 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  z-index: 10; max-height: 210px; overflow-y: auto;
+}
+.skill-ac-option {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; cursor: pointer; font-size: 13px; color: var(--dark);
+  transition: background 0.1s;
+}
+.skill-ac-option:hover, .skill-ac-option.active { background: var(--mint-bg); }
+.skill-ac-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.skill-ac-hint {
+  font-size: 11px; color: var(--text-m); padding: 8px 10px;
+}
+.skill-selected-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 
 /* Checkboxes */
 .panel-checks { display: flex; flex-direction: column; gap: 6px; }
