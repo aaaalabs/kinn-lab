@@ -106,23 +106,25 @@ async function loadRadarEvents() {
     }
     if (!events.length) return;
 
-    const container = document.querySelector('.termine');
-    if (!container) return;
+    const el = document.getElementById('radar-section');
+    if (!el) return;
 
     const rows = events.map(ev => {
       const label = esc(ev.title || '');
       const when = fmtDateNoDay(ev.date);
       const href = ev.detailUrl ? escUrl(ev.detailUrl) : ev.registrationUrl ? escUrl(ev.registrationUrl) : '#';
       const target = href !== '#' ? ' target="_blank" rel="noopener"' : '';
-      return `<a class="termin-row termin-radar" href="${href}"${target}>
-        <span class="termin-city">${label}</span>
-        <span class="termin-when">${esc(when)}</span>
+      return `<a class="radar-row" href="${href}"${target}>
+        <span class="radar-title">${label}</span>
+        <span class="radar-when">${esc(when)}</span>
       </a>`;
     }).join('');
 
-    container.insertAdjacentHTML('beforeend',
-      `<div class="radar-divider"></div>${rows}
-       <a class="radar-subscribe" href="https://kinn.at/api/radar/calendar.ics">Alle KI Events abonnieren</a>`);
+    el.innerHTML = `<div class="section reveal">
+      <div class="section-label">Was sonst passiert</div>
+      <div class="radar-list">${rows}</div>
+      <a class="radar-subscribe" href="https://kinn.at/api/radar/calendar.ics">KI Events abonnieren</a>
+    </div>`;
   } catch { /* silent */ }
 }
 
