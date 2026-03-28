@@ -420,7 +420,7 @@ function renderFooter() {
 // ====== PROFILE PANEL ======
 const panelState = {
   view: 'profile', // 'profile' | 'settings'
-  identity: { name: 'Verena Muster', linkedIn: 'linkedin.com/in/verena-muster', github: '', portfolio: '' },
+  identity: { name: 'Verena Muster', linkedIn: 'linkedin.com/in/verena-muster', website: '' },
   supply: {
     skills: ['Product Management', 'AI Strategy', 'Design Thinking'],
     experience: 'senior',
@@ -437,6 +437,29 @@ const panelState = {
   subscribedAt: '2025-03-12',
   events: 5,
 };
+
+// ====== CURATED SKILLS (from KINN main, flat list with domain colors) ======
+const SKILL_CATALOG = [
+  // Kreativ
+  ...['Midjourney','DALL-E','Stable Diffusion','ComfyUI','Adobe Firefly','Imagen','ControlNet','LoRA Training','Inpainting/Outpainting','Runway','Pika Labs','Sora','Google Veo','Stable Video','Luma AI','HeyGen','Synthesia','Lip Sync','Suno AI','Udio','ElevenLabs','Voice Cloning','Text-to-Speech','Speech-to-Text','Audio Enhancement','Stem Separation','Meshy AI','Luma AI Genie','NeRF','3D Asset Generation','ChatGPT','Claude','Gemini','Notion AI','Grammarly AI','Content Summarization'].map(s => ({ name: s, color: '#9B87F5' })),
+  // Sprache
+  ...['GPT','Llama','Mistral','LLM Fine-Tuning','Few-Shot Learning','Zero-Shot Learning','In-Context Learning','Token Optimization','Model Selection','Prompt Design','Context Window Management','Few-Shot Prompting','Zero-Shot Prompting','Chain-of-Thought','ReAct Prompting','Tree of Thoughts','Prompt Chaining','Role Prompting','Prompt Templates','System Prompts','RAG Architecture','Vector Databases','Embeddings','Semantic Search','Document Chunking','Hybrid Search','Knowledge Graphs','GraphRAG','Corrective RAG','Adaptive RAG','Multi-Vector Retrieval','Document Processing','Query Optimization','Transformers','BERT','Text Classification','Named Entity Recognition','Sentiment Analysis','Text Summarization','Question Answering','Machine Translation','Topic Modeling','Text Generation','Intent Classification','Speech Recognition'].map(s => ({ name: s, color: '#5ED9A6' })),
+  // Vision
+  ...['OpenCV','YOLO','Object Detection','Image Segmentation','Semantic Segmentation','Pose Estimation','Facial Recognition','OCR','Image Classification','Action Recognition','Depth Estimation','Image Captioning','Vision-Language Models','Text-to-Image Understanding','Visual Question Answering','Audio-Visual Learning','Document Understanding','Video Understanding','Cross-Modal Retrieval'].map(s => ({ name: s, color: '#4A90E2' })),
+  // Engineering
+  ...['GitHub Copilot','Cursor','Claude Code','v0','Windsurf','Devin','Bolt.new','Replit AI','Code Review','Bug Detection','Code Refactoring','Test Generation','Documentation Generation','Supervised Learning','Unsupervised Learning','Reinforcement Learning','Deep Learning','Neural Networks','Model Training','Feature Engineering','Model Evaluation','Transfer Learning','Hyperparameter Tuning','Ensemble Methods','Gradient Descent','CI/CD for ML','Model Versioning','MLflow','Kubeflow','Docker','Kubernetes','Model Monitoring','A/B Testing','Feature Stores','Model Registry','Experiment Tracking','Model Serving','Model Drift Detection','SQL','Data Warehousing','ETL/ELT Pipelines','Data Cleaning','Data Augmentation','Synthetic Data Generation','Data Labeling','Apache Spark','Apache Kafka','Data Lake Architecture','BigQuery/Snowflake','pandas/polars','AWS SageMaker','Google Cloud Vertex AI','Azure ML','Hugging Face','CUDA','GPU Optimization','Distributed Training','Model Quantization','Python','PyTorch','TensorFlow','JAX','scikit-learn','Hugging Face Transformers','Keras','NumPy'].map(s => ({ name: s, color: '#6B7280' })),
+  // Anwendung
+  ...['Campaign Optimization','Personalization Engines','Customer Segmentation','Predictive Analytics','Chatbots','Conversational AI','Virtual Assistants','Voice Assistants','LangChain','LangGraph','CrewAI','AutoGPT','AutoGen','BabyAGI','Agentic RAG','Tool Use/Function Calling','Agent Orchestration','Workflow Automation','Task Decomposition','Human-in-the-Loop'].map(s => ({ name: s, color: '#FF6B6B' })),
+  // Forschung
+  ...['AI Ethics','Bias Detection','Fairness Metrics','Explainable AI','AI Alignment','Red Teaming','AI Auditing','Adversarial Robustness','Privacy-Preserving ML','Model Governance'].map(s => ({ name: s, color: '#FBBF24' })),
+];
+// Deduplicate (Claude, Gemini etc. appear in multiple categories — keep first)
+const SKILL_CATALOG_UNIQUE = [];
+const _seen = new Set();
+for (const s of SKILL_CATALOG) {
+  const key = s.name.toLowerCase();
+  if (!_seen.has(key)) { _seen.add(key); SKILL_CATALOG_UNIQUE.push(s); }
+}
 
 const EXPERIENCE_LABELS = { junior: 'Junior', mid: 'Mid-Level', senior: 'Senior', lead: 'Lead' };
 const AVAILABILITY_LABELS = { employed: 'Angestellt', freelancer: 'Freelancer', student: 'Student', 'between-jobs': 'Suchend', 'side-projects': 'Nebenprojekte' };
@@ -529,9 +552,8 @@ function renderProfileView(el) {
     </div>`,
     section('Name', textField('name', 'identity.name', 'Name eingeben')),
     section('LinkedIn', textField('linkedIn', 'identity.linkedIn', 'LinkedIn-URL')),
-    section('GitHub', textField('github', 'identity.github', 'GitHub-URL')),
-    section('Portfolio', textField('portfolio', 'identity.portfolio', 'Portfolio-URL')),
-    section('Skills', tagsField('supply.skills')),
+    section('Website', textField('website', 'identity.website', 'Website-URL')),
+    section('Skills', renderSkillAutocomplete()),
     section('Erfahrung', selectField('supply.experience', EXPERIENCE_LABELS)),
     section('Verf\u00fcgbarkeit', selectField('supply.availability', AVAILABILITY_LABELS)),
     section('Kann anbieten', checksField('supply.canOffer', CAN_OFFER_LABELS)),
@@ -544,6 +566,113 @@ function renderProfileView(el) {
       <div class="panel-progress-text">${pct}% vollst\u00e4ndig</div>
     </div>`,
   ].join('');
+}
+
+// ====== SKILL AUTOCOMPLETE ======
+const MAX_SKILLS = 20;
+let _acIndex = -1; // active dropdown index
+
+function renderSkillAutocomplete() {
+  const skills = panelState.supply.skills;
+  const count = skills.length;
+  const warnCls = count >= 18 ? ' warn' : '';
+
+  const tags = skills.map(s => {
+    const cat = SKILL_CATALOG_UNIQUE.find(c => c.name.toLowerCase() === s.toLowerCase());
+    const dot = cat ? `<span class="skill-ac-dot" style="background:${cat.color}"></span>` : '';
+    return `<span class="panel-tag">${dot}${esc(s)}<span class="panel-tag-x" onclick="removeSkill('${esc(s)}')">\u00d7</span></span>`;
+  }).join('');
+
+  return `<div class="skill-autocomplete">
+    <input class="skill-ac-input" placeholder="Skill eingeben..." oninput="handleSkillInput(this)" onkeydown="handleSkillKeydown(event,this)" onfocus="handleSkillInput(this)" onblur="setTimeout(()=>{const d=document.getElementById('skill-dropdown');if(d)d.style.display='none'},150)" autocomplete="off"${count >= MAX_SKILLS ? ' disabled placeholder="Maximum erreicht"' : ''}>
+    <span class="skill-ac-counter${warnCls}">${count}/${MAX_SKILLS}</span>
+    <div class="skill-ac-dropdown" id="skill-dropdown" style="display:none"></div>
+  </div>
+  <div class="skill-selected-tags">${tags}</div>`;
+}
+
+function handleSkillInput(input) {
+  const query = input.value.trim().toLowerCase();
+  const dd = document.getElementById('skill-dropdown');
+  if (!dd) return;
+  _acIndex = -1;
+
+  if (!query) { dd.style.display = 'none'; return; }
+
+  const selected = new Set(panelState.supply.skills.map(s => s.toLowerCase()));
+  const matches = SKILL_CATALOG_UNIQUE
+    .filter(s => !selected.has(s.name.toLowerCase()) && s.name.toLowerCase().includes(query))
+    .slice(0, 6);
+
+  const exactExists = SKILL_CATALOG_UNIQUE.some(s => s.name.toLowerCase() === query) || selected.has(query);
+  const showCustom = query.length >= 2 && !exactExists && !matches.some(m => m.name.toLowerCase() === query);
+
+  if (!matches.length && !showCustom) { dd.style.display = 'none'; return; }
+
+  let html = matches.map((m, i) =>
+    `<div class="skill-ac-option" data-idx="${i}" data-value="${esc(m.name)}" onmousedown="selectSkill('${esc(m.name)}')">
+      <span class="skill-ac-dot" style="background:${m.color}"></span>${esc(m.name)}
+    </div>`
+  ).join('');
+
+  if (showCustom) {
+    html += `<div class="skill-ac-option" data-idx="${matches.length}" data-value="${esc(input.value.trim())}" onmousedown="selectSkill('${esc(input.value.trim())}')">
+      <span class="skill-ac-dot" style="background:var(--border-s)"></span>&laquo;${esc(input.value.trim())}&raquo; hinzuf\u00fcgen
+    </div>`;
+  }
+
+  dd.innerHTML = html;
+  dd.style.display = 'block';
+}
+
+function handleSkillKeydown(e, input) {
+  const dd = document.getElementById('skill-dropdown');
+  if (!dd || dd.style.display === 'none') {
+    if (e.key === 'Escape') input.blur();
+    return;
+  }
+
+  const options = dd.querySelectorAll('.skill-ac-option');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    _acIndex = Math.min(_acIndex + 1, options.length - 1);
+    updateAcHighlight(options);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    _acIndex = Math.max(_acIndex - 1, -1);
+    updateAcHighlight(options);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (_acIndex >= 0 && options[_acIndex]) {
+      selectSkill(options[_acIndex].dataset.value);
+    } else if (input.value.trim()) {
+      selectSkill(input.value.trim());
+    }
+  } else if (e.key === 'Escape') {
+    dd.style.display = 'none';
+    _acIndex = -1;
+  }
+}
+
+function updateAcHighlight(options) {
+  options.forEach((o, i) => o.classList.toggle('active', i === _acIndex));
+  if (_acIndex >= 0 && options[_acIndex]) {
+    options[_acIndex].scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function selectSkill(name) {
+  const skills = panelState.supply.skills;
+  if (skills.length >= MAX_SKILLS) return;
+  if (!skills.some(s => s.toLowerCase() === name.toLowerCase())) {
+    skills.push(name);
+  }
+  renderPanel();
+}
+
+function removeSkill(name) {
+  panelState.supply.skills = panelState.supply.skills.filter(s => s !== name);
+  renderPanel();
 }
 
 function renderSettingsView(el) {
