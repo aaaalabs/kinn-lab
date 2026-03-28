@@ -430,7 +430,7 @@ const panelState = {
     activeSearch: 'networking-only',
     interests: '',
   },
-  preferences: { showInDirectory: true, allowMatching: true },
+  preferences: { allowMatching: false },
   badge: { active: true, linkType: 'linkedin', shortlink: 'kinn.at/b/42' },
   fund: { donated: true, amount: '2.50', visibility: 'public' },
   subscribedAt: '2025-03-12',
@@ -736,8 +736,7 @@ function renderSettingsView(el) {
 
   el.innerHTML = `
     <div class="panel-section">
-      <div class="panel-label">Sichtbarkeit</div>
-      ${toggle('Im Verzeichnis sichtbar', 'Andere finden dich in der Community', 'preferences.showInDirectory', s.preferences.showInDirectory)}
+      <div class="panel-label">Matching</div>
       ${toggle('Matching erlauben', 'Passende Profile bei Events vorschlagen', 'preferences.allowMatching', s.preferences.allowMatching)}
     </div>
     <div class="panel-section">
