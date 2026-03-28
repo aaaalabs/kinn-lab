@@ -733,14 +733,21 @@ function finishEdit(input, path) {
 function startSelectEdit(el, path, labelsJson) {
   const labels = typeof labelsJson === 'string' ? JSON.parse(labelsJson) : labelsJson;
   const current = getNestedVal(panelState, path);
-  const options = Object.entries(labels).map(([k, v]) =>
-    `<option value="${k}" ${k === current ? 'selected' : ''}>${v}</option>`
+  const entries = Object.entries(labels);
+  const items = entries.map(([k, v]) =>
+    `<div class="panel-select-option${k === current ? ' active' : ''}" onmousedown="finishSelectPick('${path}','${k}')">${v}</div>`
   ).join('');
-  el.outerHTML = `<select class="panel-select" onchange="finishSelect(this,'${path}')" onblur="finishSelect(this,'${path}')" autofocus>${options}</select>`;
+  el.outerHTML = `<div class="panel-select-list" tabindex="-1" onblur="renderPanel()">${items}</div>`;
+  el.parentElement?.querySelector('.panel-select-list')?.focus();
 }
 
 function finishSelect(select, path) {
   setNestedVal(panelState, path, select.value);
+  renderPanel();
+}
+
+function finishSelectPick(path, key) {
+  setNestedVal(panelState, path, key);
   renderPanel();
 }
 

@@ -456,6 +456,14 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   background: transparent; outline: none; cursor: pointer;
   -webkit-appearance: none; appearance: none;
 }
+.panel-select-list { outline: none; }
+.panel-select-option {
+  padding: 8px 2px; font-size: 14px; font-weight: 500; color: var(--text-s);
+  cursor: pointer; border-bottom: 1px solid var(--border); transition: color 0.1s;
+}
+.panel-select-option:last-child { border-bottom: none; }
+.panel-select-option:hover { color: var(--dark); }
+.panel-select-option.active { color: var(--mint); font-weight: 600; }
 .panel-textarea {
   width: 100%; padding: 6px 0; border: none; border-bottom: 1.5px solid var(--mint);
   font-family: inherit; font-size: 13px; color: var(--dark);
