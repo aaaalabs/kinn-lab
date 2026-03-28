@@ -341,7 +341,7 @@ function renderFooter() {
       '<a href="https://kinn.at/start">Starten</a>',
       '<a href="https://kinn.at/lade">Nachlesen</a>',
       '<a href="https://kinn.at/fund">Unterst\u00fctzen</a>',
-      '<a href="https://kinn.at/dabei">Mitmachen</a>',
+      '<a href="https://kinn.at/crew">Mitmachen</a>',
     ].join('');
   }
   const legal = document.getElementById('footer-legal');

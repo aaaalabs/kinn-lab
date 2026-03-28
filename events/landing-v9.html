@@ -343,6 +343,17 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .partner-row img { height: 22px; object-fit: contain; filter: grayscale(1); transition: filter 0.3s, opacity 0.3s; }
 .partner-row a:hover img { filter: grayscale(0); opacity: 1; }
 
+/* ====== DNA LINK ====== */
+.dna-link {
+  text-align: center; padding: 40px 0 8px;
+}
+.dna-link a {
+  font-size: 13px; font-weight: 500; color: var(--text-m);
+  text-decoration: none; letter-spacing: 0.02em;
+  transition: color 0.15s;
+}
+.dna-link a:hover { color: var(--mint); }
+
 @keyframes shimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
 .skeleton {
   display: inline-block; border-radius: 4px;
@@ -398,6 +409,10 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   <div id="voting-section"></div>
   <div id="formats-section"></div>
   <div id="past-section"></div>
+
+  <div class="dna-link reveal">
+    <a href="https://kinn.at/dna">Wof&uuml;r wir stehen &rarr;</a>
+  </div>
 </div>
 
 <footer class="footer" id="footer">
