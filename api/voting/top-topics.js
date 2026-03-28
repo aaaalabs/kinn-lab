@@ -2,7 +2,7 @@
  * Public endpoint: Top voted topics from kinn.at voting system
  * GET /api/voting/top-topics?limit=4
  *
- * Reads directly from shared Upstash DB (voting:kinn-8:topics).
+ * Reads directly from shared Upstash DB (voting:topics).
  * No lab: prefix — this is KINN main repo data, not lab-scoped.
  * No auth required (public read for ops toolkit).
  */
@@ -14,7 +14,7 @@ const redis = new Redis({
   token: process.env.KINNST_KV_REST_API_TOKEN
 });
 
-const TOPICS_KEY = 'voting:kinn-8:topics';
+const TOPICS_KEY = 'voting:topics';
 
 function flattenTopics(data) {
   const topics = [];
