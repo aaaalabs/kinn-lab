@@ -710,8 +710,7 @@ function renderSettingsView(el) {
     ).join('');
     fundHtml = `<div class="panel-section">
       <div class="panel-label">Unterst\u00fctzung</div>
-      <div class="panel-meta">${esc(s.fund.amount)} EUR gespendet</div>
-      <div class="panel-meta" style="margin-top:8px;color:var(--dark);font-weight:500">Sichtbarkeit</div>
+      <div class="panel-meta">${esc(s.fund.amount)} EUR gespendet \u00b7 angezeigt als:</div>
       <div class="panel-fund-options">${visOptions}</div>
       <a href="https://kinn.at/fund" target="_blank" class="panel-fund-link">Unterst\u00fctzer-Liste \u2192</a>
     </div>`;
