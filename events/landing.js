@@ -74,7 +74,7 @@ function renderTermine(hero, chapters) {
         <div class="termin-name">${esc(ev.name)}</div>
         <div class="termin-meta">${esc(meta)}</div>
       </div>
-      ${ev.lumaUrl ? `<a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="termin-cta">Dabei sein</a>` : ''}
+      ${lumaButton(ev, 'termin-cta')}
     </div>`;
   }).join('');
 
@@ -165,7 +165,7 @@ function renderFormats(events, hero) {
         <span class="format-card-type ${typeCls}">${esc(typeLabel)}</span>
         <div class="format-card-title">${esc(displayName)}</div>
         <div class="format-card-meta">${esc(meta)}</div>
-        <a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="format-card-cta">Anmelden</a>
+        ${lumaButton(ev, 'format-card-cta')}
       </div>
     </div>`;
   });
@@ -292,6 +292,13 @@ function chapterFromName(name, chapter) {
   if (chapter) return chapter;
   const m = name.match(/KINN#\d+\s+(.*)/i);
   return m ? m[1].trim() : 'Innsbruck';
+}
+function lumaButton(ev, cls) {
+  if (!ev.lumaUrl) return '';
+  if (ev.lumaId) {
+    return `<a href="${escUrl(ev.lumaUrl)}" class="luma-checkout--button ${cls}" data-luma-action="checkout" data-luma-event-id="${esc(ev.lumaId)}">Dabei sein</a>`;
+  }
+  return `<a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="${cls}">Dabei sein</a>`;
 }
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 function escUrl(u) { if (!u) return ''; try { return new URL(u).href; } catch { return esc(u); } }

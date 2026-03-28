@@ -11,14 +11,10 @@ export default async function handler(req, res) {
     // Verify user if email provided
     let verified = false;
     if (email) {
-      // Check attendance cache (built by /api/luma/attendance)
       const cached = await kv.get('attendance:counts');
       const counts = cached?.counts || {};
       const attended = (counts[email] || 0) >= 1;
-
-      // Check whitelist
       const whitelisted = await raw.sismember('kinn:verified:whitelist', email);
-
       verified = attended || whitelisted;
     }
 
@@ -28,7 +24,6 @@ export default async function handler(req, res) {
       return res.status(200).json({ hero: null, events: [], verified });
     }
 
-    // Compare dates as strings (YYYY-MM-DD) to avoid timezone issues
     const today = new Date().toISOString().split('T')[0];
     let hero = null;
     const events = [];
@@ -36,13 +31,14 @@ export default async function handler(req, res) {
     for (const fullKey of eventKeys) {
       const ev = await raw.hgetall(fullKey);
       if (!ev || !ev.date) continue;
-
-      if (ev.date < today) continue; // skip past events
+      if (ev.date < today) continue;
 
       const key = fullKey.replace('kinn:event:', '');
       const type = ev.type || 'chapter';
       const isGated = type === 'talk' || type === 'kurs';
       const locked = isGated && !verified;
+
+      const lumaId = ev.lumaId || null;
 
       const item = {
         key,
@@ -54,21 +50,20 @@ export default async function handler(req, res) {
         location: ev.location || '',
         locationCity: ev.locationCity || '',
         lumaUrl: locked ? null : (ev.lumaUrl || null),
+        lumaId: locked ? null : lumaId,
         coverUrl: ev.coverUrl || null,
         locked,
       };
 
-      // First upcoming chapter = hero, rest are additional Donnerstage (unlocked)
       if (type === 'chapter' && !hero) {
         hero = item;
       } else if (type === 'chapter') {
-        events.push({ ...item, locked: false }); // additional Donnerstage always unlocked
+        events.push({ ...item, locked: false });
       } else if (isGated) {
         events.push(item);
       }
     }
 
-    // Set cache headers
     if (email) {
       res.setHeader('Cache-Control', 'private, no-store');
     } else {
