@@ -144,15 +144,21 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .voting-cta:hover { background: var(--mint); color: #fff; }
 
-/* ====== HIGHLIGHT QUOTE (below fold) ====== */
-.highlight-quote {
+/* ====== TESTIMONIAL (below fold) ====== */
+.testimonial {
   background: var(--card); border: 1px solid var(--border);
-  border-left: 3px solid var(--mint);
-  border-radius: var(--r-sm); padding: 14px 18px;
-  margin-bottom: 24px;
+  border-radius: var(--r); padding: 20px 22px;
+  margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
 }
-.highlight-quote-text { font-size: 13px; font-style: italic; color: var(--text-s); line-height: 1.5; }
-.highlight-quote-author { font-size: 11px; font-weight: 600; color: var(--text-m); margin-top: 6px; }
+.testimonial-text { font-size: 14px; font-style: italic; color: var(--text-s); line-height: 1.6; margin-bottom: 14px; }
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.testimonial-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  background: var(--border); /* placeholder while loading */
+}
+.testimonial-name { font-size: 13px; font-weight: 600; color: var(--dark); }
+.testimonial-role { font-size: 11px; color: var(--text-m); }
 
 /* ====== FORMAT CARDS ====== */
 /* Unlocked: full card with cover */

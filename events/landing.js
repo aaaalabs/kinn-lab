@@ -41,7 +41,6 @@ async function loadAll() {
   if (feedback.status === 'fulfilled') {
     const all = feedback.value.events || [];
     renderStats(all);
-    renderHeroQuote(all);
     const past = all.filter(e => e.groupPhoto || e.feedback?.length).reverse().slice(0, 10);
     renderPast(past);
   }
@@ -91,32 +90,27 @@ function renderTermine(hero, chapters) {
   </div>`;
 }
 
-// ====== HERO QUOTE ======
-function renderHeroQuote(allEvents) {
+// ====== TESTIMONIAL ======
+async function loadTestimonial() {
   const el = document.getElementById('hero-quote');
-  const allQuotes = allEvents.flatMap(e => (e.feedback || []).map(q => ({ ...q, event: e.name })));
-  if (!allQuotes.length) return;
-
-  // Filter for positive, newcomer-friendly quotes (not process criticism)
-  const positive = ['format', 'austausch', 'toll', 'super', 'cool', 'erste', 'unglaublich', 'spannend', 'wirkung', 'wieder', 'energie', 'vernetz'];
-  const negative = ['nicht', 'fehlt', 'leider', 'laut', 'kurz', 'problem', 'funktioniert nicht'];
-
-  const good = allQuotes.filter(q => {
-    const t = (q.text || '').toLowerCase();
-    if (t.length < 40) return false;
-    const hasPositive = positive.some(kw => t.includes(kw));
-    const hasNegative = negative.some(kw => t.includes(kw));
-    return hasPositive && !hasNegative;
-  });
-
-  const pool = good.length ? good : allQuotes.filter(q => (q.text || '').length > 40);
-  if (!pool.length) return;
-  const q = pool[Math.floor(Math.random() * pool.length)];
-
-  el.innerHTML = `<div class="highlight-quote">
-    <div class="highlight-quote-text">\u201E${esc(q.text?.substring(0, 130))}${q.text?.length > 130 ? '...' : ''}\u201C</div>
-    <div class="highlight-quote-author">${esc(q.firstName)} ${esc(q.lastInitial)} \u00b7 ${esc(q.event)}</div>
-  </div>`;
+  try {
+    const res = await fetch('https://kinn.at/api/testimonials');
+    if (!res.ok) return;
+    const data = await res.json();
+    const pool = (data.testimonials || []).filter(t => t.quote && t.name && t.image);
+    if (!pool.length) return;
+    const t = pool[Math.floor(Math.random() * pool.length)];
+    el.innerHTML = `<div class="testimonial">
+      <div class="testimonial-text">\u201E${esc(t.quote)}\u201C</div>
+      <div class="testimonial-author">
+        <img class="testimonial-avatar" src="https://kinn.at/testimonials/images/${esc(t.image)}" alt="${esc(t.name)}" loading="lazy">
+        <div>
+          <div class="testimonial-name">${esc(t.name)}</div>
+          ${t.role ? `<div class="testimonial-role">${esc(t.role)}</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  } catch { /* silent */ }
 }
 
 // ====== STATS ======
@@ -365,4 +359,5 @@ function renderFooter() {
 // ====== INIT ======
 extractAuthFromHash();
 loadAll();
+loadTestimonial();
 renderFooter();
