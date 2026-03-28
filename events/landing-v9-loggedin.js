@@ -484,7 +484,7 @@ function renderPanel() {
   const body = document.getElementById('panel-body');
 
   if (panelState.view === 'settings') {
-    header.innerHTML = `<button class="panel-header-btn panel-back" onclick="panelState.view='profile';renderPanel()">\u2190</button>
+    header.innerHTML = `<button class="panel-header-btn panel-back" onclick="panelState.view='profile';renderPanel()" style="font-size:20px;padding:4px 8px">\u2190</button>
       <span class="panel-title">Einstellungen</span>
       <button class="panel-header-btn" onclick="closeProfile()">\u00d7</button>`;
     renderSettingsView(body);
@@ -690,14 +690,26 @@ function renderSettingsView(el) {
   const since = new Date(s.subscribedAt + 'T12:00:00');
   const sinceStr = `${['J\u00e4n','Feb','M\u00e4r','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][since.getMonth()]} ${since.getFullYear()}`;
 
-  // Badge section
-  const badgeLinkOptions = ['linkedin', 'website'].map(k => {
-    const label = k === 'linkedin' ? 'LinkedIn' : 'Website';
-    return `<span class="panel-fund-opt${k === s.badge.linkType ? ' active' : ''}" onclick="panelState.badge.linkType='${k}';renderPanel()">${label}</span>`;
-  }).join('');
+  // Badge section — toggle only if both LinkedIn and website exist
+  const hasLinkedIn = !!s.identity.linkedIn;
+  const hasWebsite = !!s.identity.website;
+  const hasBothLinks = hasLinkedIn && hasWebsite;
+  let badgeLinkHtml = '';
+  if (s.badge.active) {
+    if (hasBothLinks) {
+      const badgeLinkOptions = ['linkedin', 'website'].map(k => {
+        const label = k === 'linkedin' ? 'LinkedIn' : 'Website';
+        return `<span class="panel-fund-opt${k === s.badge.linkType ? ' active' : ''}" onclick="panelState.badge.linkType='${k}';renderPanel()">${label}</span>`;
+      }).join('');
+      badgeLinkHtml = `<div class="panel-meta" style="color:var(--dark);font-weight:500">Badge verlinkt auf</div>
+        <div class="panel-fund-options" style="max-width:200px">${badgeLinkOptions}</div>`;
+    } else {
+      const target = hasLinkedIn ? 'LinkedIn' : hasWebsite ? 'Website' : '\u2014';
+      badgeLinkHtml = `<div class="panel-meta">Verlinkt auf ${target}</div>`;
+    }
+  }
   const badgeHtml = s.badge.active
-    ? `<div class="panel-meta" style="color:var(--dark);font-weight:500">Badge verlinkt auf</div>
-       <div class="panel-fund-options" style="max-width:200px">${badgeLinkOptions}</div>
+    ? `${badgeLinkHtml}
        <div class="panel-meta" style="margin-top:8px"><a href="https://${esc(s.badge.shortlink)}" target="_blank" style="color:var(--mint);font-weight:600;text-decoration:none">${esc(s.badge.shortlink)}</a></div>`
     : `<div class="panel-meta">${badgeStatus}</div>`;
 
