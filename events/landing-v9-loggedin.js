@@ -80,11 +80,13 @@ function renderTermine(hero, chapters) {
       ? `<div class="termin-topics">${topicPills}</div>`
       : '';
 
-    return `<a class="termin-row" href="${href}" target="_blank" rel="noopener">
-      <span class="termin-city">${esc(city)}</span>
-      <span class="termin-when">${esc(when)}</span>
-      <span class="termin-arrow">\u2192</span>
-    </a>${topicsHtml}`;
+    return `<div class="termin-group">
+      <a class="termin-row" href="${href}" target="_blank" rel="noopener">
+        <span class="termin-city">${esc(city)}</span>
+        <span class="termin-when">${esc(when)}</span>
+        <span class="termin-arrow">\u2192</span>
+      </a>${topicsHtml}
+    </div>`;
   }).join('');
 
   el.innerHTML = `<div class="termine">
