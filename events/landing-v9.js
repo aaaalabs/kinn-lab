@@ -356,16 +356,18 @@ function renderFooter() {
   el.innerHTML = `<div class="partner-label">Unterst\u00fctzt von</div>
     <div class="partner-row">${logos.map(l => `<a href="${l.url}" target="_blank" rel="noopener"><img src="${l.src}" alt="${esc(l.alt)}" loading="lazy"></a>`).join('')}</div>`;
 
-  const links = document.getElementById('footer-links');
-  if (links) {
-    links.innerHTML = [
+  const nav = document.getElementById('footer-links');
+  if (nav) {
+    nav.innerHTML = [
       '<a href="https://kinn.at/start">Starten</a>',
       '<a href="https://kinn.at/lade">Nachlesen</a>',
       '<a href="https://kinn.at/fund">Unterst\u00fctzen</a>',
       '<a href="https://kinn.at/dabei">Mitmachen</a>',
-      '<a href="https://kinn.at/pages/privacy.html">Datenschutz</a>',
-      '<a href="https://kinn.at/pages/agb.html">AGB</a>',
     ].join('');
+  }
+  const legal = document.getElementById('footer-legal');
+  if (legal) {
+    legal.innerHTML = '<a href="https://kinn.at/pages/privacy.html">Datenschutz</a><a href="https://kinn.at/pages/agb.html">AGB</a>';
   }
 }
 
