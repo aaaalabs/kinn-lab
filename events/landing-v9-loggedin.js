@@ -64,21 +64,33 @@ function renderTermine(hero, chapters) {
     return;
   }
 
+  // TODO: replace mock topics with ev.topics from gated API
+  const mockTopics = {
+    'Innsbruck': { 'Vibe Coding': 12, 'RAG': 8, 'KI im Business': 6 },
+    'Kufstein': { 'KI im Business': 9, 'Content AI': 5 },
+  };
+
   const rows = all.map(ev => {
     const city = ev.locationCity || chapterFromName(ev.name, null) || 'Innsbruck';
-    const date = fmtDateNoDay(ev.date);
     const lumaId = ev.lumaId;
     const href = ev.lumaUrl ? escUrl(ev.lumaUrl) : '#';
-    const onclick = lumaId
-      ? `openLumaCheckout('${esc(lumaId)}');return false`
-      : '';
 
     const when = fmtRelative(ev.date);
+    const topics = ev.topics || mockTopics[city] || {};
+    const topicPills = Object.entries(topics)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([t, n]) => `<span class="termin-topic"><span class="termin-topic-n">${n}</span>${esc(t)}</span>`)
+      .join('');
+    const topicsHtml = topicPills
+      ? `<div class="termin-topics">${topicPills}</div>`
+      : '';
+
     return `<a class="termin-row" href="${href}" target="_blank" rel="noopener">
       <span class="termin-city">${esc(city)}</span>
       <span class="termin-when">${esc(when)}</span>
       <span class="termin-arrow">\u2192</span>
-    </a>`;
+    </a>${topicsHtml}`;
   }).join('');
 
   el.innerHTML = `<div class="termine">
