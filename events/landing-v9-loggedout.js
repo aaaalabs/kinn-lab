@@ -19,7 +19,8 @@ async function loadAll() {
     const d = gated.value;
     const chapters = d.events.filter(e => e.type === 'chapter');
     renderTermine(d.hero, chapters);
-    renderFormats(d.events.filter(e => e.type !== 'chapter'), d.hero);
+    loadRadarEvents();
+    renderFormats(d.events.filter(e => e.type === 'talk' || e.type === 'kurs'), d.hero);
 
     const loginEl = document.getElementById('hero-login');
     loginEl.innerHTML = isLoggedIn()
@@ -79,6 +80,40 @@ function renderTermine(hero, chapters) {
   </div>`;
 }
 
+// ====== RADAR (external KI events, quiet rows) ======
+async function loadRadarEvents() {
+  try {
+    // TODO: replace mock with fetch('https://kinn.at/api/events/widget?page=1') once CORS is configured
+    const events = [
+      { title: 'KI in der Freiwilligenarbeit', date: '2026-04-09', city: 'St. Johann', detailUrl: 'https://erwachsenenschulen.at/veranstaltungs-details/?eid=441906&vid=3250' },
+      { title: 'Daten und KI \u2014 Ans\u00e4tze zur Verbesserung der Datenbasis', date: '2026-04-14', city: 'Innsbruck', detailUrl: 'https://dih-west.at/events/daten-und-ki-ansaetze-zur-verbesserung-der-datenbasis/' },
+      { title: 'AI Business Circle', date: '2026-04-21', city: 'Innsbruck', detailUrl: 'https://dih-west.at/events/ai-business-circle-april/' },
+    ];
+    if (!events.length) return;
+
+    const el = document.getElementById('radar-section');
+    if (!el) return;
+
+    const rows = events.map(ev => {
+      const city = ev.city ? ' \u2014 ' + esc(ev.city) : '';
+      const label = esc(ev.title || '') + `<span class="radar-city">${city}</span>`;
+      const when = fmtDate(ev.date);
+      const href = ev.detailUrl ? escUrl(ev.detailUrl) : ev.registrationUrl ? escUrl(ev.registrationUrl) : '#';
+      const target = href !== '#' ? ' target="_blank" rel="noopener"' : '';
+      return `<a class="radar-row" href="${href}"${target}>
+        <span class="radar-title">${label}</span>
+        <span class="radar-when">${esc(when)}</span>
+      </a>`;
+    }).join('');
+
+    el.innerHTML = `<div class="section reveal">
+      <div class="section-label">Was sonst passiert</div>
+      <div class="radar-list">${rows}</div>
+      <a class="radar-subscribe" href="https://kinn.at/api/radar/calendar.ics">KI Events abonnieren</a>
+    </div>`;
+  } catch { /* silent */ }
+}
+
 // ====== TESTIMONIAL (in hero) ======
 async function loadTestimonial() {
   const el = document.getElementById('hero-testimonial');
@@ -121,7 +156,11 @@ function renderHeroBg(allEvents) {
 function renderVoting(topics) {
   const el = document.getElementById('voting-section');
   if (!topics.length) return;
-  const items = topics.map(t => `<span class="voting-topic"><span class="voting-topic-n">${t.votes}</span>${esc(t.title)}</span>`).join('');
+  const maxLen = 20;
+  const items = topics.map(t => {
+    const title = t.title.length > maxLen ? t.title.substring(0, maxLen) + '...' : t.title;
+    return `<span class="voting-topic"><span class="voting-topic-n">${t.votes}</span>${esc(title)}</span>`;
+  }).join('');
   el.innerHTML = `<div class="section reveal">
     <div class="section-label">Themen-Voting</div>
     <div class="voting">

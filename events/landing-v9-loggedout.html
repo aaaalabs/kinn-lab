@@ -143,16 +143,28 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 
 /* ====== VOTING ====== */
 .voting {
-  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  display: flex; align-items: baseline; gap: 16px;
   padding: 14px 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
 }
-.voting-topics { display: flex; gap: 16px; flex-wrap: wrap; flex: 1; }
+.voting-topics {
+  display: flex; gap: 16px; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .voting-topic {
   font-size: 13px; font-weight: 500; color: var(--text-s);
+  flex-shrink: 0;
 }
-.voting-topic-n { font-weight: 700; color: var(--dark); margin-right: 4px; }
+.voting-topic:last-child { flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; }
+.voting-topic-n {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 10px; background: var(--mint-bg);
+  font-size: 11px; font-weight: 700; color: var(--dark);
+  margin-right: 6px;
+}
 .voting-cta {
   font-size: 12px; font-weight: 600; color: var(--mint);
   background: none; border: none; cursor: pointer; font-family: inherit;
@@ -160,6 +172,27 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .voting-cta:hover { opacity: 0.7; }
 
+
+/* Radar — "Was sonst passiert" */
+.radar-list { border-top: 1px solid var(--border); }
+.radar-row {
+  display: flex; align-items: baseline; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+  text-decoration: none; color: inherit; transition: opacity 0.15s;
+}
+.radar-row:hover { opacity: 0.7; }
+.radar-title {
+  font-size: 13px; font-weight: 400; color: var(--text-s);
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.radar-city { color: var(--text-m); }
+.radar-when { font-size: 11px; color: var(--text-m); white-space: nowrap; flex-shrink: 0; }
+.radar-subscribe {
+  display: block; text-align: right;
+  font-size: 11px; font-weight: 500; color: var(--text-m);
+  text-decoration: none; padding: 10px 0 0; transition: color 0.15s;
+}
+.radar-subscribe:hover { color: var(--mint); }
 
 /* ====== FORMAT LIST (typography-only, no images) ====== */
 .format-list {
@@ -368,16 +401,16 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
     <div class="termine">
       <div class="termine-label">Wo bist du dabei?</div>
       <div class="termin-row" style="pointer-events:none">
-        <span class="skeleton" style="width:90px;height:14px;flex:1"></span>
-        <span class="skeleton" style="width:55px;height:12px;margin-left:16px"></span>
+        <span class="termin-city"><span class="skeleton" style="width:90px;height:14px"></span></span>
+        <span class="termin-when"><span class="skeleton" style="width:55px;height:12px"></span></span>
       </div>
       <div class="termin-row" style="pointer-events:none">
-        <span class="skeleton" style="width:70px;height:14px;flex:1"></span>
-        <span class="skeleton" style="width:55px;height:12px;margin-left:16px"></span>
+        <span class="termin-city"><span class="skeleton" style="width:68px;height:14px"></span></span>
+        <span class="termin-when"><span class="skeleton" style="width:55px;height:12px"></span></span>
       </div>
       <div class="termin-row" style="pointer-events:none">
-        <span class="skeleton" style="width:80px;height:14px;flex:1"></span>
-        <span class="skeleton" style="width:40px;height:12px"></span>
+        <span class="termin-city"><span class="skeleton" style="width:76px;height:14px"></span></span>
+        <span class="termin-when"><span class="skeleton" style="width:40px;height:12px"></span></span>
       </div>
     </div>
   </div>
@@ -388,6 +421,7 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 <div class="wrap">
   <div id="voting-section"></div>
   <div id="formats-section"></div>
+  <div id="radar-section"></div>
   <div id="past-section"></div>
 
   <div class="dna-link reveal">
