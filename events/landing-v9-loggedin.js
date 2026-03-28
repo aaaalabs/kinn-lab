@@ -68,7 +68,9 @@ function renderTermine(hero, chapters) {
     const href = ev.lumaUrl ? escUrl(ev.lumaUrl) : '#';
 
     const when = fmtRelative(ev.date);
-    const topics = ev.topics || {};
+    // TODO: remove mock fallback once Luma topic question is live
+    const mockTopics = { 'Innsbruck': { 'Vibe Coding': 12, 'RAG': 8, 'KI im Business': 6 }, 'Kufstein': { 'KI im Business': 9, 'Content AI': 5 } };
+    const topics = ev.topics || mockTopics[city] || {};
     const topicPills = Object.entries(topics)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
