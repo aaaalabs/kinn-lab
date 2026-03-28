@@ -268,11 +268,11 @@ function renderPast(events) {
     photosHtml = `<div class="photos-scroll">${cards}</div>`;
   }
 
-  // Single featured quote — pick the longest meaningful one
+  // Single featured quote — short and punchy
   let quotesHtml = '';
   if (allQuotes.length) {
     const best = allQuotes
-      .filter(q => q.text && q.text.length > 30)
+      .filter(q => q.text && q.text.length > 20 && q.text.length < 120)
       .sort((a, b) => b.text.length - a.text.length)[0];
     if (best) {
       quotesHtml = `<div class="featured-quote">
