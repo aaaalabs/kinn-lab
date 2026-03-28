@@ -292,6 +292,20 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .partner-row img { height: 24px; object-fit: contain; filter: grayscale(1); transition: filter 0.2s; }
 .partner-row a:hover img { filter: grayscale(0); }
 
+/* ====== LUMA OVERRIDE ====== */
+.termin-cta[data-luma-action],
+.format-card-cta[data-luma-action] {
+  background: var(--mint) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-family: 'Work Sans', system-ui, sans-serif !important;
+  font-size: inherit !important;
+  font-weight: 600 !important;
+  padding: inherit !important;
+  cursor: pointer !important;
+}
+
 /* ====== ANIMATIONS ====== */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes modalIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }

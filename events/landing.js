@@ -71,7 +71,7 @@ function renderTermine(hero, chapters) {
 
   const rows = all.map(ev => {
     const loc = ev.locationCity || (ev.location || '').split(',')[0] || '';
-    const meta = [fmtDate(ev.date), ev.time, loc].filter(Boolean).join(' \u00b7 ');
+    const meta = [fmtDateNoDay(ev.date), ev.time, loc].filter(Boolean).join(' \u00b7 ');
     return `<div class="termin-row">
       <div class="termin-info">
         <div class="termin-name">${esc(ev.name)}</div>
@@ -279,6 +279,13 @@ async function handleLogin(e) {
 }
 
 // ====== UTILS ======
+function fmtDateNoDay(s) {
+  if (!s) return '';
+  const d = new Date(s + 'T12:00:00');
+  if (isNaN(d)) return s;
+  const months = ['J\u00e4n', 'Feb', 'M\u00e4r', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+  return `${d.getDate()}. ${months[d.getMonth()]}`;
+}
 function fmtDate(s) {
   if (!s) return '';
   const d = new Date(s + 'T12:00:00');
@@ -299,25 +306,15 @@ function chapterFromName(name, chapter) {
 function lumaButton(ev, cls) {
   if (!ev.lumaUrl) return '';
   if (ev.lumaId) {
-    // Luma checkout button — rendered as plain link, then upgraded by initLumaButtons()
-    return `<a href="${escUrl(ev.lumaUrl)}" class="${cls}" data-luma-id="${esc(ev.lumaId)}" target="_blank" rel="noopener">Dabei sein</a>`;
+    // Use data-luma-action + data-luma-event-id for Luma checkout script
+    return `<a href="${escUrl(ev.lumaUrl)}" class="${cls}" data-luma-action="checkout" data-luma-event-id="${esc(ev.lumaId)}">Dabei sein</a>`;
   }
   return `<a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="${cls}">Dabei sein</a>`;
 }
 
 function initLumaButtons() {
-  document.querySelectorAll('[data-luma-id]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const eventId = btn.dataset.lumaId;
-      if (window.luma?.showCheckout) {
-        window.luma.showCheckout({ eventId });
-      } else {
-        // Fallback: open Luma checkout in new tab
-        window.open(btn.href, '_blank');
-      }
-    });
-  });
+  // Re-init Luma checkout script for dynamically rendered buttons
+  if (window.luma?.initCheckout) window.luma.initCheckout();
 }
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 function escUrl(u) { if (!u) return ''; try { return new URL(u).href; } catch { return esc(u); } }
