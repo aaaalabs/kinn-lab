@@ -32,7 +32,7 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 
 /* ====== HERO ====== */
 .hero {
-  min-height: 92vh; display: flex; flex-direction: column;
+  min-height: 80vh; display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center;
   padding: 60px 24px 40px; position: relative; overflow: hidden;
 }
@@ -56,46 +56,51 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   font-size: 13px; font-weight: 500; color: var(--text-m);
   letter-spacing: 0.04em; margin-bottom: 28px; position: relative;
 }
-.hero-event {
-  position: relative;
+/* ====== TERMINE LIST ====== */
+.termine {
+  max-width: 480px; width: 100%; position: relative;
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 20px 28px;
-  box-shadow: var(--sh); margin-bottom: 24px;
-  max-width: 440px; width: 100%;
-  animation: fadeUp 0.6s ease-out 0.1s both;
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--sh); margin-bottom: 16px;
+  animation: fadeUp 0.5s ease-out 0.1s both;
 }
-.hero-event-label {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--mint); margin-bottom: 6px;
+.termine-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-m);
+  padding: 12px 18px 0;
 }
-.hero-event-name { font-size: 20px; font-weight: 900; color: var(--dark); margin-bottom: 4px; }
-.hero-event-meta { font-size: 14px; color: var(--text-s); margin-bottom: 16px; }
-.hero-cta {
-  display: inline-block; padding: 12px 36px;
-  background: var(--mint); color: #fff;
-  border: none; border-radius: var(--r-sm);
-  font-family: inherit; font-size: 15px; font-weight: 700;
-  text-decoration: none; cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 3px 16px rgba(94,217,166,0.35);
+.termin-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 18px; border-bottom: 1px solid var(--border);
 }
-.hero-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(94,217,166,0.45); }
-.hero-login {
-  font-size: 12px; color: var(--text-m); margin-top: 10px;
-  position: relative;
+.termin-row:last-child { border-bottom: none; }
+.termin-info { flex: 1; }
+.termin-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+.termin-meta { font-size: 12px; color: var(--text-s); }
+.termin-cta {
+  padding: 7px 16px; background: var(--mint); color: #fff;
+  border: none; border-radius: 6px; font-family: inherit;
+  font-size: 12px; font-weight: 600; text-decoration: none;
+  white-space: nowrap; flex-shrink: 0;
+  transition: background 0.15s;
 }
-.hero-login a { color: var(--mint); font-weight: 600; text-decoration: none; }
-.hero-login a:hover { text-decoration: underline; }
+.termin-cta:hover { background: var(--mint-hover); }
 
 /* ====== STATS ====== */
 .stats {
-  display: flex; gap: 32px; justify-content: center;
-  padding: 8px 0 0; position: relative;
-  animation: fadeUp 0.5s ease-out 0.25s both;
+  display: flex; gap: 24px; justify-content: center;
+  padding: 4px 0 0; position: relative;
+  animation: fadeUp 0.5s ease-out 0.2s both;
 }
 .stat { text-align: center; }
-.stat-val { font-weight: 900; font-size: 28px; color: var(--dark); display: block; line-height: 1.2; }
-.stat-label { font-size: 11px; color: var(--text-m); text-transform: uppercase; letter-spacing: 0.06em; }
+.stat-val { font-weight: 900; font-size: 22px; color: var(--dark); display: block; line-height: 1.2; }
+.stat-label { font-size: 10px; color: var(--text-m); text-transform: uppercase; letter-spacing: 0.06em; }
+
+.hero-login {
+  font-size: 12px; color: var(--text-m); margin-top: 8px; position: relative;
+}
+.hero-login a { color: var(--mint); font-weight: 600; text-decoration: none; }
+.hero-login a:hover { text-decoration: underline; }
 
 /* ====== SCROLL HINT ====== */
 .scroll-hint {
@@ -132,17 +137,15 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .voting-cta:hover { background: var(--mint); color: #fff; }
 
-/* ====== HERO QUOTE ====== */
-.hero-quote {
-  max-width: 440px; width: 100%; text-align: left;
+/* ====== HIGHLIGHT QUOTE (below fold) ====== */
+.highlight-quote {
   background: var(--card); border: 1px solid var(--border);
   border-left: 3px solid var(--mint);
   border-radius: var(--r-sm); padding: 14px 18px;
-  margin-top: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  animation: fadeUp 0.6s ease-out 0.2s both;
+  margin-bottom: 24px;
 }
-.hero-quote-text { font-size: 13px; font-style: italic; color: var(--text-s); line-height: 1.5; }
-.hero-quote-author { font-size: 11px; font-weight: 600; color: var(--text-m); margin-top: 6px; }
+.highlight-quote-text { font-size: 13px; font-style: italic; color: var(--text-s); line-height: 1.5; }
+.highlight-quote-author { font-size: 11px; font-weight: 600; color: var(--text-m); margin-top: 6px; }
 
 /* ====== FORMAT CARDS ====== */
 /* Unlocked: full card with cover */
@@ -279,26 +282,6 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .modal-status { font-size: 13px; color: var(--text-s); margin-top: 12px; text-align: center; }
 .modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 22px; color: var(--text-m); cursor: pointer; }
 
-/* ====== CHAPTERS ====== */
-.chapters { display: flex; gap: 10px; flex-wrap: wrap; }
-.chapter-card {
-  flex: 1; min-width: 200px;
-  display: flex; align-items: center; gap: 12px;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 14px 18px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.chapter-card-info { flex: 1; }
-.chapter-card-name { font-size: 14px; font-weight: 700; color: var(--text-h); }
-.chapter-card-meta { font-size: 12px; color: var(--text-s); }
-.chapter-card-cta {
-  padding: 6px 14px; background: var(--mint); color: #fff;
-  border: none; border-radius: 6px; font-family: inherit;
-  font-size: 12px; font-weight: 600; text-decoration: none;
-  white-space: nowrap; transition: background 0.15s;
-}
-.chapter-card-cta:hover { background: var(--mint-hover); }
-
 /* ====== PARTNER LOGOS ====== */
 .partner-row {
   display: flex; gap: 20px; justify-content: center; align-items: center;
@@ -337,18 +320,14 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   </svg>
   <div class="hero-tagline">Der KI-Treff für Tirol.</div>
   <div class="hero-ritual">Jeden Donnerstag. 8 Uhr. Kaffee und Klartext.</div>
-  <div class="hero-event" id="hero-event">
-    <div style="color:var(--text-m);font-size:13px">Lädt...</div>
-  </div>
-  <div id="chapters-section" style="max-width:520px;width:100%"></div>
-  <div id="hero-quote"></div>
+  <div id="termine-section"></div>
   <div class="stats" id="stats"></div>
   <div class="hero-login" id="hero-login"></div>
-  <div class="scroll-hint" id="scroll-hint"></div>
 </section>
 
 <!-- ====== BELOW THE FOLD ====== -->
 <div class="wrap">
+  <div id="hero-quote"></div>
   <div id="voting-section"></div>
   <div id="formats-section"></div>
   <div id="past-section"></div>

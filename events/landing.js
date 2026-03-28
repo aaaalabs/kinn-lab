@@ -28,17 +28,14 @@ async function loadAll() {
 
   if (gated.status === 'fulfilled') {
     const d = gated.value;
-    renderHeroEvent(d.hero);
-    renderChapters(d.events.filter(e => e.type === 'chapter'));
+    const chapters = d.events.filter(e => e.type === 'chapter');
+    renderTermine(d.hero, chapters);
     renderFormats(d.events.filter(e => e.type !== 'chapter'), d.hero);
 
-    // Login hint
     const loginEl = document.getElementById('hero-login');
-    if (isLoggedIn()) {
-      loginEl.innerHTML = `Eingeloggt als ${esc(getEmail())}`;
-    } else {
-      loginEl.innerHTML = `<a href="#" onclick="openModal();return false">Einloggen</a>`;
-    }
+    loginEl.innerHTML = isLoggedIn()
+      ? `Eingeloggt als ${esc(getEmail())}`
+      : `<a href="#" onclick="openModal();return false">Einloggen</a>`;
   }
 
   if (feedback.status === 'fulfilled') {
@@ -67,20 +64,31 @@ async function loadAll() {
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
-// ====== HERO EVENT ======
-function renderHeroEvent(hero) {
-  const el = document.getElementById('hero-event');
-  if (!hero) {
-    el.innerHTML = '<div style="color:var(--text-m)">Kein kommendes Event</div>';
+// ====== TERMINE (all Donnerstage in one compact list) ======
+function renderTermine(hero, chapters) {
+  const el = document.getElementById('termine-section');
+  const all = hero ? [hero, ...chapters] : chapters;
+  if (!all.length) {
+    el.innerHTML = '<div style="color:var(--text-m);font-size:13px">Keine kommenden Termine</div>';
     return;
   }
-  const meta = [fmtDate(hero.date), hero.time, hero.location, hero.locationCity].filter(Boolean).join(' \u00b7 ');
-  el.innerHTML = `
-    <div class="hero-event-label">N\u00e4chster Termin</div>
-    <div class="hero-event-name">${esc(hero.name)}</div>
-    <div class="hero-event-meta">${esc(meta)}</div>
-    ${hero.lumaUrl ? `<a href="${escUrl(hero.lumaUrl)}" target="_blank" rel="noopener" class="hero-cta">Dabei sein</a>` : ''}
-  `;
+
+  const rows = all.map(ev => {
+    const loc = ev.locationCity || (ev.location || '').split(',')[0] || '';
+    const meta = [fmtDate(ev.date), ev.time, loc].filter(Boolean).join(' \u00b7 ');
+    return `<div class="termin-row">
+      <div class="termin-info">
+        <div class="termin-name">${esc(ev.name)}</div>
+        <div class="termin-meta">${esc(meta)}</div>
+      </div>
+      ${ev.lumaUrl ? `<a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="termin-cta">Dabei sein</a>` : ''}
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `<div class="termine">
+    <div class="termine-label">N\u00e4chste Termine</div>
+    ${rows}
+  </div>`;
 }
 
 // ====== HERO QUOTE ======
@@ -105,9 +113,9 @@ function renderHeroQuote(allEvents) {
   if (!pool.length) return;
   const q = pool[Math.floor(Math.random() * pool.length)];
 
-  el.innerHTML = `<div class="hero-quote">
-    <div class="hero-quote-text">\u201E${esc(q.text?.substring(0, 130))}${q.text?.length > 130 ? '...' : ''}\u201C</div>
-    <div class="hero-quote-author">${esc(q.firstName)} ${esc(q.lastInitial)} \u00b7 ${esc(q.event)}</div>
+  el.innerHTML = `<div class="highlight-quote">
+    <div class="highlight-quote-text">\u201E${esc(q.text?.substring(0, 130))}${q.text?.length > 130 ? '...' : ''}\u201C</div>
+    <div class="highlight-quote-author">${esc(q.firstName)} ${esc(q.lastInitial)} \u00b7 ${esc(q.event)}</div>
   </div>`;
 }
 
@@ -139,26 +147,6 @@ function renderVoting(topics) {
       <button class="voting-cta" onclick="alert('Voting-Details kommen bald!')">Stimm ab</button>
     </div>
   </div>`;
-}
-
-// ====== CHAPTERS ======
-function renderChapters(chapters) {
-  const el = document.getElementById('chapters-section');
-  if (!chapters.length) { el.innerHTML = ''; return; }
-
-  const cards = chapters.map(ch => {
-    const meta = [fmtDate(ch.date), ch.time].filter(Boolean).join(' \u00b7 ');
-    const loc = ch.locationCity || (ch.location || '').split(',')[0];
-    return `<div class="chapter-card">
-      <div class="chapter-card-info">
-        <div class="chapter-card-name">${esc(ch.name)}</div>
-        <div class="chapter-card-meta">${esc(meta)}${loc ? ' \u00b7 ' + esc(loc) : ''}</div>
-      </div>
-      ${ch.lumaUrl ? `<a href="${escUrl(ch.lumaUrl)}" target="_blank" rel="noopener" class="chapter-card-cta">Dabei sein</a>` : ''}
-    </div>`;
-  }).join('');
-
-  el.innerHTML = `<div class="chapters" style="margin-top:12px">${cards}</div>`;
 }
 
 // ====== FORMAT CARDS ======
