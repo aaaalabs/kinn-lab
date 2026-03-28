@@ -323,7 +323,7 @@ function openLumaCheckout(eventId) {
     <div class="luma-modal-header">
       <button class="luma-modal-close" onclick="this.closest('.luma-modal').remove()">&times;</button>
     </div>
-    <iframe class="luma-modal-iframe" src="https://lu.ma/embed/event/${eventId}/simple" allow="fullscreen; payment"></iframe>
+    <iframe class="luma-modal-iframe" src="https://lu.ma/embed/event/${eventId}/simple" allow="fullscreen; payment" style="width:100%;height:100%;border:none"></iframe>
   </div>`;
   document.body.appendChild(overlay);
 }

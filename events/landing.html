@@ -85,7 +85,7 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .termin-date {
   font-size: 12px; color: var(--text-s);
-  margin-right: 8px;
+  margin-left: 8px; margin-right: 8px;
 }
 .termin-arrow {
   font-size: 14px; color: var(--mint);
@@ -310,16 +310,18 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   background: #fff; border-radius: 16px; overflow: hidden;
   width: 90%; max-width: 480px; height: 85vh; max-height: 700px;
   box-shadow: 0 24px 64px rgba(0,0,0,0.2);
-  display: flex; flex-direction: column;
+  position: relative;
   animation: modalIn 0.25s ease-out;
 }
 .luma-modal-header {
-  display: flex; justify-content: flex-end; padding: 8px 12px;
-  border-bottom: 1px solid var(--border);
+  position: absolute; top: 0; right: 0; z-index: 1;
+  padding: 8px 12px;
 }
 .luma-modal-close {
-  background: none; border: none; font-size: 22px;
-  color: var(--text-m); cursor: pointer; padding: 4px 8px;
+  background: rgba(255,255,255,0.9); border: none; font-size: 20px;
+  color: var(--text-s); cursor: pointer; padding: 4px 10px;
+  border-radius: 50%; line-height: 1;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 .luma-modal-iframe {
   flex: 1; border: none; width: 100%;
