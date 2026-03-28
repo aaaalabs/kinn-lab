@@ -35,7 +35,7 @@ async function loadAll() {
     const loginEl = document.getElementById('hero-login');
     if (isLoggedIn()) {
       loginEl.style.display = 'none';
-      renderUserBar(gatedData.verified);
+      renderUserBar(d.verified);
       loadProfile();
     } else {
       loginEl.innerHTML = `<a href="#" onclick="openModal();return false">Einloggen</a>`;
