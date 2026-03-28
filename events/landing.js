@@ -50,13 +50,6 @@ async function loadAll() {
     renderVoting(voting.value.topics || []);
   }
 
-  // Scroll hint
-  const hint = document.getElementById('scroll-hint');
-  if (document.getElementById('formats-section').innerHTML || document.getElementById('past-section').innerHTML) {
-    hint.textContent = '\u2193';
-    hint.style.fontSize = '18px';
-  }
-
   // Scroll reveal
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
