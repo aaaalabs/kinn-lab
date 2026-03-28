@@ -739,9 +739,19 @@ function renderSettingsView(el) {
       <div class="panel-label">Matching</div>
       ${toggle('Matching erlauben', 'Passende Profile bei Events vorschlagen', 'preferences.allowMatching', s.preferences.allowMatching)}
     </div>
-    <div class="panel-section">
-      <div class="panel-label">KINN Badge</div>
-      ${badgeHtml}
+    <div class="panel-section panel-badge-section">
+      <div>
+        <div class="panel-label">KINN Badge</div>
+        ${badgeHtml}
+      </div>
+      <svg class="panel-badge-icon" viewBox="0 0 64 44" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="1" width="62" height="42" rx="6"/>
+        <circle cx="20" cy="18" r="6"/>
+        <line x1="14" y1="32" x2="26" y2="32"/>
+        <line x1="36" y1="14" x2="52" y2="14"/>
+        <line x1="36" y1="22" x2="48" y2="22"/>
+        <line x1="36" y1="30" x2="44" y2="30"/>
+      </svg>
     </div>
     ${fundHtml}
     <div class="panel-section">

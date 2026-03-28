@@ -587,6 +587,16 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .panel-toggle.on .panel-toggle-dot { transform: translateX(16px); }
 
+/* Badge section with card icon */
+.panel-badge-section {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.panel-badge-section > div { flex: 1; min-width: 0; }
+.panel-badge-icon {
+  width: 56px; height: auto; flex-shrink: 0;
+  color: var(--border-s); opacity: 0.6;
+}
+
 /* Settings meta */
 .panel-meta { font-size: 12px; color: var(--text-m); padding: 6px 0; line-height: 1.5; }
 
