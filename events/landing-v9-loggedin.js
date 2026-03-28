@@ -517,7 +517,9 @@ function renderProfileView(el) {
 
   const selectField = (path, labels) => {
     const val = getNestedVal(s, path);
-    return `<div class="panel-value" onclick="startSelectEdit(this,'${path}',${esc(JSON.stringify(labels))})">${labels[val] || '<span class="empty">Ausw\u00e4hlen</span>'}</div>`;
+    const labelsId = '_sel_' + path.replace(/\./g, '_');
+    window[labelsId] = labels;
+    return `<div class="panel-value" onclick="startSelectEdit(this,'${path}',window['${labelsId}'])">${labels[val] || '<span class="empty">Ausw\u00e4hlen</span>'}</div>`;
   };
 
   const tagsField = (path) => {
