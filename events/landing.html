@@ -292,19 +292,32 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .partner-row img { height: 24px; object-fit: contain; filter: grayscale(1); transition: filter 0.2s; }
 .partner-row a:hover img { filter: grayscale(0); }
 
-/* ====== LUMA OVERRIDE ====== */
-.termin-cta[data-luma-action],
-.format-card-cta[data-luma-action] {
-  background: var(--mint) !important;
-  color: #fff !important;
-  border: none !important;
-  border-radius: 6px !important;
-  font-family: 'Work Sans', system-ui, sans-serif !important;
-  font-size: inherit !important;
-  font-weight: 600 !important;
-  padding: inherit !important;
-  cursor: pointer !important;
+/* ====== LUMA CHECKOUT MODAL ====== */
+.luma-modal {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.2s ease-out;
 }
+.luma-modal-inner {
+  background: #fff; border-radius: 16px; overflow: hidden;
+  width: 90%; max-width: 480px; height: 85vh; max-height: 700px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+  display: flex; flex-direction: column;
+  animation: modalIn 0.25s ease-out;
+}
+.luma-modal-header {
+  display: flex; justify-content: flex-end; padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.luma-modal-close {
+  background: none; border: none; font-size: 22px;
+  color: var(--text-m); cursor: pointer; padding: 4px 8px;
+}
+.luma-modal-iframe {
+  flex: 1; border: none; width: 100%;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ====== ANIMATIONS ====== */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -373,7 +386,6 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   </div>
 </div>
 
-<script id="luma-checkout" src="https://embed.lu.ma/checkout-button.js"></script>
 <script src="/events/landing.js"></script>
 </body>
 </html>

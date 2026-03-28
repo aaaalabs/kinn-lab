@@ -306,16 +306,25 @@ function chapterFromName(name, chapter) {
 function lumaButton(ev, cls) {
   if (!ev.lumaUrl) return '';
   if (ev.lumaId) {
-    // Use data-luma-action + data-luma-event-id for Luma checkout script
-    return `<a href="${escUrl(ev.lumaUrl)}" class="${cls}" data-luma-action="checkout" data-luma-event-id="${esc(ev.lumaId)}">Dabei sein</a>`;
+    return `<a href="${escUrl(ev.lumaUrl)}" class="${cls}" onclick="openLumaCheckout('${esc(ev.lumaId)}');return false">Dabei sein</a>`;
   }
   return `<a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="${cls}">Dabei sein</a>`;
 }
 
-function initLumaButtons() {
-  // Re-init Luma checkout script for dynamically rendered buttons
-  if (window.luma?.initCheckout) window.luma.initCheckout();
+function openLumaCheckout(eventId) {
+  const overlay = document.createElement('div');
+  overlay.className = 'luma-modal';
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `<div class="luma-modal-inner">
+    <div class="luma-modal-header">
+      <button class="luma-modal-close" onclick="this.closest('.luma-modal').remove()">&times;</button>
+    </div>
+    <iframe class="luma-modal-iframe" src="https://lu.ma/embed/event/${eventId}/simple" allow="fullscreen; payment"></iframe>
+  </div>`;
+  document.body.appendChild(overlay);
 }
+
+function initLumaButtons() { /* no-op, buttons use onclick directly */ }
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 function escUrl(u) { if (!u) return ''; try { return new URL(u).href; } catch { return esc(u); } }
 
