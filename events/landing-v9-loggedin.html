@@ -194,11 +194,16 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .termin-status.going { color: #065F46; background: var(--mint-bg); }
 .termin-status.open { color: var(--text-m); background: transparent; }
 
-/* ====== SCROLL HINT ====== */
-.scroll-hint {
-  position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
-  font-size: 11px; color: var(--text-m); letter-spacing: 0.1em; text-transform: uppercase;
-  animation: pulse 2s ease-in-out infinite;
+/* ====== SCROLL HINT (mobile chevron) ====== */
+.scroll-chevron {
+  display: none; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  color: var(--text-m); animation: bobChevron 2s ease-in-out infinite;
+}
+.scroll-chevron svg { width: 20px; height: 20px; }
+@media (max-width: 640px) { .scroll-chevron { display: block; } }
+@keyframes bobChevron {
+  0%,100% { opacity: 0.3; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 0.6; transform: translateX(-50%) translateY(4px); }
 }
 @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.8; } }
 
@@ -704,6 +709,7 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
     </div>
   </div>
   <div class="hero-login" id="hero-login" style="display:none"></div>
+  <div class="scroll-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
 </section>
 
 <!-- ====== BELOW THE FOLD ====== -->
