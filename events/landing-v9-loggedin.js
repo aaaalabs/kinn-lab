@@ -184,18 +184,17 @@ function renderHeroBg(allEvents) {
 function renderVoting(topics) {
   const el = document.getElementById('voting-section');
   if (!topics.length) return;
-  const pills = topics.map(t => `<span class="voting-pill">${esc(t.title)}<span class="voting-pill-n">${t.votes}</span></span>`).join('');
+  const items = topics.map(t => `<span class="voting-topic"><span class="voting-topic-n">${t.votes}</span>${esc(t.title)}</span>`).join('');
   el.innerHTML = `<div class="section reveal">
     <div class="section-label">Themen-Voting</div>
     <div class="voting">
-      <span class="voting-label">Top 3</span>
-      <div class="voting-topics">${pills}</div>
-      <button class="voting-cta" onclick="alert('Voting-Details kommen bald!')">Stimm ab</button>
+      <div class="voting-topics">${items}</div>
+      <button class="voting-cta" onclick="alert('Voting-Details kommen bald!')">Abstimmen \u2192</button>
     </div>
   </div>`;
 }
 
-// ====== FORMAT CARDS ======
+// ====== FORMAT LIST (typography-only) ======
 function renderFormats(events, hero) {
   const el = document.getElementById('formats-section');
   if (!events.length) return;
@@ -204,54 +203,40 @@ function renderFormats(events, hero) {
   const unlocked = events.filter(e => !e.locked);
   const locked = events.filter(e => e.locked);
 
-  let html = '';
-
-  // Unlocked: full cards with covers
-  unlocked.forEach(ev => {
-    const typeLabel = ev.type === 'talk' ? 'TALK' : ev.type === 'kurs' ? 'KURS' : 'KINN';
-    const typeCls = ev.type || 'chapter';
+  const formatRow = (ev, isLocked) => {
+    const typeLabel = ev.type === 'talk' ? 'Talk' : ev.type === 'kurs' ? 'Kurs' : 'KINN';
     const displayName = ev.name.replace(/^KINN[:\s]+\w+\s*[-\u2013\u2014]\s*/i, '').trim() || ev.name;
-    const meta = [fmtDate(ev.date), ev.time, ev.location].filter(Boolean).join(' \u00b7 ');
-    html += `<div class="format-card-unlocked">
-      ${ev.coverUrl ? `<img class="format-card-cover" src="${escUrl(ev.coverUrl)}" alt="" loading="lazy">` : ''}
-      <div class="format-card-body">
-        <span class="format-card-type ${typeCls}">${esc(typeLabel)}</span>
-        <div class="format-card-title">${esc(displayName)}</div>
-        <div class="format-card-meta">${esc(meta)}</div>
-        ${lumaButton(ev, 'format-card-cta')}
-      </div>
-    </div>`;
-  });
+    const meta = [fmtDate(ev.date), ev.location].filter(Boolean).join(' \u00b7 ');
+    const href = !isLocked && ev.lumaUrl ? escUrl(ev.lumaUrl) : '#';
+    const target = !isLocked && ev.lumaUrl ? ' target="_blank" rel="noopener"' : '';
+    const lockedCls = isLocked ? ' locked' : '';
 
-  // Locked: compact list in one card
+    return `<a class="format-row${lockedCls}" href="${href}"${target}>
+      <span class="format-row-type">${esc(typeLabel)}</span>
+      <span class="format-row-title">${esc(displayName)}</span>
+      <span class="format-row-meta">${esc(meta)}</span>
+      ${!isLocked ? '<span class="format-row-arrow">\u2192</span>' : ''}
+    </a>`;
+  };
+
+  let rows = unlocked.map(ev => formatRow(ev, false)).join('');
+  rows += locked.map(ev => formatRow(ev, true)).join('');
+
+  let hintHtml = '';
   if (locked.length) {
-    const rows = locked.map(ev => {
-      const typeLabel = ev.type === 'talk' ? 'TALK' : ev.type === 'kurs' ? 'KURS' : 'KINN';
-      const typeCls = ev.type || 'chapter';
-      const displayName = ev.name.replace(/^KINN[:\s]+\w+\s*[-\u2013\u2014]\s*/i, '').trim() || ev.name;
-      const meta = [fmtDate(ev.date), ev.time].filter(Boolean).join(' \u00b7 ');
-      return `<div class="format-locked-row">
-        <span class="format-locked-badge ${typeCls}">${esc(typeLabel)}</span>
-        <span class="format-locked-title">${esc(displayName)}</span>
-        <span class="format-locked-meta">${esc(meta)}</span>
-      </div>`;
-    }).join('');
-
     const login = !isLoggedIn() ? `<a href="#" onclick="openModal();return false">Einloggen</a> oder ` : '';
-    const contact = isLoggedIn() ? ' \u00b7 <a href="mailto:kontakt@kinn.at">Schon da gewesen? Schreib uns</a>' : '';
-
-    html += `<div class="format-locked-list">
-      ${rows}
-      <div class="format-lock-hint">
-        Freigeschaltet nach deinem ersten KINN Donnerstag.
-        ${login}<a href="${escUrl(heroUrl)}" target="_blank" rel="noopener">Zum n\u00e4chsten Donnerstag</a>${contact}
-      </div>
+    hintHtml = `<div class="format-lock-hint">
+      Freigeschaltet nach deinem ersten KINN Donnerstag.
+      ${login}<a href="${escUrl(heroUrl)}" target="_blank" rel="noopener">Zum n\u00e4chsten Donnerstag</a>
     </div>`;
   }
 
   el.innerHTML = `<div class="section reveal">
     <div class="section-label">Weitere Formate</div>
-    ${html}
+    <div class="format-list">
+      ${rows}
+    </div>
+    ${hintHtml}
   </div>`;
 }
 
@@ -283,15 +268,18 @@ function renderPast(events) {
     photosHtml = `<div class="photos-scroll">${cards}</div>`;
   }
 
-  // Quotes
+  // Single featured quote — pick the longest meaningful one
   let quotesHtml = '';
   if (allQuotes.length) {
-    const top = allQuotes.slice(0, 6);
-    const cards = top.map(q => `<div class="quote-card">
-      <div class="quote-text">\u201E${esc(q.text?.substring(0, 100))}${q.text?.length > 100 ? '...' : ''}\u201C</div>
-      <div class="quote-author">${esc(q.firstName)} ${esc(q.lastInitial)} \u00b7 ${esc(q.event)}</div>
-    </div>`).join('');
-    quotesHtml = `<div class="quotes-grid">${cards}</div>`;
+    const best = allQuotes
+      .filter(q => q.text && q.text.length > 30)
+      .sort((a, b) => b.text.length - a.text.length)[0];
+    if (best) {
+      quotesHtml = `<div class="featured-quote">
+        <div class="featured-quote-text">\u201E${esc(best.text)}\u201C</div>
+        <div class="featured-quote-author">${esc(best.firstName)} ${esc(best.lastInitial)} \u00b7 ${esc(best.event)}</div>
+      </div>`;
+    }
   }
 
   el.innerHTML = `<div class="section reveal">
