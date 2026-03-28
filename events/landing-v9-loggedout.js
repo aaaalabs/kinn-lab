@@ -37,9 +37,7 @@ async function loadAll() {
     renderPast(past);
   }
 
-  if (voting.status === 'fulfilled') {
-    renderVoting(voting.value.topics || []);
-  }
+  // Voting section removed — topics now shown live under each chapter termin
 
   // Scroll reveal
   const observer = new IntersectionObserver(entries => {
