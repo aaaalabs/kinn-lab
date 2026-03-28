@@ -158,10 +158,7 @@ function renderChapters(chapters) {
     </div>`;
   }).join('');
 
-  el.innerHTML = `<div class="section reveal" style="padding-top:24px;padding-bottom:0">
-    <div class="section-label">Weitere Standorte</div>
-    <div class="chapters">${cards}</div>
-  </div>`;
+  el.innerHTML = `<div class="chapters" style="margin-top:12px">${cards}</div>`;
 }
 
 // ====== FORMAT CARDS ======
