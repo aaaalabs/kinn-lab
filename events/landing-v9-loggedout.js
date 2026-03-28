@@ -2,21 +2,10 @@
 const AUTH_DOMAIN = 'https://kinn.at';
 const REDIRECT_URL = window.location.origin + '/events/landing-v9-loggedout.html';
 
-// ====== AUTH ======
-function extractAuthFromHash() {
-  const hash = window.location.hash.substring(1);
-  if (!hash) return;
-  const params = new URLSearchParams(hash);
-  const token = params.get('token');
-  const email = params.get('email');
-  if (token && email) {
-    localStorage.setItem('lab_session', token);
-    localStorage.setItem('lab_email', email.toLowerCase().trim());
-    window.history.replaceState(null, '', window.location.pathname);
-  }
-}
-function getEmail() { return localStorage.getItem('lab_email'); }
-function isLoggedIn() { return !!localStorage.getItem('lab_session') && !!getEmail(); }
+// ====== AUTH (always visitor mode for preview) ======
+function extractAuthFromHash() {}
+function getEmail() { return null; }
+function isLoggedIn() { return false; }
 
 // ====== LOAD ALL ======
 async function loadAll() {
