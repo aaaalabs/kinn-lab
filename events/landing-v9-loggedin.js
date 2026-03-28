@@ -103,7 +103,7 @@ async function loadRadarEvents() {
 
     const rows = events.map(ev => {
       const label = esc(ev.title || '');
-      const when = fmtDateNoDay(ev.date);
+      const when = fmtDate(ev.date);
       const href = ev.detailUrl ? escUrl(ev.detailUrl) : ev.registrationUrl ? escUrl(ev.registrationUrl) : '#';
       const target = href !== '#' ? ' target="_blank" rel="noopener"' : '';
       return `<a class="radar-row" href="${href}"${target}>
