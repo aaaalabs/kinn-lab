@@ -119,24 +119,6 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .termin-row:hover .termin-arrow { transform: translateX(3px); opacity: 1; }
 
-/* Topic pills under termine — reveal on hover */
-.termin-group { position: relative; }
-.termin-topics {
-  display: flex; gap: 6px; padding: 0 14px 6px;
-  overflow: hidden; white-space: nowrap;
-  max-height: 0; opacity: 0;
-  transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
-  padding-top: 0; padding-bottom: 0;
-}
-.termin-group:hover .termin-topics {
-  max-height: 28px; opacity: 1; padding-bottom: 8px;
-}
-.termin-topic {
-  font-size: 10px; font-weight: 500; color: var(--text-m);
-  padding: 2px 8px; border-radius: 10px; background: var(--mint-bg);
-  flex-shrink: 0;
-}
-.termin-topic:last-child { flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; }
 
 /* Radar — "Was sonst passiert" */
 .radar-list {

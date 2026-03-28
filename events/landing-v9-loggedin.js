@@ -64,29 +64,14 @@ function renderTermine(hero, chapters) {
 
   const rows = all.map(ev => {
     const city = ev.locationCity || chapterFromName(ev.name, null) || 'Innsbruck';
-    const lumaId = ev.lumaId;
     const href = ev.lumaUrl ? escUrl(ev.lumaUrl) : '#';
-
     const when = fmtRelative(ev.date);
-    // TODO: remove mock fallback once Luma topic question is live
-    const mockTopics = { 'Innsbruck': { 'Vibe Coding': 12, 'RAG': 8, 'KI im Business': 6 }, 'Kufstein': { 'KI im Business': 9, 'Content AI': 5 } };
-    const topics = ev.topics || mockTopics[city] || {};
-    const topicPills = Object.entries(topics)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([t]) => `<span class="termin-topic">${esc(t)}</span>`)
-      .join('');
-    const topicsHtml = topicPills
-      ? `<div class="termin-topics">${topicPills}</div>`
-      : '';
 
-    return `<div class="termin-group">
-      <a class="termin-row" href="${href}" target="_blank" rel="noopener">
-        <span class="termin-city">${esc(city)}</span>
-        <span class="termin-when">${esc(when)}</span>
-        <span class="termin-arrow">\u2192</span>
-      </a>${topicsHtml}
-    </div>`;
+    return `<a class="termin-row" href="${href}" target="_blank" rel="noopener">
+      <span class="termin-city">${esc(city)}</span>
+      <span class="termin-when">${esc(when)}</span>
+      <span class="termin-arrow">\u2192</span>
+    </a>`;
   }).join('');
 
   el.innerHTML = `<div class="termine">

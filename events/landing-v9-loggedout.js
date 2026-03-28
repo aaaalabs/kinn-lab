@@ -72,15 +72,9 @@ function renderTermine(hero, chapters) {
     </a>`;
   }).join('');
 
-  const totalVotes = all.reduce((s, ev) => s + (ev.topics?.totalVotes || 0), 0);
-  const teaser = totalVotes > 0
-    ? `<div class="termin-topics-teaser">${totalVotes} Themen-Stimmen gew\u00e4hlt</div>`
-    : '';
-
   el.innerHTML = `<div class="termine">
     <div class="termine-label">Wo bist du dabei?</div>
     ${rows}
-    ${teaser}
   </div>`;
 }
 
