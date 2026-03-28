@@ -140,7 +140,7 @@ function renderStats(allEvents) {
   const el = document.getElementById('stats');
   const cities = [...new Set(allEvents.map(e => e.location?.city).filter(Boolean))];
   const totalFb = allEvents.reduce((s, e) => s + (e.stats?.totalFeedback || 0), 0);
-  el.innerHTML = `<strong>${allEvents.length}</strong> Events in <strong>${cities.length}</strong> St\u00e4dten \u00b7 <strong>${totalFb}</strong> Stimmen`;
+  el.innerHTML = `<strong>${allEvents.length}</strong> Events in <strong>${cities.length}</strong> St\u00e4dten \u00b7 <a href="https://kinn.at/stimmen" style="color:inherit;text-decoration:none"><strong>${totalFb}</strong> Stimmen</a>`;
 }
 
 // ====== HERO BACKGROUND PHOTO ======
