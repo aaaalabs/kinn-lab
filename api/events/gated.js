@@ -8,28 +8,36 @@ export default async function handler(req, res) {
   try {
     const email = (req.query.email || '').toLowerCase().trim();
 
-    // Verify user if email provided
+    // Load event keys + verify user in parallel
+    const [eventKeys, ...verifyResults] = await Promise.all([
+      raw.zrange('kinn:events', 0, '+inf', { byScore: true }),
+      ...(email ? [
+        kv.get('attendance:counts'),
+        raw.sismember('kinn:verified:whitelist', email),
+      ] : []),
+    ]);
+
     let verified = false;
     if (email) {
-      const cached = await kv.get('attendance:counts');
-      const counts = cached?.counts || {};
+      const counts = verifyResults[0]?.counts || {};
       const attended = (counts[email] || 0) >= 1;
-      const whitelisted = await raw.sismember('kinn:verified:whitelist', email);
-      verified = attended || whitelisted;
+      verified = attended || verifyResults[1];
     }
 
-    // Load all events from sorted set
-    const eventKeys = await raw.zrange('kinn:events', 0, '+inf', { byScore: true });
     if (!eventKeys?.length) {
       return res.status(200).json({ hero: null, events: [], verified });
     }
 
+    // Fetch all event hashes in parallel
     const today = new Date().toISOString().split('T')[0];
+    const allEvents = await Promise.all(eventKeys.map(k => raw.hgetall(k)));
+
     let hero = null;
     const events = [];
 
-    for (const fullKey of eventKeys) {
-      const ev = await raw.hgetall(fullKey);
+    for (let i = 0; i < eventKeys.length; i++) {
+      const fullKey = eventKeys[i];
+      const ev = allEvents[i];
       if (!ev || !ev.date) continue;
       if (ev.date < today) continue;
 
