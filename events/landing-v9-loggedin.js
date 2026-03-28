@@ -207,15 +207,18 @@ function renderFormats(events, hero) {
     const typeLabel = ev.type === 'talk' ? 'Talk' : ev.type === 'kurs' ? 'Kurs' : 'KINN';
     const displayName = ev.name.replace(/^KINN[:\s]+\w+\s*[-\u2013\u2014]\s*/i, '').trim() || ev.name;
     const meta = [fmtDate(ev.date), ev.location].filter(Boolean).join(' \u00b7 ');
-    const href = !isLocked && ev.lumaUrl ? escUrl(ev.lumaUrl) : '#';
-    const target = !isLocked && ev.lumaUrl ? ' target="_blank" rel="noopener"' : '';
-    const lockedCls = isLocked ? ' locked' : '';
-
-    return `<a class="format-row${lockedCls}" href="${href}"${target}>
-      <span class="format-row-type">${esc(typeLabel)}</span>
+    const inner = `<span class="format-row-type">${esc(typeLabel)}</span>
       <span class="format-row-title">${esc(displayName)}</span>
-      <span class="format-row-meta">${esc(meta)}</span>
-      ${!isLocked ? '<span class="format-row-arrow">\u2192</span>' : ''}
+      <span class="format-row-meta">${esc(meta)}</span>`;
+
+    if (isLocked) {
+      return `<div class="format-row locked">${inner}</div>`;
+    }
+    const href = ev.lumaUrl ? escUrl(ev.lumaUrl) : '#';
+    const target = ev.lumaUrl ? ' target="_blank" rel="noopener"' : '';
+    return `<a class="format-row" href="${href}"${target}>
+      ${inner}
+      <span class="format-row-arrow">\u2192</span>
     </a>`;
   };
 
