@@ -110,7 +110,7 @@ async function loadRadarEvents() {
     if (!container) return;
 
     const rows = events.map(ev => {
-      const label = esc(ev.title?.length > 28 ? ev.title.substring(0, 28) + '...' : ev.title || '');
+      const label = esc(ev.title || '');
       const when = fmtDateNoDay(ev.date);
       const href = ev.detailUrl ? escUrl(ev.detailUrl) : ev.registrationUrl ? escUrl(ev.registrationUrl) : '#';
       const target = href !== '#' ? ' target="_blank" rel="noopener"' : '';
