@@ -112,7 +112,7 @@ async function loadRadarEvents() {
   } catch { /* silent */ }
 }
 
-// ====== TESTIMONIAL (in hero) ======
+// ====== TESTIMONIAL (in hero, crossfade rotation) ======
 async function loadTestimonial() {
   const el = document.getElementById('hero-testimonial');
   if (!el) return;
@@ -122,14 +122,27 @@ async function loadTestimonial() {
     const data = await res.json();
     const pool = (data.testimonials || []).filter(t => t.quote && t.name && t.image && t.quote.length < 160);
     if (!pool.length) return;
-    const t = pool[Math.floor(Math.random() * pool.length)];
-    el.innerHTML = `<div class="hero-testimonial">
+
+    let idx = Math.floor(Math.random() * pool.length);
+    const render = (t) => `<div class="hero-testimonial">
       <img class="hero-testimonial-avatar" src="https://kinn.at/testimonials/images/${esc(t.image)}" alt="${esc(t.name)}" loading="lazy">
       <div>
         <div class="hero-testimonial-text">\u201E${esc(t.quote)}\u201C</div>
         <div class="hero-testimonial-author">${esc(t.name)}${t.role ? ', ' + esc(t.role) : ''}</div>
       </div>
     </div>`;
+
+    el.innerHTML = render(pool[idx]);
+    if (pool.length < 2) return;
+
+    setInterval(() => {
+      idx = (idx + 1) % pool.length;
+      el.style.opacity = '0';
+      setTimeout(() => {
+        el.innerHTML = render(pool[idx]);
+        el.style.opacity = '1';
+      }, 400);
+    }, 8000);
   } catch { /* silent */ }
 }
 
