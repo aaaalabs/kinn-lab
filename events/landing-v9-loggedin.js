@@ -19,6 +19,7 @@ async function loadAll() {
     const d = gated.value;
     const chapters = d.events.filter(e => e.type === 'chapter');
     renderTermine(d.hero, chapters);
+    loadRadarEvents();
     // Preview mode: unlock all formats, force verified
     d.events.forEach(e => e.locked = false);
     d.verified = true;
@@ -84,6 +85,45 @@ function renderTermine(hero, chapters) {
     <div class="termine-label">Wo bist du dabei?</div>
     ${rows}
   </div>`;
+}
+
+// ====== RADAR (external KI events, quiet rows) ======
+async function loadRadarEvents() {
+  try {
+    let events;
+    try {
+      const res = await fetch('https://kinn.at/api/events/widget?page=1');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      events = (data.events || []).slice(0, 3);
+    } catch {
+      // Local dev fallback — remove before deploy
+      events = [
+        { title: 'KI in der Freiwilligenarbeit', date: '2026-04-09', detailUrl: '#' },
+        { title: 'Daten und KI — Datenbasis', date: '2026-04-14', detailUrl: '#' },
+        { title: 'AI Monday Innsbruck', date: '2026-04-21', detailUrl: '#' },
+      ];
+    }
+    if (!events.length) return;
+
+    const container = document.querySelector('.termine');
+    if (!container) return;
+
+    const rows = events.map(ev => {
+      const label = esc(ev.title?.length > 28 ? ev.title.substring(0, 28) + '...' : ev.title || '');
+      const when = fmtDateNoDay(ev.date);
+      const href = ev.detailUrl ? escUrl(ev.detailUrl) : ev.registrationUrl ? escUrl(ev.registrationUrl) : '#';
+      const target = href !== '#' ? ' target="_blank" rel="noopener"' : '';
+      return `<a class="termin-row termin-radar" href="${href}"${target}>
+        <span class="termin-city">${label}</span>
+        <span class="termin-when">${esc(when)}</span>
+      </a>`;
+    }).join('');
+
+    container.insertAdjacentHTML('beforeend',
+      `<div class="radar-divider"></div>${rows}
+       <a class="radar-subscribe" href="https://kinn.at/api/radar/calendar.ics">Alle KI Events abonnieren</a>`);
+  } catch { /* silent */ }
 }
 
 // ====== LOGGED-IN STATE ======

@@ -119,6 +119,26 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 }
 .termin-row:hover .termin-arrow { transform: translateX(3px); opacity: 1; }
 
+/* Radar events — quieter than KINN rows */
+.radar-divider {
+  height: 1px; margin: 6px 14px;
+  background: var(--border);
+}
+.termin-row.termin-radar .termin-city {
+  font-weight: 400; font-size: 13px; color: var(--text-s);
+}
+.termin-row.termin-radar .termin-when {
+  font-size: 10px;
+}
+.radar-subscribe {
+  display: block; text-align: center;
+  font-size: 10px; font-weight: 500; color: var(--text-m);
+  text-decoration: none; padding: 8px 0 2px;
+  letter-spacing: 0.02em;
+  transition: color 0.15s;
+}
+.radar-subscribe:hover { color: var(--mint); }
+
 .hero-login {
   font-size: 11px; color: var(--text-m); margin-top: 6px;
 }
@@ -581,16 +601,16 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
     <div class="termine">
       <div class="termine-label">Wo bist du dabei?</div>
       <div class="termin-row" style="pointer-events:none">
-        <span class="skeleton" style="width:90px;height:14px;flex:1"></span>
-        <span class="skeleton" style="width:55px;height:12px;margin-left:16px"></span>
+        <span class="termin-city"><span class="skeleton" style="width:90px;height:14px"></span></span>
+        <span class="termin-when"><span class="skeleton" style="width:55px;height:12px"></span></span>
       </div>
       <div class="termin-row" style="pointer-events:none">
-        <span class="skeleton" style="width:70px;height:14px;flex:1"></span>
-        <span class="skeleton" style="width:55px;height:12px;margin-left:16px"></span>
+        <span class="termin-city"><span class="skeleton" style="width:68px;height:14px"></span></span>
+        <span class="termin-when"><span class="skeleton" style="width:55px;height:12px"></span></span>
       </div>
       <div class="termin-row" style="pointer-events:none">
-        <span class="skeleton" style="width:80px;height:14px;flex:1"></span>
-        <span class="skeleton" style="width:40px;height:12px"></span>
+        <span class="termin-city"><span class="skeleton" style="width:76px;height:14px"></span></span>
+        <span class="termin-when"><span class="skeleton" style="width:40px;height:12px"></span></span>
       </div>
     </div>
   </div>
