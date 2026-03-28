@@ -691,10 +691,14 @@ function renderSettingsView(el) {
   const sinceStr = `${['J\u00e4n','Feb','M\u00e4r','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][since.getMonth()]} ${since.getFullYear()}`;
 
   // Badge section
-  const badgeLinkLabel = s.badge.linkType === 'linkedin' ? 'LinkedIn' : 'Website';
+  const badgeLinkOptions = ['linkedin', 'website'].map(k => {
+    const label = k === 'linkedin' ? 'LinkedIn' : 'Website';
+    return `<span class="panel-fund-opt${k === s.badge.linkType ? ' active' : ''}" onclick="panelState.badge.linkType='${k}';renderPanel()">${label}</span>`;
+  }).join('');
   const badgeHtml = s.badge.active
-    ? `<div class="panel-meta">${badgeStatus} \u00b7 ${badgeLinkLabel}</div>
-       <div class="panel-meta" style="margin-top:4px"><a href="https://${esc(s.badge.shortlink)}" target="_blank" style="color:var(--mint);font-weight:600;text-decoration:none">${esc(s.badge.shortlink)}</a></div>`
+    ? `<div class="panel-meta" style="color:var(--dark);font-weight:500">Badge verlinkt auf</div>
+       <div class="panel-fund-options" style="max-width:200px">${badgeLinkOptions}</div>
+       <div class="panel-meta" style="margin-top:8px"><a href="https://${esc(s.badge.shortlink)}" target="_blank" style="color:var(--mint);font-weight:600;text-decoration:none">${esc(s.badge.shortlink)}</a></div>`
     : `<div class="panel-meta">${badgeStatus}</div>`;
 
   // Fund section
