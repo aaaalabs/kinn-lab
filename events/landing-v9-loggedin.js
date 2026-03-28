@@ -210,7 +210,11 @@ function renderHeroBg(allEvents) {
 function renderVoting(topics) {
   const el = document.getElementById('voting-section');
   if (!topics.length) return;
-  const items = topics.map(t => `<span class="voting-topic"><span class="voting-topic-n">${t.votes}</span>${esc(t.title)}</span>`).join('');
+  const maxLen = 20;
+  const items = topics.map(t => {
+    const title = t.title.length > maxLen ? t.title.substring(0, maxLen) + '...' : t.title;
+    return `<span class="voting-topic"><span class="voting-topic-n">${t.votes}</span>${esc(title)}</span>`;
+  }).join('');
   el.innerHTML = `<div class="section reveal">
     <div class="section-label">Themen-Voting</div>
     <div class="voting">
