@@ -113,7 +113,7 @@ async function loadRadarEvents() {
     }).join('');
 
     el.innerHTML = `<div class="section reveal">
-      <div class="section-label">Was sonst passiert</div>
+      <div class="section-label">Was sonst in Tirol passiert</div>
       <div class="radar-list">${rows}</div>
       <a class="radar-subscribe" href="https://kinn.at/api/radar/calendar.ics">KI Events abonnieren</a>
     </div>`;
