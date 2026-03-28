@@ -23,7 +23,7 @@ async function loadAll() {
     // Preview mode: unlock all formats, force verified
     d.events.forEach(e => e.locked = false);
     d.verified = true;
-    renderFormats(d.events.filter(e => e.type !== 'chapter'), d.hero);
+    renderFormats(d.events.filter(e => e.type === 'talk' || e.type === 'kurs'), d.hero);
 
     const loginEl = document.getElementById('hero-login');
     if (isLoggedIn()) {
