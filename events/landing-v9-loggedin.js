@@ -80,7 +80,7 @@ function renderTermine(hero, chapters) {
     const topicPills = Object.entries(topics)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)
-      .map(([t, n]) => `<span class="termin-topic"><span class="termin-topic-n">${n}</span>${esc(t)}</span>`)
+      .map(([t]) => `<span class="termin-topic">${esc(t)}</span>`)
       .join('');
     const topicsHtml = topicPills
       ? `<div class="termin-topics">${topicPills}</div>`
