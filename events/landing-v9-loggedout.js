@@ -208,18 +208,15 @@ function renderPast(events) {
     photosHtml = `<div class="photos-scroll">${cards}</div>`;
   }
 
-  // Single featured quote
+  // Quotes — clean typographic list
   let quotesHtml = '';
   if (allQuotes.length) {
-    const best = allQuotes
-      .filter(q => q.text && q.text.length > 20 && q.text.length < 120)
-      .sort((a, b) => b.text.length - a.text.length)[0];
-    if (best) {
-      quotesHtml = `<div class="featured-quote">
-        <div class="featured-quote-text">\u201E${esc(best.text)}\u201C</div>
-        <div class="featured-quote-author">${esc(best.firstName)} ${esc(best.lastInitial)} \u00b7 ${esc(best.event)}</div>
-      </div>`;
-    }
+    const top = allQuotes.filter(q => q.text && q.text.length > 15).slice(0, 6);
+    const items = top.map(q => `<div class="quote-item">
+      <div class="quote-item-text">\u201E${esc(q.text?.substring(0, 100))}${q.text?.length > 100 ? '...' : ''}\u201C</div>
+      <div class="quote-item-author">${esc(q.firstName)} ${esc(q.lastInitial)} \u00b7 ${esc(q.event)}</div>
+    </div>`).join('');
+    quotesHtml = `<div class="quotes-list">${items}</div>`;
   }
 
   el.innerHTML = `<div class="section reveal">

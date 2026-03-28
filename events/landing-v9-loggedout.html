@@ -225,19 +225,24 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .photo-card-stats { font-size: 10px; color: rgba(255,255,255,0.75); margin-top: 2px; }
 .photo-card-stats strong { color: var(--mint); }
 
-/* ====== SINGLE QUOTE ====== */
-.featured-quote {
+/* ====== QUOTES LIST ====== */
+.quotes-list {
   margin-top: 32px; padding-top: 24px;
   border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px 32px;
 }
-.featured-quote-text {
-  font-size: 15px; font-weight: 400;
-  color: var(--text-s); line-height: 1.6;
-  font-style: italic; max-width: 480px;
+.quote-item {}
+.quote-item-text {
+  font-size: 13px; font-weight: 400;
+  color: var(--text-s); line-height: 1.5;
+  font-style: italic;
 }
-.featured-quote-author {
-  font-size: 12px; font-weight: 600; color: var(--text-m); margin-top: 12px;
-  font-style: normal; letter-spacing: 0.02em;
+.quote-item-author {
+  font-size: 11px; font-weight: 600; color: var(--text-m); margin-top: 6px;
+  font-style: normal;
+}
+@media (max-width: 640px) {
+  .quotes-list { grid-template-columns: 1fr; }
 }
 
 /* ====== FOOTER ====== */
