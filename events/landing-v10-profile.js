@@ -69,6 +69,11 @@ function closeProfile() {
   document.body.style.overflow = '';
 }
 
+function handleLogout() {
+  localStorage.removeItem('lab_session');
+  window.location.reload();
+}
+
 // ====== PANEL RENDER ======
 function renderPanel() {
   const header = document.getElementById('panel-header');
@@ -348,7 +353,7 @@ function renderSettingsView(el) {
       <div class="panel-label">Mitglied seit</div>
       <div class="panel-meta">${sinceStr}</div>
     </div>
-    <button class="panel-danger" onclick="alert('Mock: Abmelden-Flow')">Abmelden</button>`;
+    <button class="panel-danger" onclick="handleLogout()">Abmelden</button>`;
 }
 
 // ====== INLINE EDIT HELPERS ======
@@ -491,6 +496,7 @@ export function init() {
   window.handleSkillKeydown = handleSkillKeydown;
   window.selectSkill = selectSkill;
   window.panelState = panelState;
+  window.handleLogout = handleLogout;
 
   // Load profile data
   loadProfile();
