@@ -90,20 +90,12 @@ function renderTermine(hero, chapters) {
 // ====== RADAR (external KI events, quiet rows) ======
 async function loadRadarEvents() {
   try {
-    let events;
-    try {
-      const res = await fetch('https://kinn.at/api/events/widget?page=1');
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      events = (data.events || []).slice(0, 3);
-    } catch {
-      // Local dev fallback — remove before deploy
-      events = [
-        { title: 'KI in der Freiwilligenarbeit', date: '2026-04-09', detailUrl: '#' },
-        { title: 'Daten und KI — Datenbasis', date: '2026-04-14', detailUrl: '#' },
-        { title: 'AI Monday Innsbruck', date: '2026-04-21', detailUrl: '#' },
-      ];
-    }
+    // TODO: replace mock with fetch('https://kinn.at/api/events/widget?page=1') once CORS is configured
+    const events = [
+      { title: 'KI in der Freiwilligenarbeit', date: '2026-04-09', detailUrl: 'https://erwachsenenschulen.at/veranstaltungs-details/?eid=441906&vid=3250' },
+      { title: 'Daten und KI — Ansätze zur Verbesserung der Datenbasis', date: '2026-04-14', detailUrl: 'https://dih-west.at/events/daten-und-ki-ansaetze-zur-verbesserung-der-datenbasis/' },
+      { title: 'AI Business Circle', date: '2026-04-21', detailUrl: 'https://dih-west.at/events/ai-business-circle-april/' },
+    ];
     if (!events.length) return;
 
     const el = document.getElementById('radar-section');
