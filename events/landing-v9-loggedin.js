@@ -862,7 +862,8 @@ if (chevron) {
     window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
   });
   window.addEventListener('scroll', () => {
-    const atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 50;
+    const atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 100;
     chevron.style.opacity = atBottom ? '0' : '';
+    chevron.style.pointerEvents = atBottom ? 'none' : '';
   }, { passive: true });
 }
