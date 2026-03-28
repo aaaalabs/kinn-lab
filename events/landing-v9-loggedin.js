@@ -19,6 +19,9 @@ async function loadAll() {
     const d = gated.value;
     const chapters = d.events.filter(e => e.type === 'chapter');
     renderTermine(d.hero, chapters);
+    // Preview mode: unlock all formats, force verified
+    d.events.forEach(e => e.locked = false);
+    d.verified = true;
     renderFormats(d.events.filter(e => e.type !== 'chapter'), d.hero);
 
     const loginEl = document.getElementById('hero-login');
