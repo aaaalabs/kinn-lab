@@ -62,19 +62,13 @@ function renderTermine(hero, chapters) {
     return;
   }
 
-  // TODO: replace mock topics with ev.topics from gated API
-  const mockTopics = {
-    'Innsbruck': { 'Vibe Coding': 12, 'RAG': 8, 'KI im Business': 6 },
-    'Kufstein': { 'KI im Business': 9, 'Content AI': 5 },
-  };
-
   const rows = all.map(ev => {
     const city = ev.locationCity || chapterFromName(ev.name, null) || 'Innsbruck';
     const lumaId = ev.lumaId;
     const href = ev.lumaUrl ? escUrl(ev.lumaUrl) : '#';
 
     const when = fmtRelative(ev.date);
-    const topics = ev.topics || mockTopics[city] || {};
+    const topics = ev.topics || {};
     const topicPills = Object.entries(topics)
       .sort((a, b) => b[1] - a[1])
       .slice(0, 3)

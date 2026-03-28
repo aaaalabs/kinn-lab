@@ -72,8 +72,7 @@ function renderTermine(hero, chapters) {
     </a>`;
   }).join('');
 
-  // TODO: replace mock with real aggregated topic counts from gated API
-  const totalVotes = 38;
+  const totalVotes = all.reduce((s, ev) => s + (ev.topics?.totalVotes || 0), 0);
   const teaser = totalVotes > 0
     ? `<div class="termin-topics-teaser">${totalVotes} Themen-Stimmen gew\u00e4hlt</div>`
     : '';

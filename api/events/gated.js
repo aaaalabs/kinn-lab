@@ -28,9 +28,12 @@ export default async function handler(req, res) {
       return res.status(200).json({ hero: null, events: [], verified });
     }
 
-    // Fetch all event hashes in parallel
+    // Fetch all event hashes + topic data in parallel
     const today = new Date().toISOString().split('T')[0];
-    const allEvents = await Promise.all(eventKeys.map(k => raw.hgetall(k)));
+    const [allEvents, allTopics] = await Promise.all([
+      Promise.all(eventKeys.map(k => raw.hgetall(k))),
+      Promise.all(eventKeys.map(k => raw.get(`${k}:topics`))),
+    ]);
 
     let hero = null;
     const events = [];
@@ -48,6 +51,19 @@ export default async function handler(req, res) {
 
       const lumaId = ev.lumaId || null;
 
+      // Parse topic data if available
+      const topicRaw = allTopics[i];
+      const topicData = topicRaw ? (typeof topicRaw === 'string' ? JSON.parse(topicRaw) : topicRaw) : null;
+      let topics = null;
+      if (topicData && type === 'chapter') {
+        if (email) {
+          topics = topicData; // Full breakdown for logged-in users
+        } else {
+          const vals = Object.values(topicData);
+          topics = { totalTopics: vals.length, totalVotes: vals.reduce((s, v) => s + v, 0) };
+        }
+      }
+
       const item = {
         key,
         name: ev.name,
@@ -61,6 +77,7 @@ export default async function handler(req, res) {
         lumaId: locked ? null : lumaId,
         coverUrl: ev.coverUrl || null,
         locked,
+        ...(topics && { topics }),
       };
 
       if (type === 'chapter' && !hero) {

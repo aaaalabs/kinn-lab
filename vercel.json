@@ -1,5 +1,11 @@
 {
   "version": 2,
+  "crons": [
+    {
+      "path": "/api/events/sync-topics",
+      "schedule": "*/15 * * * *"
+    }
+  ],
   "buildCommand": null,
   "outputDirectory": ".",
   "functions": {
