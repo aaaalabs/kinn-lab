@@ -383,10 +383,14 @@ loadAll();
 loadTestimonial();
 renderFooter();
 
-// Hide scroll chevron on scroll
+// Scroll chevron: tap to scroll, hide at bottom
 const chevron = document.querySelector('.scroll-chevron');
 if (chevron) {
+  chevron.addEventListener('click', () => {
+    window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
+  });
   window.addEventListener('scroll', () => {
-    chevron.style.opacity = window.scrollY > 50 ? '0' : '';
+    const atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 50;
+    chevron.style.opacity = atBottom ? '0' : '';
   }, { passive: true });
 }
