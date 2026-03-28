@@ -584,6 +584,29 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 /* Settings meta */
 .panel-meta { font-size: 12px; color: var(--text-m); padding: 8px 0; }
 
+/* Fund visibility options */
+.panel-fund-options {
+  display: flex; gap: 0; margin-top: 6px;
+  border: 1px solid var(--border-s); border-radius: 6px; overflow: hidden;
+}
+.panel-fund-opt {
+  flex: 1; padding: 7px 4px; text-align: center;
+  font-size: 11px; font-weight: 500; color: var(--text-s);
+  cursor: pointer; transition: all 0.15s;
+  border-right: 1px solid var(--border-s);
+}
+.panel-fund-opt:last-child { border-right: none; }
+.panel-fund-opt:hover { background: var(--mint-bg); }
+.panel-fund-opt.active {
+  background: var(--dark); color: #fff; font-weight: 600;
+}
+.panel-fund-link {
+  display: inline-block; margin-top: 10px;
+  font-size: 11px; font-weight: 600; color: var(--mint);
+  text-decoration: none;
+}
+.panel-fund-link:hover { text-decoration: underline; }
+
 /* Danger button */
 .panel-danger {
   display: block; width: 100%; padding: 10px;

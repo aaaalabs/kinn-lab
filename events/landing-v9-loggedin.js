@@ -431,7 +431,8 @@ const panelState = {
     interests: '',
   },
   preferences: { showInDirectory: true, allowMatching: true },
-  badge: { active: true, linkType: 'linkedin' },
+  badge: { active: true, linkType: 'linkedin', shortlink: 'kinn.at/b/42' },
+  fund: { donated: true, amount: '2.50', visibility: 'public' },
   subscribedAt: '2025-03-12',
   events: 5,
 };
@@ -689,6 +690,35 @@ function renderSettingsView(el) {
   const since = new Date(s.subscribedAt + 'T12:00:00');
   const sinceStr = `${['J\u00e4n','Feb','M\u00e4r','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][since.getMonth()]} ${since.getFullYear()}`;
 
+  // Badge section
+  const badgeLinkLabel = s.badge.linkType === 'linkedin' ? 'LinkedIn' : 'Website';
+  const badgeHtml = s.badge.active
+    ? `<div class="panel-meta">${badgeStatus} \u00b7 ${badgeLinkLabel}</div>
+       <div class="panel-meta" style="margin-top:4px"><a href="https://${esc(s.badge.shortlink)}" target="_blank" style="color:var(--mint);font-weight:600;text-decoration:none">${esc(s.badge.shortlink)}</a></div>`
+    : `<div class="panel-meta">${badgeStatus}</div>`;
+
+  // Fund section
+  let fundHtml = '';
+  if (s.fund.donated) {
+    const visLabels = { anonym: 'Anonym', standard: 'Vorname + Initiale', public: 'Voller Name' };
+    const visOptions = Object.entries(visLabels).map(([k, v]) =>
+      `<span class="panel-fund-opt${k === s.fund.visibility ? ' active' : ''}" onclick="panelState.fund.visibility='${k}';renderPanel()">${v}</span>`
+    ).join('');
+    fundHtml = `<div class="panel-section">
+      <div class="panel-label">Unterst\u00fctzung</div>
+      <div class="panel-meta">${esc(s.fund.amount)} EUR gespendet</div>
+      <div class="panel-meta" style="margin-top:8px;color:var(--dark);font-weight:500">Sichtbarkeit</div>
+      <div class="panel-fund-options">${visOptions}</div>
+      <a href="https://kinn.at/fund" target="_blank" class="panel-fund-link">Unterst\u00fctzer-Liste \u2192</a>
+    </div>`;
+  } else {
+    fundHtml = `<div class="panel-section">
+      <div class="panel-label">Unterst\u00fctzung</div>
+      <div class="panel-meta">Unabh\u00e4ngigkeit ist kein Feature. Ist eine Entscheidung.</div>
+      <a href="https://kinn.at/fund" target="_blank" class="panel-fund-link">KINN unterst\u00fctzen \u2192</a>
+    </div>`;
+  }
+
   el.innerHTML = `
     <div class="panel-section">
       <div class="panel-label">Sichtbarkeit</div>
@@ -697,8 +727,9 @@ function renderSettingsView(el) {
     </div>
     <div class="panel-section">
       <div class="panel-label">KINN Badge</div>
-      <div class="panel-meta">${badgeStatus} \u00b7 Verkn\u00fcpft mit ${s.badge.linkType === 'linkedin' ? 'LinkedIn' : 'Website'}</div>
+      ${badgeHtml}
     </div>
+    ${fundHtml}
     <div class="panel-section">
       <div class="panel-label">Mitglied seit</div>
       <div class="panel-meta">${sinceStr}</div>
