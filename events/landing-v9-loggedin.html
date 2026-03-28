@@ -419,13 +419,14 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   text-transform: uppercase; color: var(--text-m); flex: 1;
 }
 .panel-header-btn {
-  background: none; border: none; padding: 4px;
+  background: none; border: none; padding: 10px;
   color: var(--text-m); cursor: pointer; transition: color 0.15s;
-  display: flex; align-items: center;
+  display: flex; align-items: center; margin: -10px;
 }
 .panel-header-btn:hover { color: var(--dark); }
-.panel-header-btn svg { width: 16px; height: 16px; }
-.panel-back { font-size: 16px; margin-right: 4px; }
+.panel-header-btn svg { width: 18px; height: 18px; }
+.panel-header-btn:last-child { font-size: 22px; margin-left: 4px; }
+.panel-back { font-size: 18px; margin-right: 4px; }
 
 /* Body */
 .panel-body { padding: 28px; flex: 1; }
