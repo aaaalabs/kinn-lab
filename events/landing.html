@@ -288,8 +288,9 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   flex-wrap: wrap; opacity: 0.5; transition: opacity 0.3s;
 }
 .partner-row:hover { opacity: 0.8; }
+.partner-row a { display: inline-flex; }
 .partner-row img { height: 24px; object-fit: contain; filter: grayscale(1); transition: filter 0.2s; }
-.partner-row img:hover { filter: grayscale(0); }
+.partner-row a:hover img { filter: grayscale(0); }
 
 /* ====== ANIMATIONS ====== */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -335,7 +336,13 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 
 <footer class="footer" id="footer">
   <div class="partner-row" id="partners"></div>
-  <div style="margin-top:16px">kinn.at &middot; Tirols KI-Community</div>
+  <div id="footer-links" style="margin-top:20px"></div>
+  <div style="margin-top:12px;display:flex;gap:16px;justify-content:center">
+    <a href="https://www.linkedin.com/company/kinn-tirol/" target="_blank" rel="noopener" title="LinkedIn">LinkedIn</a>
+    <a href="https://www.youtube.com/@kinn-tirol" target="_blank" rel="noopener" title="YouTube">YouTube</a>
+    <a href="https://www.instagram.com/kinn.tirol" target="_blank" rel="noopener" title="Instagram">Instagram</a>
+  </div>
+  <div style="margin-top:12px;font-size:11px;color:var(--text-m)">KINN &mdash; Wo Tiroler KI Profil bekommt</div>
 </footer>
 
 <!-- ====== LOGIN MODAL ====== -->

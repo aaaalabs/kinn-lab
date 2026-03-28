@@ -50,6 +50,9 @@ async function loadAll() {
     renderVoting(voting.value.topics || []);
   }
 
+  // Init Luma checkout buttons after all rendering
+  initLumaButtons();
+
   // Scroll reveal
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -296,27 +299,60 @@ function chapterFromName(name, chapter) {
 function lumaButton(ev, cls) {
   if (!ev.lumaUrl) return '';
   if (ev.lumaId) {
-    return `<a href="${escUrl(ev.lumaUrl)}" class="luma-checkout--button ${cls}" data-luma-action="checkout" data-luma-event-id="${esc(ev.lumaId)}">Dabei sein</a>`;
+    // Luma checkout button — rendered as plain link, then upgraded by initLumaButtons()
+    return `<a href="${escUrl(ev.lumaUrl)}" class="${cls}" data-luma-id="${esc(ev.lumaId)}" target="_blank" rel="noopener">Dabei sein</a>`;
   }
   return `<a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="${cls}">Dabei sein</a>`;
+}
+
+function initLumaButtons() {
+  document.querySelectorAll('[data-luma-id]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const eventId = btn.dataset.lumaId;
+      if (window.luma?.showCheckout) {
+        window.luma.showCheckout({ eventId });
+      } else {
+        // Fallback: open Luma checkout in new tab
+        window.open(btn.href, '_blank');
+      }
+    });
+  });
 }
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 function escUrl(u) { if (!u) return ''; try { return new URL(u).href; } catch { return esc(u); } }
 
-// ====== PARTNER LOGOS ======
-function renderPartners() {
+// ====== PARTNER LOGOS + FOOTER ======
+function renderFooter() {
   const logos = [
-    { src: 'https://kinn.at/public/logos/land-tirol.svg', alt: 'Land Tirol' },
-    { src: 'https://kinn.at/public/logos/inncubator.svg', alt: 'Inncubator' },
-    { src: 'https://kinn.at/public/logos/impacthub.svg', alt: 'Impact Hub Tirol' },
-    { src: 'https://kinn.at/public/logos/werkstaette-wattens.svg', alt: 'Werkst\u00e4tte Wattens' },
-    { src: 'https://kinn.at/public/logos/innovationsraum-kufstein.svg', alt: 'Innovationsraum Kufstein' },
+    { src: 'https://kinn.at/public/logos/inncubator.svg', alt: 'Inncubator', url: 'https://inncubator.at' },
+    { src: 'https://kinn.at/public/logos/impacthub.svg', alt: 'Impact Hub Tirol', url: 'https://tirol.impacthub.net' },
+    { src: 'https://kinn.at/public/logos/wundervoll.svg', alt: 'Das Wundervoll', url: 'https://daswundervoll.at' },
+    { src: 'https://kinn.at/public/logos/raum_13.svg', alt: 'Raum13', url: 'https://www.raum13.at' },
+    { src: 'https://kinn.at/public/logos/filmbase.svg', alt: 'Filmbase', url: 'https://filmbase.at' },
+    { src: 'https://kinn.at/public/logos/werkstaette-wattens.svg', alt: 'Werkst\u00e4tte Wattens', url: 'https://www.werkstaette-wattens.at' },
+    { src: 'https://kinn.at/public/logos/innovationsraum-kufstein.svg', alt: 'Innovationsraum Kufstein', url: 'https://www.coworkingspace.tirol/de/innovationsraum-kufstein.html' },
+    { src: 'https://kinn.at/public/logos/land-tirol.svg', alt: 'Land Tirol', url: 'https://www.tirol.gv.at' },
   ];
+
   const el = document.getElementById('partners');
-  el.innerHTML = logos.map(l => `<img src="${l.src}" alt="${esc(l.alt)}" loading="lazy">`).join('');
+  el.innerHTML = `<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-m);margin-bottom:10px">Unterst\u00fctzt von</div>` +
+    logos.map(l => `<a href="${l.url}" target="_blank" rel="noopener"><img src="${l.src}" alt="${esc(l.alt)}" loading="lazy"></a>`).join('');
+
+  const links = document.getElementById('footer-links');
+  if (links) {
+    links.innerHTML = `
+      <a href="https://kinn.at/start">Starten</a> \u00b7
+      <a href="https://kinn.at/lade">Nachlesen</a> \u00b7
+      <a href="https://kinn.at/fund">Unterst\u00fctzen</a> \u00b7
+      <a href="https://kinn.at/dabei">Mitmachen</a> \u00b7
+      <a href="https://kinn.at/pages/privacy.html">Datenschutz</a> \u00b7
+      <a href="https://kinn.at/pages/agb.html">AGB</a>
+    `;
+  }
 }
 
 // ====== INIT ======
 extractAuthFromHash();
 loadAll();
-renderPartners();
+renderFooter();
