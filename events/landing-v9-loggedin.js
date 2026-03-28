@@ -96,7 +96,7 @@ function renderUserBar(verified) {
   el.innerHTML = `<div class="user-bar">
     <span class="user-greeting">Hallo, <strong>${esc(name)}</strong></span>
     ${verified ? '<svg class="verified-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>' : ''}
-    <a href="https://kinn.at/profil" class="user-profile-link">Mein Profil</a>
+    <a href="#" onclick="openProfile();return false" class="user-profile-link">Mein Profil</a>
   </div>`;
 }
 
@@ -380,6 +380,69 @@ function renderFooter() {
   if (legal) {
     legal.innerHTML = '<a href="https://kinn.at/pages/privacy.html">Datenschutz</a><a href="https://kinn.at/pages/agb.html">AGB</a>';
   }
+}
+
+// ====== PROFILE PANEL ======
+function openProfile() {
+  document.getElementById('panel-overlay').classList.add('active');
+  document.getElementById('profile-panel').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  renderProfile();
+}
+function closeProfile() {
+  document.getElementById('panel-overlay').classList.remove('active');
+  document.getElementById('profile-panel').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function renderProfile() {
+  const el = document.getElementById('panel-body');
+
+  // Mock data for preview — structured for future matchmaking
+  const profile = {
+    name: 'Verena Muster',
+    email: ['verena', 'kinn.at'].join('@'),
+    linkedIn: 'linkedin.com/in/verena-muster',
+    skills: ['Product Management', 'AI Strategy', 'Design Thinking'],
+    experience: 'Head of Product bei einem Tiroler Scale-up. 8 Jahre Erfahrung in Produktentwicklung und AI-Integration.',
+    seeking: ['Technische Co-Founder', 'AI/ML Engineers', 'Sparring zu RAG-Architekturen'],
+    canOffer: ['Produkt-Feedback', 'Go-to-Market Strategie', 'Mentoring'],
+    events: 5,
+  };
+
+  let filled = 0;
+  const total = 5;
+  if (profile.name) filled++;
+  if (profile.linkedIn) filled++;
+  if (profile.skills.length) filled++;
+  if (profile.experience) filled++;
+  if (profile.seeking.length) filled++;
+  const pct = Math.round(filled / total * 100);
+
+  const section = (label, content) => `<div class="panel-section">
+    <div class="panel-label">${label}</div>${content}</div>`;
+
+  const tags = (arr) => arr.length
+    ? `<div class="panel-tags">${arr.map(t => `<span class="panel-tag">${esc(t)}</span>`).join('')}</div>`
+    : '<div class="panel-value empty">Noch nicht ausgef\u00fcllt</div>';
+
+  el.innerHTML = [
+    section('Name', `<div class="panel-value">${esc(profile.name)}</div>`),
+    section('LinkedIn', profile.linkedIn
+      ? `<a class="panel-link" href="https://${esc(profile.linkedIn)}" target="_blank" rel="noopener">${esc(profile.linkedIn)}</a>`
+      : '<div class="panel-value empty">Nicht verkn\u00fcpft</div>'),
+    section('Skills', tags(profile.skills)),
+    section('Erfahrung', `<div class="panel-value">${profile.experience ? esc(profile.experience) : '<span class="empty">Noch nicht ausgef\u00fcllt</span>'}</div>`),
+    section('Suche', tags(profile.seeking)),
+    section('Kann anbieten', tags(profile.canOffer)),
+    section('Events', `<div class="panel-value">${profile.events} besucht</div>`),
+    `<div class="panel-progress">
+      <div class="panel-label">Profil</div>
+      <div class="panel-progress-bar"><div class="panel-progress-fill" style="width:${pct}%"></div></div>
+      <div class="panel-progress-text">${pct}% vollst\u00e4ndig</div>
+    </div>`,
+    `<button class="panel-edit-btn" onclick="window.open('https://kinn.at/profil','_blank')">Profil bearbeiten</button>`,
+  ].join('');
 }
 
 // ====== INIT ======
