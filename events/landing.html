@@ -333,6 +333,13 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   flex: 1; border: none; width: 100%;
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes shimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
+.skeleton {
+  display: inline-block; border-radius: 4px;
+  background: linear-gradient(90deg, var(--border) 25%, rgba(0,0,0,0.04) 50%, var(--border) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
 
 /* ====== ANIMATIONS ====== */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -363,9 +370,16 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   </svg>
   <div class="hero-statement">Donnerstag. 8 Uhr.</div>
   <div class="hero-context">Der KI-Treff für Tirol.</div>
-  <div id="termine-section"></div>
-  <div class="stats" id="stats"></div>
-  <div class="hero-login" id="hero-login"></div>
+  <div id="termine-section">
+    <div class="termine">
+      <div class="termine-label">Wo bist du dabei?</div>
+      <div class="termin-row"><span class="skeleton" style="width:100px;height:16px"></span><span class="skeleton" style="width:50px;height:14px;margin-left:auto"></span></div>
+      <div class="termin-row"><span class="skeleton" style="width:80px;height:16px"></span><span class="skeleton" style="width:50px;height:14px;margin-left:auto"></span></div>
+      <div class="termin-row"><span class="skeleton" style="width:90px;height:16px"></span><span class="skeleton" style="width:50px;height:14px;margin-left:auto"></span></div>
+    </div>
+  </div>
+  <div class="stats" id="stats" style="display:none"></div>
+  <div class="hero-login" id="hero-login" style="display:none"></div>
 </section>
 
 <!-- ====== BELOW THE FOLD ====== -->

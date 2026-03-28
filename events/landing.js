@@ -36,6 +36,7 @@ async function loadAll() {
     loginEl.innerHTML = isLoggedIn()
       ? `Eingeloggt als ${esc(getEmail())}`
       : `<a href="#" onclick="openModal();return false">Einloggen</a>`;
+    loginEl.style.display = '';
   }
 
   if (feedback.status === 'fulfilled') {
@@ -120,6 +121,7 @@ function renderStats(allEvents) {
   const withFb = allEvents.reduce((s, e) => s + (e.stats?.totalFeedback || 0), 0);
   const cities = [...new Set(chapters.map(e => e.location?.city).filter(Boolean))];
 
+  el.style.display = '';
   el.innerHTML = `
     <div class="stat"><span class="stat-val">${allEvents.length}</span><span class="stat-label">Events</span></div>
     <div class="stat"><span class="stat-val">${cities.length}</span><span class="stat-label">Standorte</span></div>
