@@ -44,62 +44,69 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   pointer-events: none;
 }
 .hero-logo-svg {
-  width: clamp(180px, 30vw, 280px); height: auto;
-  fill: var(--dark); margin-bottom: 14px; position: relative;
-  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.06));
+  width: clamp(140px, 24vw, 220px); height: auto;
+  fill: var(--dark); margin-bottom: 20px; position: relative;
 }
-.hero-tagline {
-  font-size: clamp(16px, 3vw, 22px); font-weight: 400;
-  color: var(--text-s); margin-bottom: 6px; position: relative;
+
+/* THE statement — this is what sticks */
+.hero-statement {
+  font-size: clamp(22px, 4vw, 32px); font-weight: 700;
+  color: var(--dark); letter-spacing: 0.02em;
+  margin-bottom: 6px; position: relative; line-height: 1.3;
 }
-.hero-ritual {
-  font-size: 13px; font-weight: 500; color: var(--text-m);
-  letter-spacing: 0.04em; margin-bottom: 28px; position: relative;
+.hero-context {
+  font-size: clamp(14px, 2.5vw, 17px); font-weight: 400;
+  color: var(--text-s); margin-bottom: 32px; position: relative;
 }
-/* ====== TERMINE LIST ====== */
+
+/* ====== TERMINE — quiet, tappable rows ====== */
 .termine {
-  max-width: 480px; width: 100%; position: relative;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r); overflow: hidden;
-  box-shadow: var(--sh); margin-bottom: 16px;
+  max-width: 400px; width: 100%; position: relative;
+  margin-bottom: 20px;
   animation: fadeUp 0.5s ease-out 0.1s both;
 }
 .termine-label {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.1em;
   text-transform: uppercase; color: var(--text-m);
-  padding: 12px 18px 0;
+  margin-bottom: 8px;
 }
 .termin-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 18px; border-bottom: 1px solid var(--border);
-}
-.termin-row:last-child { border-bottom: none; }
-.termin-info { flex: 1; }
-.termin-name { font-size: 14px; font-weight: 700; color: var(--dark); }
-.termin-meta { font-size: 12px; color: var(--text-s); }
-.termin-cta {
-  padding: 7px 16px; background: var(--mint); color: #fff;
-  border: none; border-radius: 6px; font-family: inherit;
-  font-size: 12px; font-weight: 600; text-decoration: none;
-  white-space: nowrap; flex-shrink: 0;
+  display: flex; align-items: center;
+  padding: 10px 16px; margin-bottom: 2px;
+  border-radius: 10px;
+  text-decoration: none; color: inherit;
   transition: background 0.15s;
+  cursor: pointer;
 }
-.termin-cta:hover { background: var(--mint-hover); }
+.termin-row:hover { background: rgba(94,217,166,0.06); }
+.termin-city {
+  font-size: 14px; font-weight: 600; color: var(--dark);
+  flex: 1;
+}
+.termin-date {
+  font-size: 12px; color: var(--text-s);
+  margin-right: 8px;
+}
+.termin-arrow {
+  font-size: 14px; color: var(--mint);
+  transition: transform 0.15s;
+}
+.termin-row:hover .termin-arrow { transform: translateX(3px); }
 
-/* ====== STATS ====== */
+/* ====== STATS — whisper, don't shout ====== */
 .stats {
-  display: flex; gap: 24px; justify-content: center;
+  display: flex; gap: 20px; justify-content: center;
   padding: 4px 0 0; position: relative;
   animation: fadeUp 0.5s ease-out 0.2s both;
 }
 .stat { text-align: center; }
-.stat-val { font-weight: 900; font-size: 22px; color: var(--dark); display: block; line-height: 1.2; }
-.stat-label { font-size: 10px; color: var(--text-m); text-transform: uppercase; letter-spacing: 0.06em; }
+.stat-val { font-weight: 700; font-size: 16px; color: var(--text-s); display: block; line-height: 1.2; }
+.stat-label { font-size: 9px; color: var(--text-m); text-transform: uppercase; letter-spacing: 0.06em; }
 
 .hero-login {
-  font-size: 12px; color: var(--text-m); margin-top: 8px; position: relative;
+  font-size: 11px; color: var(--text-m); margin-top: 8px; position: relative;
 }
-.hero-login a { color: var(--mint); font-weight: 600; text-decoration: none; }
+.hero-login a { color: var(--mint); font-weight: 500; text-decoration: none; }
 .hero-login a:hover { text-decoration: underline; }
 
 /* ====== SCROLL HINT ====== */
@@ -346,8 +353,8 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
     <polygon points="100.04 20.27 100.04 136.27 160.54 20.27 256.04 20.27 182.26 145.61 262.04 288.27 166.54 288.27 100.04 159.27 100.04 288.27 21.04 288.27 21.04 20.27 100.04 20.27"/>
     <path d="M359.04,20.27v265.5c0,.31,1.37,1.42,1,2.5h-82V20.27h81Z"/>
   </svg>
-  <div class="hero-tagline">Der KI-Treff für Tirol.</div>
-  <div class="hero-ritual">Jeden Donnerstag. 8 Uhr. Kaffee und Klartext.</div>
+  <div class="hero-statement">Donnerstag. 8 Uhr.</div>
+  <div class="hero-context">Der KI-Treff für Tirol.</div>
   <div id="termine-section"></div>
   <div class="stats" id="stats"></div>
   <div class="hero-login" id="hero-login"></div>

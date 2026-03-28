@@ -70,19 +70,23 @@ function renderTermine(hero, chapters) {
   }
 
   const rows = all.map(ev => {
-    const loc = ev.locationCity || (ev.location || '').split(',')[0] || '';
-    const meta = [fmtDateNoDay(ev.date), ev.time, loc].filter(Boolean).join(' \u00b7 ');
-    return `<div class="termin-row">
-      <div class="termin-info">
-        <div class="termin-name">${esc(ev.name)}</div>
-        <div class="termin-meta">${esc(meta)}</div>
-      </div>
-      ${lumaButton(ev, 'termin-cta')}
-    </div>`;
+    const city = ev.locationCity || chapterFromName(ev.name, null) || 'Innsbruck';
+    const date = fmtDateNoDay(ev.date);
+    const lumaId = ev.lumaId;
+    const href = ev.lumaUrl ? escUrl(ev.lumaUrl) : '#';
+    const onclick = lumaId
+      ? `openLumaCheckout('${esc(lumaId)}');return false`
+      : '';
+
+    return `<a class="termin-row" href="${href}" ${onclick ? `onclick="${onclick}"` : `target="_blank" rel="noopener"`}>
+      <span class="termin-city">${esc(city)}</span>
+      <span class="termin-date">${esc(date)}</span>
+      <span class="termin-arrow">\u2192</span>
+    </a>`;
   }).join('');
 
   el.innerHTML = `<div class="termine">
-    <div class="termine-label">N\u00e4chste Termine</div>
+    <div class="termine-label">Wo bist du dabei?</div>
     ${rows}
   </div>`;
 }
