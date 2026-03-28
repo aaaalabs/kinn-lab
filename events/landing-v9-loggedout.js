@@ -382,3 +382,11 @@ extractAuthFromHash();
 loadAll();
 loadTestimonial();
 renderFooter();
+
+// Hide scroll chevron on scroll
+const chevron = document.querySelector('.scroll-chevron');
+if (chevron) {
+  window.addEventListener('scroll', () => {
+    chevron.style.opacity = window.scrollY > 50 ? '0' : '';
+  }, { passive: true });
+}
