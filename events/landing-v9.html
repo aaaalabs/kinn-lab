@@ -273,12 +273,20 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 
 /* ====== FOOTER ====== */
 .footer {
-  text-align: center; padding: 48px 24px 32px;
+  text-align: center; padding: 0 24px 40px;
   font-size: 12px; color: var(--text-m);
-  border-top: 1px solid var(--border); margin-top: 24px;
+  margin-top: 48px;
 }
-.footer a { color: var(--text-s); text-decoration: none; margin: 0 8px; }
+.footer-block {
+  padding: 32px 0;
+  border-top: 1px solid var(--border);
+}
+.footer-block:first-child { border-top: none; }
+.footer a { color: var(--text-s); text-decoration: none; }
 .footer a:hover { color: var(--mint); }
+.footer-nav { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; font-size: 13px; }
+.footer-social { display: flex; gap: 24px; justify-content: center; font-size: 12px; color: var(--text-m); }
+.footer-tagline { font-size: 11px; color: var(--text-m); margin-top: 16px; letter-spacing: 0.02em; }
 
 /* ====== MODAL ====== */
 .modal-overlay {
@@ -314,14 +322,17 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 22px; color: var(--text-m); cursor: pointer; }
 
 /* ====== PARTNER LOGOS ====== */
-.partner-row {
-  display: flex; gap: 20px; justify-content: center; align-items: center;
-  flex-wrap: wrap; opacity: 0.5; transition: opacity 0.3s;
+.partner-label {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-m); margin-bottom: 16px;
 }
-.partner-row:hover { opacity: 0.8; }
+.partner-row {
+  display: flex; gap: 24px; justify-content: center; align-items: center;
+  flex-wrap: wrap; opacity: 0.4;
+}
 .partner-row a { display: inline-flex; }
-.partner-row img { height: 24px; object-fit: contain; filter: grayscale(1); transition: filter 0.2s; }
-.partner-row a:hover img { filter: grayscale(0); }
+.partner-row img { height: 22px; object-fit: contain; filter: grayscale(1); transition: filter 0.3s, opacity 0.3s; }
+.partner-row a:hover img { filter: grayscale(0); opacity: 1; }
 
 /* ====== LUMA CHECKOUT MODAL ====== */
 .luma-modal {
@@ -409,14 +420,23 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 </div>
 
 <footer class="footer" id="footer">
-  <div class="partner-row" id="partners"></div>
-  <div id="footer-links" style="margin-top:20px"></div>
-  <div style="margin-top:12px;display:flex;gap:16px;justify-content:center">
-    <a href="https://www.linkedin.com/company/kinn-tirol/" target="_blank" rel="noopener" title="LinkedIn">LinkedIn</a>
-    <a href="https://www.youtube.com/@kinn-tirol" target="_blank" rel="noopener" title="YouTube">YouTube</a>
-    <a href="https://www.instagram.com/kinn.tirol" target="_blank" rel="noopener" title="Instagram">Instagram</a>
+  <!-- Block 1: Partner logos -->
+  <div class="footer-block" id="partners"></div>
+
+  <!-- Block 2: Navigation -->
+  <div class="footer-block">
+    <nav class="footer-nav" id="footer-links"></nav>
   </div>
-  <div style="margin-top:12px;font-size:11px;color:var(--text-m)">KINN &mdash; Wo Tiroler KI Profil bekommt</div>
+
+  <!-- Block 3: Social + Tagline -->
+  <div class="footer-block">
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/company/kinn-tirol/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.youtube.com/@kinn-tirol" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://www.instagram.com/kinn.tirol" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <div class="footer-tagline">KINN &mdash; Wo Tiroler KI Profil bekommt</div>
+  </div>
 </footer>
 
 <!-- ====== LOGIN MODAL ====== -->
