@@ -737,8 +737,8 @@ function renderSettingsView(el) {
   el.innerHTML = `
     <div class="panel-section">
       <div class="panel-label">Sichtbarkeit</div>
-      ${toggle('Im Verzeichnis sichtbar', 'Andere Community-Mitglieder k\u00f6nnen dich finden', 'preferences.showInDirectory', s.preferences.showInDirectory)}
-      ${toggle('Matching erlauben', 'Bei Events mit passenden Profilen verbunden werden', 'preferences.allowMatching', s.preferences.allowMatching)}
+      ${toggle('Im Verzeichnis sichtbar', 'Andere finden dich in der Community', 'preferences.showInDirectory', s.preferences.showInDirectory)}
+      ${toggle('Matching erlauben', 'Passende Profile bei Events vorschlagen', 'preferences.allowMatching', s.preferences.allowMatching)}
     </div>
     <div class="panel-section">
       <div class="panel-label">KINN Badge</div>
@@ -749,7 +749,7 @@ function renderSettingsView(el) {
       <div class="panel-label">Mitglied seit</div>
       <div class="panel-meta">${sinceStr}</div>
     </div>
-    <button class="panel-danger" onclick="alert('Mock: Abmelden-Flow')">Komplett abmelden</button>`;
+    <button class="panel-danger" onclick="alert('Mock: Abmelden-Flow')">Abmelden</button>`;
 }
 
 // ====== INLINE EDIT HELPERS ======
