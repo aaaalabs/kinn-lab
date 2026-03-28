@@ -76,9 +76,8 @@ function renderTermine(hero, chapters) {
 
   // TODO: replace mock with real aggregated topic counts from gated API
   const totalVotes = 38;
-  const totalCities = all.length;
   const teaser = totalVotes > 0
-    ? `<div class="termin-topics-teaser">${totalVotes} Themen-Stimmen aus ${totalCities} St\u00e4dten \u2014 <a href="#" onclick="openModal();return false">Einloggen</a> um zu sehen</div>`
+    ? `<div class="termin-topics-teaser">${totalVotes} Themen-Stimmen gew\u00e4hlt</div>`
     : '';
 
   el.innerHTML = `<div class="termine">
