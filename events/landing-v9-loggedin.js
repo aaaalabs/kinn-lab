@@ -383,11 +383,39 @@ function renderFooter() {
 }
 
 // ====== PROFILE PANEL ======
+// ====== PROFILE PANEL ======
+const panelState = {
+  view: 'profile', // 'profile' | 'settings'
+  identity: { name: 'Verena Muster', linkedIn: 'linkedin.com/in/verena-muster', github: '', portfolio: '' },
+  supply: {
+    skills: ['Product Management', 'AI Strategy', 'Design Thinking'],
+    experience: 'senior',
+    availability: 'employed',
+    canOffer: ['mentoring', 'projects'],
+  },
+  demand: {
+    seeking: ['collaboration', 'learning'],
+    activeSearch: 'networking-only',
+    interests: '',
+  },
+  preferences: { showInDirectory: true, allowMatching: true },
+  badge: { active: true, linkType: 'linkedin' },
+  subscribedAt: '2025-03-12',
+  events: 5,
+};
+
+const EXPERIENCE_LABELS = { junior: 'Junior', mid: 'Mid-Level', senior: 'Senior', lead: 'Lead' };
+const AVAILABILITY_LABELS = { employed: 'Angestellt', freelancer: 'Freelancer', student: 'Student', 'between-jobs': 'Suchend', 'side-projects': 'Nebenprojekte' };
+const SEARCH_LABELS = { active: 'Aktiv suchend', passive: 'Passiv', 'networking-only': 'Nur Networking' };
+const CAN_OFFER_LABELS = { mentoring: 'Mentoring', 'code-review': 'Code Review', workshop: 'Workshop', projects: 'Projekte' };
+const SEEKING_LABELS = { job: 'Job', freelance: 'Freelance', cofounder: 'Co-Founder', collaboration: 'Zusammenarbeit', learning: 'Lernen', inspiration: 'Inspiration' };
+
 function openProfile() {
+  panelState.view = 'profile';
   document.getElementById('panel-overlay').classList.add('active');
   document.getElementById('profile-panel').classList.add('active');
   document.body.style.overflow = 'hidden';
-  renderProfile();
+  renderPanel();
 }
 function closeProfile() {
   document.getElementById('panel-overlay').classList.remove('active');
@@ -395,55 +423,206 @@ function closeProfile() {
   document.body.style.overflow = '';
 }
 
-function renderProfile() {
-  const el = document.getElementById('panel-body');
+function renderPanel() {
+  const header = document.getElementById('panel-header');
+  const body = document.getElementById('panel-body');
 
-  // Mock data for preview — structured for future matchmaking
-  const profile = {
-    name: 'Verena Muster',
-    email: ['verena', 'kinn.at'].join('@'),
-    linkedIn: 'linkedin.com/in/verena-muster',
-    skills: ['Product Management', 'AI Strategy', 'Design Thinking'],
-    experience: 'Head of Product bei einem Tiroler Scale-up. 8 Jahre Erfahrung in Produktentwicklung und AI-Integration.',
-    seeking: ['Technische Co-Founder', 'AI/ML Engineers', 'Sparring zu RAG-Architekturen'],
-    canOffer: ['Produkt-Feedback', 'Go-to-Market Strategie', 'Mentoring'],
-    events: 5,
+  if (panelState.view === 'settings') {
+    header.innerHTML = `<button class="panel-header-btn panel-back" onclick="panelState.view='profile';renderPanel()">\u2190</button>
+      <span class="panel-title">Einstellungen</span>
+      <button class="panel-header-btn" onclick="closeProfile()">\u00d7</button>`;
+    renderSettingsView(body);
+  } else {
+    header.innerHTML = `<span class="panel-title">Mein Profil</span>
+      <button class="panel-header-btn" onclick="panelState.view='settings';renderPanel()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </button>
+      <button class="panel-header-btn" onclick="closeProfile()">\u00d7</button>`;
+    renderProfileView(body);
+  }
+}
+
+function renderProfileView(el) {
+  const s = panelState;
+  const section = (label, content) => `<div class="panel-section"><div class="panel-label">${label}</div>${content}</div>`;
+
+  const textField = (key, path, placeholder) => {
+    const val = getNestedVal(s, path);
+    return val
+      ? `<div class="panel-value" onclick="startEdit(this,'${path}','text')">${esc(val)}</div>`
+      : `<div class="panel-value empty" onclick="startEdit(this,'${path}','text')">${placeholder}</div>`;
   };
 
+  const selectField = (path, labels) => {
+    const val = getNestedVal(s, path);
+    return `<div class="panel-value" onclick="startSelectEdit(this,'${path}',${esc(JSON.stringify(labels))})">${labels[val] || '<span class="empty">Ausw\u00e4hlen</span>'}</div>`;
+  };
+
+  const tagsField = (path) => {
+    const arr = getNestedVal(s, path) || [];
+    const items = arr.map(t => `<span class="panel-tag">${esc(t)}<span class="panel-tag-x" onclick="removeTag('${path}','${esc(t)}')">\u00d7</span></span>`).join('');
+    return `<div class="panel-tags">${items}<span class="panel-tag-add" onclick="startTagAdd(this,'${path}')">+</span></div>`;
+  };
+
+  const checksField = (path, labels) => {
+    const selected = getNestedVal(s, path) || [];
+    const items = Object.entries(labels).map(([k, v]) => {
+      const checked = selected.includes(k);
+      return `<label class="panel-check${checked ? ' checked' : ''}">
+        <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleCheck('${path}','${k}')"> ${v}
+      </label>`;
+    }).join('');
+    return `<div class="panel-checks">${items}</div>`;
+  };
+
+  // Profile completeness
   let filled = 0;
-  const total = 5;
-  if (profile.name) filled++;
-  if (profile.linkedIn) filled++;
-  if (profile.skills.length) filled++;
-  if (profile.experience) filled++;
-  if (profile.seeking.length) filled++;
+  const total = 7;
+  if (s.identity.name) filled++;
+  if (s.identity.linkedIn) filled++;
+  if (s.supply.skills.length) filled++;
+  if (s.supply.experience) filled++;
+  if (s.supply.canOffer.length) filled++;
+  if (s.demand.seeking.length) filled++;
+  if (s.demand.interests) filled++;
   const pct = Math.round(filled / total * 100);
 
-  const section = (label, content) => `<div class="panel-section">
-    <div class="panel-label">${label}</div>${content}</div>`;
-
-  const tags = (arr) => arr.length
-    ? `<div class="panel-tags">${arr.map(t => `<span class="panel-tag">${esc(t)}</span>`).join('')}</div>`
-    : '<div class="panel-value empty">Noch nicht ausgef\u00fcllt</div>';
-
   el.innerHTML = [
-    section('Name', `<div class="panel-value">${esc(profile.name)}</div>`),
-    section('LinkedIn', profile.linkedIn
-      ? `<a class="panel-link" href="https://${esc(profile.linkedIn)}" target="_blank" rel="noopener">${esc(profile.linkedIn)}</a>`
-      : '<div class="panel-value empty">Nicht verkn\u00fcpft</div>'),
-    section('Skills', tags(profile.skills)),
-    section('Erfahrung', `<div class="panel-value">${profile.experience ? esc(profile.experience) : '<span class="empty">Noch nicht ausgef\u00fcllt</span>'}</div>`),
-    section('Suche', tags(profile.seeking)),
-    section('Kann anbieten', tags(profile.canOffer)),
-    section('Events', `<div class="panel-value">${profile.events} besucht</div>`),
-    `<div class="panel-progress">
+    // Event counter — prominent
+    `<div class="panel-section" style="text-align:center;padding:8px 0 16px;border-bottom:1px solid var(--border);margin-bottom:24px">
+      <div class="panel-event-count">${s.events}</div>
+      <div class="panel-event-label">Events besucht</div>
+    </div>`,
+    section('Name', textField('name', 'identity.name', 'Name eingeben')),
+    section('LinkedIn', textField('linkedIn', 'identity.linkedIn', 'LinkedIn-URL')),
+    section('GitHub', textField('github', 'identity.github', 'GitHub-URL')),
+    section('Portfolio', textField('portfolio', 'identity.portfolio', 'Portfolio-URL')),
+    section('Skills', tagsField('supply.skills')),
+    section('Erfahrung', selectField('supply.experience', EXPERIENCE_LABELS)),
+    section('Verf\u00fcgbarkeit', selectField('supply.availability', AVAILABILITY_LABELS)),
+    section('Kann anbieten', checksField('supply.canOffer', CAN_OFFER_LABELS)),
+    section('Suche', checksField('demand.seeking', SEEKING_LABELS)),
+    section('Suchstatus', selectField('demand.activeSearch', SEARCH_LABELS)),
+    section('Interessen', textField('interests', 'demand.interests', 'Was interessiert dich?')),
+    `<div class="panel-section panel-progress">
       <div class="panel-label">Profil</div>
       <div class="panel-progress-bar"><div class="panel-progress-fill" style="width:${pct}%"></div></div>
       <div class="panel-progress-text">${pct}% vollst\u00e4ndig</div>
     </div>`,
-    `<button class="panel-edit-btn" onclick="window.open('https://kinn.at/profil','_blank')">Profil bearbeiten</button>`,
   ].join('');
 }
+
+function renderSettingsView(el) {
+  const s = panelState;
+  const toggle = (label, sub, key, val) => {
+    const on = val ? 'on' : '';
+    return `<div class="panel-toggle-row">
+      <div><div class="panel-toggle-label">${label}</div>${sub ? `<div class="panel-toggle-sub">${sub}</div>` : ''}</div>
+      <div class="panel-toggle ${on}" onclick="toggleSetting('${key}')"><div class="panel-toggle-dot"></div></div>
+    </div>`;
+  };
+
+  const badgeStatus = s.badge.active ? 'Aktiv' : 'Nicht erstellt';
+  const since = new Date(s.subscribedAt + 'T12:00:00');
+  const sinceStr = `${['J\u00e4n','Feb','M\u00e4r','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][since.getMonth()]} ${since.getFullYear()}`;
+
+  el.innerHTML = `
+    <div class="panel-section">
+      <div class="panel-label">Sichtbarkeit</div>
+      ${toggle('Im Verzeichnis sichtbar', 'Andere Community-Mitglieder k\u00f6nnen dich finden', 'preferences.showInDirectory', s.preferences.showInDirectory)}
+      ${toggle('Matching erlauben', 'Bei Events mit passenden Profilen verbunden werden', 'preferences.allowMatching', s.preferences.allowMatching)}
+    </div>
+    <div class="panel-section">
+      <div class="panel-label">KINN Badge</div>
+      <div class="panel-meta">${badgeStatus} \u00b7 Verkn\u00fcpft mit ${s.badge.linkType === 'linkedin' ? 'LinkedIn' : 'Website'}</div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-label">Mitglied seit</div>
+      <div class="panel-meta">${sinceStr}</div>
+    </div>
+    <button class="panel-danger" onclick="alert('Mock: Abmelden-Flow')">Komplett abmelden</button>`;
+}
+
+// ====== INLINE EDIT HELPERS ======
+function getNestedVal(obj, path) {
+  return path.split('.').reduce((o, k) => o?.[k], obj);
+}
+function setNestedVal(obj, path, val) {
+  const keys = path.split('.');
+  const last = keys.pop();
+  const target = keys.reduce((o, k) => o[k], obj);
+  target[last] = val;
+}
+
+function startEdit(el, path, type) {
+  const val = getNestedVal(panelState, path) || '';
+  if (type === 'text') {
+    el.outerHTML = `<input class="panel-input" value="${esc(val)}" onblur="finishEdit(this,'${path}')" onkeydown="if(event.key==='Enter')this.blur()" autofocus>`;
+    el.parentElement?.querySelector('.panel-input')?.focus();
+  }
+}
+
+function finishEdit(input, path) {
+  setNestedVal(panelState, path, input.value.trim());
+  renderPanel();
+}
+
+function startSelectEdit(el, path, labelsJson) {
+  const labels = typeof labelsJson === 'string' ? JSON.parse(labelsJson) : labelsJson;
+  const current = getNestedVal(panelState, path);
+  const options = Object.entries(labels).map(([k, v]) =>
+    `<option value="${k}" ${k === current ? 'selected' : ''}>${v}</option>`
+  ).join('');
+  el.outerHTML = `<select class="panel-select" onchange="finishSelect(this,'${path}')" onblur="finishSelect(this,'${path}')" autofocus>${options}</select>`;
+}
+
+function finishSelect(select, path) {
+  setNestedVal(panelState, path, select.value);
+  renderPanel();
+}
+
+function removeTag(path, tag) {
+  const arr = getNestedVal(panelState, path) || [];
+  setNestedVal(panelState, path, arr.filter(t => t !== tag));
+  renderPanel();
+}
+
+function startTagAdd(el, path) {
+  el.outerHTML = `<input class="panel-tag-input" placeholder="Eingeben..." onblur="finishTagAdd(this,'${path}')" onkeydown="if(event.key==='Enter')this.blur();if(event.key==='Escape'){this.value='';this.blur()}" autofocus>`;
+  el.parentElement?.querySelector('.panel-tag-input')?.focus();
+}
+
+function finishTagAdd(input, path) {
+  const val = input.value.trim();
+  if (val) {
+    const arr = getNestedVal(panelState, path) || [];
+    if (!arr.includes(val)) arr.push(val);
+    setNestedVal(panelState, path, arr);
+  }
+  renderPanel();
+}
+
+function toggleCheck(path, key) {
+  const arr = getNestedVal(panelState, path) || [];
+  if (arr.includes(key)) {
+    setNestedVal(panelState, path, arr.filter(k => k !== key));
+  } else {
+    arr.push(key);
+    setNestedVal(panelState, path, arr);
+  }
+  renderPanel();
+}
+
+function toggleSetting(path) {
+  const current = getNestedVal(panelState, path);
+  setNestedVal(panelState, path, !current);
+  renderPanel();
+}
+
+// ESC closes panel
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeProfile();
+});
 
 // ====== INIT ======
 extractAuthFromHash();

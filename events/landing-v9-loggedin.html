@@ -348,7 +348,6 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .panel-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(0,0,0,0.3); z-index: 200;
-  transition: opacity 0.25s;
 }
 .panel-overlay.active { display: block; }
 .profile-panel {
@@ -358,52 +357,115 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   overflow-y: auto; -webkit-overflow-scrolling: touch;
+  display: flex; flex-direction: column;
 }
 .profile-panel.active { transform: translateX(0); }
+
+/* Header */
 .panel-header {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; gap: 10px;
   padding: 24px 28px 20px; border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 .panel-title {
   font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-m);
+  text-transform: uppercase; color: var(--text-m); flex: 1;
 }
-.panel-close {
-  background: none; border: none; font-size: 20px;
-  color: var(--text-m); cursor: pointer; padding: 4px;
-  transition: color 0.15s;
+.panel-header-btn {
+  background: none; border: none; padding: 4px;
+  color: var(--text-m); cursor: pointer; transition: color 0.15s;
+  display: flex; align-items: center;
 }
-.panel-close:hover { color: var(--dark); }
-.panel-body { padding: 28px; }
-.panel-section { margin-bottom: 28px; }
+.panel-header-btn:hover { color: var(--dark); }
+.panel-header-btn svg { width: 16px; height: 16px; }
+.panel-back { font-size: 16px; margin-right: 4px; }
+
+/* Body */
+.panel-body { padding: 28px; flex: 1; }
+.panel-section { margin-bottom: 24px; }
 .panel-section:last-child { margin-bottom: 0; }
 .panel-label {
   font-size: 9px; font-weight: 600; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-m); margin-bottom: 8px;
+  text-transform: uppercase; color: var(--text-m); margin-bottom: 6px;
 }
+
+/* Values (read mode) */
 .panel-value {
   font-size: 14px; font-weight: 500; color: var(--dark); line-height: 1.5;
+  cursor: pointer; padding: 2px 0;
+  border-bottom: 1px dashed transparent;
+  transition: border-color 0.15s;
 }
+.panel-value:hover { border-color: var(--border-s); }
 .panel-value.empty {
   color: var(--text-m); font-style: italic; font-weight: 400;
 }
-.panel-tags {
-  display: flex; gap: 6px; flex-wrap: wrap;
+.panel-value.readonly { cursor: default; border-bottom: none; }
+.panel-value.readonly:hover { border-color: transparent; }
+
+/* Inline edit inputs */
+.panel-input {
+  width: 100%; padding: 6px 0; border: none; border-bottom: 1.5px solid var(--mint);
+  font-family: inherit; font-size: 14px; font-weight: 500; color: var(--dark);
+  background: transparent; outline: none;
 }
+.panel-select {
+  width: 100%; padding: 6px 0; border: none; border-bottom: 1.5px solid var(--mint);
+  font-family: inherit; font-size: 13px; font-weight: 500; color: var(--dark);
+  background: transparent; outline: none; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.panel-textarea {
+  width: 100%; padding: 6px 0; border: none; border-bottom: 1.5px solid var(--mint);
+  font-family: inherit; font-size: 13px; color: var(--dark);
+  background: transparent; outline: none; resize: vertical; min-height: 60px;
+}
+
+/* Tags */
+.panel-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .panel-tag {
   font-size: 12px; font-weight: 500; color: var(--text-s);
-  padding: 4px 10px; border: 1px solid var(--border);
-  border-radius: 20px;
+  padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;
+  cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 4px;
 }
-.panel-link {
-  font-size: 13px; color: var(--mint); font-weight: 500;
-  text-decoration: none;
+.panel-tag:hover { border-color: var(--text-m); }
+.panel-tag-x {
+  font-size: 10px; color: var(--text-m); font-weight: 700;
+  cursor: pointer; margin-left: 2px;
 }
-.panel-link:hover { text-decoration: underline; }
-.panel-progress {
-  margin-top: 28px; padding-top: 20px;
-  border-top: 1px solid var(--border);
+.panel-tag-x:hover { color: var(--dark); }
+.panel-tag-add {
+  font-size: 12px; color: var(--mint); padding: 3px 10px;
+  border: 1px dashed var(--mint); border-radius: 20px;
+  cursor: pointer; transition: all 0.15s;
 }
+.panel-tag-add:hover { background: var(--mint-bg); }
+.panel-tag-input {
+  font-size: 12px; padding: 3px 8px; border: 1px solid var(--mint);
+  border-radius: 20px; outline: none; font-family: inherit;
+  min-width: 80px; background: transparent;
+}
+
+/* Checkboxes */
+.panel-checks { display: flex; flex-direction: column; gap: 6px; }
+.panel-check {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text-s); cursor: pointer;
+}
+.panel-check input { accent-color: var(--mint); cursor: pointer; }
+.panel-check.checked { color: var(--dark); font-weight: 500; }
+
+/* Event counter */
+.panel-event-count {
+  font-size: 32px; font-weight: 800; color: var(--dark);
+  font-family: 'Montserrat', sans-serif; line-height: 1;
+}
+.panel-event-label {
+  font-size: 12px; color: var(--text-m); margin-top: 4px;
+}
+
+/* Progress */
+.panel-progress { padding-top: 20px; border-top: 1px solid var(--border); }
 .panel-progress-bar {
   height: 2px; background: var(--border); border-radius: 1px;
   margin-top: 8px; overflow: hidden;
@@ -412,18 +474,42 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
   height: 100%; background: var(--mint); border-radius: 1px;
   transition: width 0.5s;
 }
-.panel-progress-text {
-  font-size: 11px; color: var(--text-m); margin-top: 6px;
+.panel-progress-text { font-size: 11px; color: var(--text-m); margin-top: 6px; }
+
+/* Toggle switch */
+.panel-toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
 }
-.panel-edit-btn {
+.panel-toggle-row:last-child { border-bottom: none; }
+.panel-toggle-label { font-size: 13px; color: var(--dark); font-weight: 500; }
+.panel-toggle-sub { font-size: 11px; color: var(--text-m); margin-top: 2px; }
+.panel-toggle {
+  position: relative; width: 36px; height: 20px;
+  background: var(--border-s); border-radius: 10px;
+  cursor: pointer; transition: background 0.2s; flex-shrink: 0;
+}
+.panel-toggle.on { background: var(--mint); }
+.panel-toggle-dot {
+  position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff; transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.panel-toggle.on .panel-toggle-dot { transform: translateX(16px); }
+
+/* Settings meta */
+.panel-meta { font-size: 12px; color: var(--text-m); padding: 8px 0; }
+
+/* Danger button */
+.panel-danger {
   display: block; width: 100%; padding: 10px;
-  margin-top: 24px; background: none;
-  border: 1px solid var(--border); border-radius: var(--r-sm);
+  margin-top: 20px; background: none;
+  border: 1px solid rgba(220,38,38,0.3); border-radius: var(--r-sm);
   font-family: inherit; font-size: 12px; font-weight: 600;
-  color: var(--text-s); cursor: pointer;
-  transition: border-color 0.15s, color 0.15s;
+  color: #DC2626; cursor: pointer; transition: all 0.15s;
 }
-.panel-edit-btn:hover { border-color: var(--mint); color: var(--mint); }
+.panel-danger:hover { background: rgba(220,38,38,0.05); border-color: #DC2626; }
 
 @media (max-width: 640px) {
   .profile-panel { width: 100vw; }
@@ -566,10 +652,7 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 <!-- ====== PROFILE PANEL ====== -->
 <div class="panel-overlay" id="panel-overlay" onclick="closeProfile()"></div>
 <div class="profile-panel" id="profile-panel">
-  <div class="panel-header">
-    <span class="panel-title">Mein Profil</span>
-    <button class="panel-close" onclick="closeProfile()">&times;</button>
-  </div>
+  <div class="panel-header" id="panel-header"></div>
   <div class="panel-body" id="panel-body"></div>
 </div>
 
