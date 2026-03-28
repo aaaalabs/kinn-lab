@@ -92,9 +92,9 @@ async function loadRadarEvents() {
   try {
     // TODO: replace mock with fetch('https://kinn.at/api/events/widget?page=1') once CORS is configured
     const events = [
-      { title: 'KI in der Freiwilligenarbeit', date: '2026-04-09', detailUrl: 'https://erwachsenenschulen.at/veranstaltungs-details/?eid=441906&vid=3250' },
-      { title: 'Daten und KI — Ansätze zur Verbesserung der Datenbasis', date: '2026-04-14', detailUrl: 'https://dih-west.at/events/daten-und-ki-ansaetze-zur-verbesserung-der-datenbasis/' },
-      { title: 'AI Business Circle', date: '2026-04-21', detailUrl: 'https://dih-west.at/events/ai-business-circle-april/' },
+      { title: 'KI in der Freiwilligenarbeit', date: '2026-04-09', city: 'St. Johann', detailUrl: 'https://erwachsenenschulen.at/veranstaltungs-details/?eid=441906&vid=3250' },
+      { title: 'Daten und KI — Ansätze zur Verbesserung der Datenbasis', date: '2026-04-14', city: 'Innsbruck', detailUrl: 'https://dih-west.at/events/daten-und-ki-ansaetze-zur-verbesserung-der-datenbasis/' },
+      { title: 'AI Business Circle', date: '2026-04-21', city: 'Innsbruck', detailUrl: 'https://dih-west.at/events/ai-business-circle-april/' },
     ];
     if (!events.length) return;
 
@@ -102,7 +102,8 @@ async function loadRadarEvents() {
     if (!el) return;
 
     const rows = events.map(ev => {
-      const label = esc(ev.title || '');
+      const city = ev.city ? ' — ' + esc(ev.city) : '';
+      const label = esc(ev.title || '') + `<span class="radar-city">${city}</span>`;
       const when = fmtDate(ev.date);
       const href = ev.detailUrl ? escUrl(ev.detailUrl) : ev.registrationUrl ? escUrl(ev.registrationUrl) : '#';
       const target = href !== '#' ? ' target="_blank" rel="noopener"' : '';
@@ -113,7 +114,7 @@ async function loadRadarEvents() {
     }).join('');
 
     el.innerHTML = `<div class="section reveal">
-      <div class="section-label">Was sonst in Tirol passiert</div>
+      <div class="section-label">Was sonst passiert</div>
       <div class="radar-list">${rows}</div>
       <a class="radar-subscribe" href="https://kinn.at/api/radar/calendar.ics">KI Events abonnieren</a>
     </div>`;
