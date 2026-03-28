@@ -343,34 +343,6 @@ body { font-family: 'Work Sans', system-ui, sans-serif; background: var(--bg); c
 .partner-row img { height: 22px; object-fit: contain; filter: grayscale(1); transition: filter 0.3s, opacity 0.3s; }
 .partner-row a:hover img { filter: grayscale(0); opacity: 1; }
 
-/* ====== LUMA CHECKOUT MODAL ====== */
-.luma-modal {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.5);
-  display: flex; align-items: center; justify-content: center;
-  animation: fadeIn 0.2s ease-out;
-}
-.luma-modal-inner {
-  background: #fff; border-radius: 16px; overflow: hidden;
-  width: 90%; max-width: 480px; height: 85vh; max-height: 700px;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.2);
-  position: relative;
-  animation: modalIn 0.25s ease-out;
-}
-.luma-modal-header {
-  position: absolute; top: 0; right: 0; z-index: 1;
-  padding: 8px 12px;
-}
-.luma-modal-close {
-  background: rgba(255,255,255,0.9); border: none; font-size: 20px;
-  color: var(--text-s); cursor: pointer; padding: 4px 10px;
-  border-radius: 50%; line-height: 1;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
-.luma-modal-iframe {
-  flex: 1; border: none; width: 100%;
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes shimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
 .skeleton {
   display: inline-block; border-radius: 4px;

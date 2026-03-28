@@ -51,9 +51,6 @@ async function loadAll() {
     renderVoting(voting.value.topics || []);
   }
 
-  // Init Luma checkout buttons after all rendering
-  initLumaButtons();
-
   // Scroll reveal
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -316,26 +313,8 @@ function chapterFromName(name, chapter) {
 }
 function lumaButton(ev, cls) {
   if (!ev.lumaUrl) return '';
-  if (ev.lumaId) {
-    return `<a href="${escUrl(ev.lumaUrl)}" class="${cls}" onclick="openLumaCheckout('${esc(ev.lumaId)}');return false">Dabei sein</a>`;
-  }
   return `<a href="${escUrl(ev.lumaUrl)}" target="_blank" rel="noopener" class="${cls}">Dabei sein</a>`;
 }
-
-function openLumaCheckout(eventId) {
-  const overlay = document.createElement('div');
-  overlay.className = 'luma-modal';
-  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
-  overlay.innerHTML = `<div class="luma-modal-inner">
-    <div class="luma-modal-header">
-      <button class="luma-modal-close" onclick="this.closest('.luma-modal').remove()">&times;</button>
-    </div>
-    <iframe class="luma-modal-iframe" src="https://lu.ma/embed/event/${eventId}/simple" allow="fullscreen; payment" style="width:100%;height:100%;border:none"></iframe>
-  </div>`;
-  document.body.appendChild(overlay);
-}
-
-function initLumaButtons() { /* no-op, buttons use onclick directly */ }
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 function escUrl(u) { if (!u) return ''; try { return new URL(u).href; } catch { return esc(u); } }
 
